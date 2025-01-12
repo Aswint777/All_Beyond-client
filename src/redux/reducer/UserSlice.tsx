@@ -14,6 +14,7 @@ interface SignUpState {
   formValues: SignUpFormValues;
   error: string | null;
   loading: boolean;
+  requiresOTP: boolean;
 }
 
 const initialState: SignUpState = {
@@ -25,6 +26,7 @@ const initialState: SignUpState = {
   },
   error: null,
   loading: false,
+  requiresOTP: false,
 };
 
 export const sendSignUpData = createAsyncThunk(
@@ -32,20 +34,12 @@ export const sendSignUpData = createAsyncThunk(
   async (formValues: SignUpFormValues, { rejectWithValue }) => {
     try {
         console.log(formValues,"form values in front-end");
-        // const formData = new FormData();
-        // formData.append("email",formValues.email)
-        // formData.append("username",formValues.name)
-        // formData.append("password",formValues.password)
-        // formData.append("confirmPassword",formValues.confirmPassword)
-        // console.log(formData.get("email"));
-        
-
         
         const API_URL = "http://localhost:5000"; 
         console.log(API_URL,"url of the backend")
         const response = await axios.post(`${API_URL}/auth/signup`, formValues, config);
-        //   return response.data;
-        console.log(response,'signUp response is here ');
+        console.log(response.data,'signUp response is here ');
+          return response.data;
         console.log(response.data.user,'data is here');
         
     
@@ -73,6 +67,9 @@ const SignUpSlice = createSlice({
       .addCase(sendSignUpData.fulfilled, (state,{payload}) => {
         state.loading = false;
         state.error = null;
+        state.requiresOTP = payload.requiresOTP || false; // Update requiresOTP here
+
+        state.formValues = { ...state.formValues, ...payload.user };
         // state.user = payload
       })
       .addCase(sendSignUpData.rejected, (state, action) => {

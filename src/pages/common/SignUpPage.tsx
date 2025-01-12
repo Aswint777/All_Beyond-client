@@ -1,27 +1,18 @@
-
 import React, { useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux';
 import { AppDispatch, RootState } from '../../redux/store';
 import { sendSignUpData, updateField } from '../../redux/reducer/UserSlice';
-
-
-
+import { useNavigate } from 'react-router-dom';
 
 
 const SignUpPage:React.FC = () => {
-
+   const navigate = useNavigate()
   const dispatch = useDispatch<AppDispatch>()
   
       // const [error, setError] = useState<string>("");
-      const { formValues, loading, error } = useSelector((state: RootState) => state.signUp);
+      const { formValues, loading, error,requiresOTP } = useSelector((state: RootState) => state.signUp);
 
-      // const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-      //   // const { name, value } = e.target;
-      //   // setFormValues({
-      //   //   ...formValues,
-      //   //   [name]: value,
-      //   // });
-      // };
+      console.log(requiresOTP,'signup page return require otp');
 
       const handleChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
         const { name, value } = e.target;
@@ -32,20 +23,13 @@ const SignUpPage:React.FC = () => {
         e.preventDefault();
         await dispatch(sendSignUpData(formValues));
       };
-    
-      // const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
-      //   e.preventDefault();
-      //   const { name, email, password, confirmPassword } = formValues;
-    
-      //   if (password !== confirmPassword) {
-      //     setError("Passwords do not match.");
-      //     return;
-      //   }
-    
-      //   setError("");
-      //   console.log("Form submitted:", { name, email, password });
-      //   // Send formValues to your backend API
-      // };
+      React.useEffect(() => {
+        console.log(requiresOTP, 'requiresOTP state in useEffect');
+        if (requiresOTP) {
+          navigate("/OtpVerify");
+        }
+      }, [requiresOTP, navigate]);
+      
     
       return (
         <div className="flex justify-center items-center min-h-screen bg-slate-50">
