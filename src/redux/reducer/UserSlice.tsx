@@ -44,8 +44,30 @@ export const sendSignUpData = createAsyncThunk(
         
     
     } catch (error: any) {
-      console.error("SignUp Error:", error.response?.data || error.message);
-      return rejectWithValue(error.response?.data || "An error occurred");
+      // console.error("SignUp Error:", error.response?.data || error.message);
+      // return rejectWithValue(error.response?.data || "An error occurred");
+      console.error("SignUp Errorsss:", error.response?.data || error.message);
+      console.error("SignUp Errorsss:", error.message);
+
+
+      // If the backend sends a structured error, check if it's an array or object.
+      const errorResponse = error.response?.data;
+
+      // If it is an array of errors, return the first message or concatenate them
+      if (Array.isArray(errorResponse?.errors)) {
+        console.log("hello inside")
+        return rejectWithValue(
+          errorResponse.errors.map((err: { message: string }) => err.message).join(", ")
+        );
+      }
+       console.log(errorResponse,"here error response ");
+       console.log(errorResponse?.message,"here error response 66");
+       console.log(typeof errorResponse?.message,"here error response 66");
+
+
+      // If it's not an array, return the error message or generic error
+      return rejectWithValue(errorResponse?.message || "An unknown error occurred");
+    
     }
   }
 );
@@ -72,11 +94,27 @@ const SignUpSlice = createSlice({
         state.formValues = { ...state.formValues, ...payload.user };
         // state.user = payload
       })
-      .addCase(sendSignUpData.rejected, (state, action) => {
-        console.log(action.payload,"error in payload");
+      // .addCase(sendSignUpData.rejected, (state, action) => {
+      //   console.log(action.payload,"error in payload");
         
+      //   state.loading = false;
+      //   state.error = action.payload as string;
+      // });
+
+      .addCase(sendSignUpData.rejected, (state, action) => {
+        console.log(action, "error in payload");
+
         state.loading = false;
-        state.error = action.payload as string;
+
+        // If action.payload is an array of error messages, display them
+        if (typeof action.payload === "string") {
+          // Single error message
+          state.error = action.payload;
+        } else {
+          // Handle unexpected cases
+          state.error = "An unexpected error occurred hahahha";
+          // state.error= e
+        }
       });
   },
 });

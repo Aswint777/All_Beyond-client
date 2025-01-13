@@ -11,7 +11,8 @@ const SignUpPage:React.FC = () => {
   
       // const [error, setError] = useState<string>("");
       const { formValues, loading, error,requiresOTP } = useSelector((state: RootState) => state.signUp);
-
+       console.log(error,"from use selecter");
+       
       console.log(requiresOTP,'signup page return require otp');
 
       const handleChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
