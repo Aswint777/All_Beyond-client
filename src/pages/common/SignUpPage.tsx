@@ -19,7 +19,7 @@ const SignUpPage:React.FC = () => {
         const { name, value } = e.target;
         await dispatch(updateField({ field: name, value }));
       };
-    
+      
       const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault();
         await dispatch(sendSignUpData(formValues));

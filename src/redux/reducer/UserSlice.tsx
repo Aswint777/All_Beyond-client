@@ -40,14 +40,12 @@ export const sendSignUpData = createAsyncThunk(
         const response = await axios.post(`${API_URL}/auth/signup`, formValues, config);
         console.log(response.data,'signUp response is here ');
           return response.data;
-        console.log(response.data.user,'data is here');
         
     
     } catch (error: any) {
       // console.error("SignUp Error:", error.response?.data || error.message);
       // return rejectWithValue(error.response?.data || "An error occurred");
-      console.error("SignUp Errorsss:", error.response?.data || error.message);
-      console.error("SignUp Errorsss:", error.message);
+      console.error("SignUp Errors:", error.response?.data || error.message);
 
 
       // If the backend sends a structured error, check if it's an array or object.
@@ -60,9 +58,7 @@ export const sendSignUpData = createAsyncThunk(
           errorResponse.errors.map((err: { message: string }) => err.message).join(", ")
         );
       }
-       console.log(errorResponse,"here error response ");
        console.log(errorResponse?.message,"here error response 66");
-       console.log(typeof errorResponse?.message,"here error response 66");
 
 
       // If it's not an array, return the error message or generic error
@@ -87,6 +83,8 @@ const SignUpSlice = createSlice({
         state.error = null;
       })
       .addCase(sendSignUpData.fulfilled, (state,{payload}) => {
+        console.log(sendSignUpData,"sendSignUp Data");
+        
         state.loading = false;
         state.error = null;
         state.requiresOTP = payload.requiresOTP || false; // Update requiresOTP here
