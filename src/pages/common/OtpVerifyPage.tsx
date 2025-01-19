@@ -13,7 +13,7 @@ const OtpVerifyPage: React.FC = () => {
   const navigate = useNavigate()
 
   // const dispatch = useDispatch();
-  const { formValues } = useSelector(
+  const { formValues } = useSelector( 
     (state: RootState) => state.signUp
   );
   

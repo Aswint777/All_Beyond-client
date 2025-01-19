@@ -118,4 +118,4 @@ const SignUpSlice = createSlice({
 });
 
 export const { updateField } = SignUpSlice.actions;
-export default SignUpSlice.reducer;
+export default SignUpSlice.reducer;     
