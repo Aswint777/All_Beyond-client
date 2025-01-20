@@ -4,6 +4,7 @@ import SignUpPage from './pages/common/SignUpPage'
 import HomePage from './pages/common/HomePage'
 import OtpVerifyPage from './pages/common/OtpVerifyPage'
 import LoginPage from './pages/common/LoginPage'
+import AdminStudentsListPage from './pages/Admin/AdminStudentsListPage'
 
 function App() {
 
@@ -16,6 +17,7 @@ function App() {
         <Route path='/login' Component={LoginPage}/>
         <Route path='/SignUP' Component={SignUpPage}/>
         <Route path='/OtpVerify' Component={OtpVerifyPage}/>
+        <Route path='/admin/AdminStudentsListPage' Component={AdminStudentsListPage}/>
       </Routes>
 
 

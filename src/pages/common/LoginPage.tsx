@@ -3,6 +3,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import { AppDispatch, RootState } from "../../redux/store";
 import { UserLoginAction } from "../../redux/actions/UserLoginAction";
+import BasicNavbar from "../../components/layout/BasicNavbar";
 
 const LoginPage: React.FC = () => {
   const navigate = useNavigate();
@@ -38,6 +39,9 @@ const LoginPage: React.FC = () => {
   }, [isAuthenticated, navigate]);
 
   return (
+    <div>
+
+      <BasicNavbar/>
     <div className="flex justify-center items-center min-h-screen bg-slate-50">
       <img
         src="\src\assets\images\Discover-the-Bright-Side-The-Surprising-Benefits-of-Online-Learning.png"
@@ -74,7 +78,7 @@ const LoginPage: React.FC = () => {
             onChange={handleChange}
             className="w-full px-3 py-2 border rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500"
             required
-          />
+            />
         </div>
         <button
           type="submit"
@@ -89,6 +93,7 @@ const LoginPage: React.FC = () => {
         </button>
       </form>
     </div>
+  </div>
   );
 };
 

@@ -3,6 +3,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import { AppDispatch, RootState } from '../../redux/store';
 import { sendSignUpData, updateField } from '../../redux/reducer/UserSlice';
 import { useNavigate } from 'react-router-dom';
+import BasicNavbar from '../../components/layout/BasicNavbar';
 
 
 const SignUpPage:React.FC = () => {
@@ -33,6 +34,8 @@ const SignUpPage:React.FC = () => {
       
     
       return (
+        <div>
+          <BasicNavbar/>
         <div className="flex justify-center items-center min-h-screen bg-slate-50">
             
             <img src="\src\assets\images\Discover-the-Bright-Side-The-Surprising-Benefits-of-Online-Learning.png" alt="Local Image" className="w-1/2 h-full object-cover"/>
@@ -62,7 +65,7 @@ const SignUpPage:React.FC = () => {
             onChange={handleChange}
             className="w-full px-3 py-2 border rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500"
             required
-          />
+            />
         </div>
         <div className="mb-4">
           <label className="block text-sm font-medium text-gray-700 mb-1">Password</label>
@@ -95,6 +98,7 @@ const SignUpPage:React.FC = () => {
         </button>
       </form>
         </div>
+    </div>
       );
 }
 
