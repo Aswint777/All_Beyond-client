@@ -37,10 +37,14 @@ const loginSlice = createSlice({
           state.error = null;
         })
         .addCase(UserLoginAction.fulfilled, (state, { payload }) => {
+          console.log(payload.data,'payload');
+          
           state.loading = false;
           state.error = null;
           state.isAuthenticated = true;
-          state.userDetails = payload.user;
+          state.userDetails = payload.data;
+          console.log(state.userDetails,'???????');
+          
         })
         .addCase(UserLoginAction.rejected, (state, action) => {
           state.loading = false;

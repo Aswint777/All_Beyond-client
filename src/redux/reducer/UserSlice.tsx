@@ -1,7 +1,8 @@
 import { createAsyncThunk, createSlice, PayloadAction } from "@reduxjs/toolkit";
 import axios from "axios";
 import { config } from "../../configaration/Config";
-
+// import dotenv from "dotenv";
+// dotenv.config()
 
 interface SignUpFormValues {
   name: string;
@@ -35,7 +36,8 @@ export const sendSignUpData = createAsyncThunk(
     try {
         console.log(formValues,"form values in front-end");
         
-        const API_URL = "http://localhost:5000"; 
+        const API_URL = import.meta.env.VITE_REACT_APP_API_URL!;
+        // const API_URL = "http://localhost:5000"; 
         console.log(API_URL,"url of the backend")
         const response = await axios.post(`${API_URL}/auth/signup`, formValues, config);
         console.log(response.data,'signUp response is here ');

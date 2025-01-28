@@ -1,8 +1,13 @@
 import React, { useState } from 'react'
 import BasicNavbar from '../../components/layout/BasicNavbar'
+import UserNavbar from '../../components/layout/UserNavbar';
+import { useSelector } from 'react-redux';
+import { RootState } from '../../redux/store';
 
 const HomePage:React.FC = () => {
   const [showVideo, setShowVideo] = useState(false);
+  const { userDetails } = useSelector((state: RootState) => state.login);
+
 
   const handleVideoModal = () => {
     setShowVideo(!showVideo);
@@ -10,8 +15,10 @@ const HomePage:React.FC = () => {
   return (
     
     <div>
-      <BasicNavbar />
+      {/* <BasicNavbar /> */}
+      <UserNavbar/>
       <div>
+      {userDetails && userDetails.email}
       <div className="relative w-full h-screen">
   <img
     src="\src\assets\images\shutterstock_1029674362-860x574.png" 

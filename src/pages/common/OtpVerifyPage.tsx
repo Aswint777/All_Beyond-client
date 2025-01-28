@@ -3,20 +3,23 @@ import { useDispatch, useSelector } from "react-redux";
 import { AppDispatch, RootState } from "../../redux/store";
 import { VerifyOtpAction } from "../../redux/actions/VerifyOtpAction";
 import { useNavigate } from "react-router-dom";
+import axios from "axios";
+import { config } from "../../configaration/Config";
 
 const OtpVerifyPage: React.FC = () => {
   const OTP_LENGTH = 6;
+  const TIMER_DURATION = 30; // 30 seconds for the timer
+
   const [otp, setOtp] = useState<string[]>(Array(OTP_LENGTH).fill(""));
   const [error, setError] = useState<string>("");
+  const [timer, setTimer] = useState<number>(TIMER_DURATION);
+  const [resendEnabled, setResendEnabled] = useState<boolean>(false);
+
   const inputRefs = useRef<HTMLInputElement[]>([]);
   const dispatch = useDispatch<AppDispatch>();
-  const navigate = useNavigate()
+  const navigate = useNavigate();
 
-  // const dispatch = useDispatch();
-  const { formValues } = useSelector( 
-    (state: RootState) => state.signUp
-  );
-  
+  const { formValues } = useSelector((state: RootState) => state.signUp);
   const { loading, error: reduxError, isOtpVerified } = useSelector(
     (state: RootState) => state.verifyOtp
   );
@@ -44,24 +47,59 @@ const OtpVerifyPage: React.FC = () => {
 
     const otpString = otp.join("");
     console.log(otpString);
-    
-    
+
     if (otpString.length !== OTP_LENGTH) {
       setError("Please enter a valid 6-digit OTP.");
       return;
     }
 
-    dispatch(VerifyOtpAction({ email:formValues.email, otp: otpString }));
+    dispatch(VerifyOtpAction({ email: formValues.email, otp: otpString }));
   };
-  useEffect(()=>{
-    if(isOtpVerified){
-      navigate("/login")
+
+  // Timer logic
+  useEffect(() => {
+    let interval: number;
+    if (timer > 0) {
+      interval = window.setInterval(() => {
+        setTimer((prev) => prev - 1);
+      }, 1000);
+    } else {
+      setResendEnabled(true); // Enable the resend button when timer hits 0
     }
-  },[isOtpVerified,navigate])
+    return () => clearInterval(interval);
+  }, [timer]);
+
+  const handleResendOtp = async () => {
+    try {
+      console.log(formValues.email, "email");
+
+      // Clear the OTP inputs, reset the timer, and hide the resend button
+      setOtp(Array(OTP_LENGTH).fill(""));
+      setTimer(TIMER_DURATION);
+      setResendEnabled(false);
+
+      const API_URL = import.meta.env.VITE_REACT_APP_API_URL!;
+      const response = await axios.post(`${API_URL}/auth/resent`, { email: formValues.email }, config);
+
+      console.log("Resend OTP response:", response.data);
+    } catch (error) {
+      console.error("Failed to resend OTP:", error);
+    }
+  };
+
+  useEffect(() => {
+    if (isOtpVerified) {
+      navigate("/login");
+    }
+  }, [isOtpVerified, navigate]);
 
   return (
     <div className="flex items-center justify-center min-h-screen bg-white">
-      <img src="\src\assets\images\Discover-the-Bright-Side-The-Surprising-Benefits-of-Online-Learning.png" alt="Local Image" className="w-1/2 h-full object-cover" />
+      <img
+        src="\src\assets\images\Discover-the-Bright-Side-The-Surprising-Benefits-of-Online-Learning.png"
+        alt="Local Image"
+        className="w-1/2 h-full object-cover"
+      />
       <div className="bg-gray-300 p-6 rounded-lg shadow-md max-w-sm w-full">
         <h2 className="text-2xl font-semibold text-center mb-4">OTP Verification</h2>
         <p className="text-gray-600 text-center mb-4">
@@ -96,6 +134,21 @@ const OtpVerifyPage: React.FC = () => {
           )}
           {isOtpVerified && <p className="text-green-500 text-sm">OTP Verified Successfully!</p>}
         </form>
+        {/* Timer and Resend OTP Button */}
+        <div className="mt-4 text-center">
+          {resendEnabled ? (
+            <button
+              onClick={handleResendOtp}
+              className="bg-blue-500 text-white py-2 px-4 rounded-lg hover:bg-blue-600 transition"
+            >
+              Resend OTP
+            </button>
+          ) : (
+            <p className="text-gray-600">
+              Resend OTP in <strong>{timer}</strong> seconds
+            </p>
+          )}
+        </div>
       </div>
     </div>
   );

@@ -11,7 +11,7 @@ interface Student{
 
 const AdminStudentsListPage: React.FC = () => {
   const [currentPage, setCurrentPage] = useState(1);
-  const itemsPerPage = 5;
+  const itemsPerPage = 8;
 
   // Sample data for students
   // const students = [
