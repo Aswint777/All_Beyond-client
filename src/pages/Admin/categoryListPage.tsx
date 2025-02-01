@@ -67,12 +67,12 @@ const CategoryListPage: React.FC = () => {
     }
   };
 
-  const handleEdit = (id: string,name:string,description:string,type:string) => {
+  const handleEdit = (id: string, name: string, description: string, type: string) => {
     console.log(`Edit category with ID: ${id}`);
-    // Implement edit functionality (navigate to edit page or open modal)
-    <EditCategoryPage/>
+    navigate("/admin/editCategory", {
+      state: { id, name, description, type }, // Passing data as state
+    });
   };
-
   return (
     <div className="min-h-screen p-8 bg-gray-100">
       {/* Header Section */}

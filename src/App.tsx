@@ -14,6 +14,7 @@ import InstructorApplyPage from './pages/common/InstructorApplyPage'
 import InstructorApplicationForm from './components/Forms/InstructorApplicationForm'
 import AddCategoryPage from './pages/Admin/AddCategoryPage'
 import categoryListPage from './pages/Admin/categoryListPage'
+import EditCategoryPage from './pages/Admin/EditCategoryPage'
 
 function App() {
   const dispatch = useDispatch<AppDispatch>();
@@ -48,6 +49,7 @@ function App() {
         <Route path='/admin/AdminStudentsListPage' Component={AdminStudentsListPage}/>
         <Route path='/admin/AddCategoryPage' Component={AddCategoryPage}/>
         <Route path='/admin/categoryListPage' Component={categoryListPage} />
+        <Route path='/admin/EditCategory' Component={EditCategoryPage} /> 
 
       </Routes>
 
