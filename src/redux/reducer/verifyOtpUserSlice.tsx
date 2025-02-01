@@ -41,7 +41,7 @@ const verifyOtpSlice = createSlice({
       })
       .addCase(VerifyOtpAction.rejected, (state, action) => {
         state.loading = false;
-        state.error = action.payload as string|| "OTP verification failed";
+        state.error = (action.payload as string) || "OTP verification failed";
       });
   },
 });

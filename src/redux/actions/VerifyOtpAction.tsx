@@ -12,8 +12,8 @@ export const VerifyOtpAction = createAsyncThunk(
     async ({ email, otp }: OTPPayload, { rejectWithValue }) => {
         try {
             console.log('otp in action');
-            
-            const API_URL = "http://localhost:5000"; // Update this URL as needed
+            const API_URL = import.meta.env.VITE_REACT_APP_API_URL!;
+
             const response = await axios.post(`${API_URL}/auth/OtpVerify`, { email, otp }, config);
             return response.data;
         } catch (error : any) {

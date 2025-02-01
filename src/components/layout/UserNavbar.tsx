@@ -1,6 +1,8 @@
 import axios from "axios";
 import React, { useState, useEffect, useRef } from "react";
+import { useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
+import { RootState } from "../../redux/store";
 
 const UserNavbar: React.FC = () => {
   const navigate = useNavigate();
@@ -8,6 +10,7 @@ const UserNavbar: React.FC = () => {
   const dropdownRef = useRef<HTMLDivElement>(null);
   const jwtToken = localStorage.getItem("access_token");
 
+  const { userDetails } = useSelector((state: RootState) => state.user);
 
   const toggleDropdown = () => {
     console.log("Toggling dropdown"); // Debug log
@@ -33,10 +36,9 @@ const UserNavbar: React.FC = () => {
     };
   }, []);
 
-
   const handleLogout = async () => {
-    console.log('jjj');
-    
+    console.log("jjj");
+
     const accessToken = localStorage.getItem("access_token");
     // if (!accessToken) {
     //   console.error("Access token not found");
@@ -44,14 +46,10 @@ const UserNavbar: React.FC = () => {
     // }
 
     try {
-      await axios.delete(
-        `http://localhost:5000/auth/logOut`,
-        {
-          headers: { "Content-Type": "application/json" },
-          withCredentials: true, 
-        }
-      );
-
+      await axios.delete(`http://localhost:5000/auth/logOut`, {
+        headers: { "Content-Type": "application/json" },
+        withCredentials: true,
+      });
 
       // console.log("Logout successful:", response.data);
 
@@ -64,7 +62,7 @@ const UserNavbar: React.FC = () => {
       console.error("Logout error:", error);
       alert("Failed to log out. Please try again.");
     }
-  }
+  };
   return (
     <nav className="bg-gray-100 shadow-md">
       <div className="container mx-auto px-4 py-3 flex justify-between items-center">
@@ -100,8 +98,10 @@ const UserNavbar: React.FC = () => {
             className="w-8 h-8 rounded-full"
           />
           <div>
-            <p className="text-sm font-semibold text-gray-800">Aswin</p>
-            <p className="text-xs text-gray-500">Aswin@gmail.com</p>
+            <p className="text-sm font-semibold text-gray-800">
+              {userDetails?.username}
+            </p>
+            <p className="text-xs text-gray-500">{userDetails?.email}</p>
           </div>
 
           {/* Dropdown Button */}

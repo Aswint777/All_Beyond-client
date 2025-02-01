@@ -2,23 +2,18 @@ import React, { useEffect, useState } from "react";
 import AdminSideBar from "../../components/layout/AdminSideBar";
 import axios from "axios";
 
-interface Student{
-  _id : number
-  username:string
-  email:string
-  isBlocked :boolean
+interface Student {
+  _id: number;
+  username: string;
+  email: string;
+  isBlocked: boolean;
+  userId: string;
+  contacts: number;
 }
 
 const AdminStudentsListPage: React.FC = () => {
   const [currentPage, setCurrentPage] = useState(1);
   const itemsPerPage = 8;
-
-  // Sample data for students
-  // const students = [
-  //   { id: 1, name: "John Doe", email: "john@example.com", phone: "1234567890", isBlocked: false },
-  //   { id: 2, name: "Jane Doe", email: "jane@example.com", phone: "9876543210", isBlocked: true },
-  //   // Add more students here
-  // ];
 
   const [students, setStudents] = useState<Student[]>([]);
   const [loading, setLoading] = useState<boolean>(true);
@@ -27,13 +22,16 @@ const AdminStudentsListPage: React.FC = () => {
   useEffect(() => {
     const fetchStudents = async () => {
       try {
-        console.log('http://localhost:5000/admin/AdminStudentsListPage,hai');
-        
-        const response = await axios.get("http://localhost:5000/admin/AdminStudentsListPage"); 
-        console.log(response,'5000 here');
+        console.log("http://localhost:5000/admin/AdminStudentsListPage,hai");
+        const API_URL = import.meta.env.VITE_REACT_APP_API_URL!;
+
+        const response = await axios.get(
+          `${API_URL}/admin/AdminStudentsListPage`
+        );
+        console.log(response, "5000 here");
         console.log(response.data.data);
-        
-        setStudents(response.data.data); // Assuming response.data is an array of students
+
+        setStudents(response.data.data);
       } catch (err: any) {
         setError(err.message || "An error occurred while fetching students.");
       } finally {
@@ -44,17 +42,28 @@ const AdminStudentsListPage: React.FC = () => {
     fetchStudents();
   }, []);
 
+  console.log(students, "students");
 
-  console.log(students,"students");
-  
-  const handleBlockUnblock = (id: number, status: boolean) => {
-    setStudents((prevStudents) => {
-      return prevStudents.map((student) =>
-        student._id === id ? { ...student, isBlocked: status } : student
-      );
-    });
+  const handleBlockUnblock = async (
+    id: number,
+    status: boolean,
+    userid: string
+  ) => {
+    try {
+      const API_URL = import.meta.env.VITE_REACT_APP_API_URL!;
+      const response = await axios.put(`${API_URL}/admin/block_UnBlock`, {
+        userId: userid,
+        isBlocked: status,
+      });
+      if (response.status === 200) {
+        setStudents((prevStudents) =>
+          prevStudents.map((student) =>
+            student._id === id ? { ...student, isBlocked: status } : student
+          )
+        );
+      }
+    } catch (error) {}
   };
-  
 
   // Pagination logic
   const totalPages = Math.ceil(students.length / itemsPerPage);
@@ -68,7 +77,6 @@ const AdminStudentsListPage: React.FC = () => {
       {/* Sidebar */}
       <AdminSideBar />
 
-      {/* Main Content */}
       <main className="flex-1 p-8">
         <h2 className="text-2xl font-bold mb-6">Student Details</h2>
         <div className="relative mb-4">
@@ -88,26 +96,32 @@ const AdminStudentsListPage: React.FC = () => {
               <th className="px-4 py-2 border">ID</th>
               <th className="px-4 py-2 border">Name</th>
               <th className="px-4 py-2 border">Email</th>
+              <th className="px-4 py-2 border">Contacts</th>
               <th className="px-4 py-2 border">Actions</th>
             </tr>
           </thead>
           <tbody>
             {currentStudents.map((student) => (
               <tr key={student._id} className="text-center">
-                <td className="px-4 py-2 border">{student._id}</td>
-                <td className="px-4 py-2 border">{student.username}</td>
-                <td className="px-4 py-2 border">{student.email}</td>
+                <td className="px-4 py-2 border">{student?.userId}</td>
+                <td className="px-4 py-2 border">{student?.username}</td>
+                <td className="px-4 py-2 border">{student?.email}</td>
+                <td className="px-4 py-2 border">{student?.contacts}</td>
                 <td className="px-4 py-2 border">
                   {student.isBlocked ? (
                     <button
-                      onClick={() => handleBlockUnblock(student._id, false)}
+                      onClick={() =>
+                        handleBlockUnblock(student._id, false, student.userId)
+                      }
                       className="px-4 py-1 bg-orange-500 text-white rounded-md"
                     >
                       Unblock
                     </button>
                   ) : (
                     <button
-                      onClick={() => handleBlockUnblock(student._id, true)}
+                      onClick={() =>
+                        handleBlockUnblock(student._id, true, student.userId)
+                      }
                       className="px-4 py-1 bg-blue-500 text-white rounded-md"
                     >
                       Block

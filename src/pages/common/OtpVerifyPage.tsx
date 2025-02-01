@@ -8,7 +8,7 @@ import { config } from "../../configaration/Config";
 
 const OtpVerifyPage: React.FC = () => {
   const OTP_LENGTH = 6;
-  const TIMER_DURATION = 30; // 30 seconds for the timer
+  const TIMER_DURATION = 30;
 
   const [otp, setOtp] = useState<string[]>(Array(OTP_LENGTH).fill(""));
   const [error, setError] = useState<string>("");
@@ -20,9 +20,11 @@ const OtpVerifyPage: React.FC = () => {
   const navigate = useNavigate();
 
   const { formValues } = useSelector((state: RootState) => state.signUp);
-  const { loading, error: reduxError, isOtpVerified } = useSelector(
-    (state: RootState) => state.verifyOtp
-  );
+  const {
+    loading,
+    error: reduxError,
+    isOtpVerified,
+  } = useSelector((state: RootState) => state.verifyOtp);
 
   const handleChange = (value: string, index: number) => {
     if (/^\d$/.test(value)) {
@@ -79,7 +81,11 @@ const OtpVerifyPage: React.FC = () => {
       setResendEnabled(false);
 
       const API_URL = import.meta.env.VITE_REACT_APP_API_URL!;
-      const response = await axios.post(`${API_URL}/auth/resent`, { email: formValues.email }, config);
+      const response = await axios.post(
+        `${API_URL}/auth/resent`,
+        { email: formValues.email },
+        config
+      );
 
       console.log("Resend OTP response:", response.data);
     } catch (error) {
@@ -101,11 +107,16 @@ const OtpVerifyPage: React.FC = () => {
         className="w-1/2 h-full object-cover"
       />
       <div className="bg-gray-300 p-6 rounded-lg shadow-md max-w-sm w-full">
-        <h2 className="text-2xl font-semibold text-center mb-4">OTP Verification</h2>
+        <h2 className="text-2xl font-semibold text-center mb-4">
+          OTP Verification
+        </h2>
         <p className="text-gray-600 text-center mb-4">
           Please verify your email: <strong>{formValues?.email}</strong>
         </p>
-        <form onSubmit={handleSubmit} className="flex flex-col items-center gap-4">
+        <form
+          onSubmit={handleSubmit}
+          className="flex flex-col items-center gap-4"
+        >
           <div className="flex gap-2">
             {otp.map((digit, index) => (
               <input
@@ -132,7 +143,9 @@ const OtpVerifyPage: React.FC = () => {
               Verify OTP
             </button>
           )}
-          {isOtpVerified && <p className="text-green-500 text-sm">OTP Verified Successfully!</p>}
+          {isOtpVerified && (
+            <p className="text-green-500 text-sm">OTP Verified Successfully!</p>
+          )}
         </form>
         {/* Timer and Resend OTP Button */}
         <div className="mt-4 text-center">

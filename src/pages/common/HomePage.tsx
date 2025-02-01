@@ -1,59 +1,55 @@
-import React, { useState } from 'react'
-import BasicNavbar from '../../components/layout/BasicNavbar'
-import UserNavbar from '../../components/layout/UserNavbar';
-import { useSelector } from 'react-redux';
-import { RootState } from '../../redux/store';
+import React, { useState } from "react";
+import BasicNavbar from "../../components/layout/BasicNavbar";
+import UserNavbar from "../../components/layout/UserNavbar";
+import { useSelector } from "react-redux";
+import { RootState } from "../../redux/store";
 
-const HomePage:React.FC = () => {
+const HomePage: React.FC = () => {
   const [showVideo, setShowVideo] = useState(false);
   const { userDetails } = useSelector((state: RootState) => state.login);
-
 
   const handleVideoModal = () => {
     setShowVideo(!showVideo);
   };
   return (
-    
     <div>
       {/* <BasicNavbar /> */}
-      <UserNavbar/>
+      <UserNavbar />
       <div>
-      {userDetails && userDetails.email}
-      <div className="relative w-full h-screen">
-  <img
-    src="\src\assets\images\shutterstock_1029674362-860x574.png" 
-    alt="Hero"
-    className="w-full h-full object-cover"
-  />
+        {/* {userDetails && userDetails.email} */}
+        <div className="relative w-full h-screen">
+          <img
+            src="\src\assets\images\shutterstock_1029674362-860x574.png"
+            alt="Hero"
+            className="w-full h-full object-cover"
+          />
 
-  <div className="absolute inset-0 flex items-center justify-center lg:justify-start px-4 lg:px-12 bg-black bg-opacity-30">
-    <div className="text-center lg:text-left max-w-lg space-y-6 text-white">
-      <h1 className="text-4xl font-bold leading-tight">
-        <span className="text-green-500">Knowledge</span> at your fingertips
-      </h1>
-      <p className="text-gray-200">
-        Unlock your potential with top-notch resources and expert guidance to
-        elevate your learning experience.
-      </p>
-      <div className="flex flex-col lg:flex-row items-center space-y-4 lg:space-y-0 lg:space-x-4">
-        <button className="px-6 py-3 bg-green-600 text-white rounded-full shadow-md hover:bg-green-700">
-          Join for free
-        </button>
-          
+          <div className="absolute inset-0 flex items-center justify-center lg:justify-start px-4 lg:px-12 bg-black bg-opacity-30">
+            <div className="text-center lg:text-left max-w-lg space-y-6 text-white">
+              <h1 className="text-4xl font-bold leading-tight">
+                <span className="text-green-500">Knowledge</span> at your
+                fingertips
+              </h1>
+              <p className="text-gray-200">
+                Unlock your potential with top-notch resources and expert
+                guidance to elevate your learning experience.
+              </p>
+              <div className="flex flex-col lg:flex-row items-center space-y-4 lg:space-y-0 lg:space-x-4">
+                <button className="px-6 py-3 bg-green-600 text-white rounded-full shadow-md hover:bg-green-700">
+                  Join for free
+                </button>
+              </div>
+              <div>
+                <button className="flex items-center text-blue-400 font-medium space-x-2 hover:underline">
+                  <span className="w-10 h-10 flex items-center justify-center rounded-full border border-blue-400">
+                    ▶
+                  </span>
+                  <span>Watch how it works</span>
+                </button>
+              </div>
+            </div>
+          </div>
         </div>
-        <div>
-        <button
-          className="flex items-center text-blue-400 font-medium space-x-2 hover:underline"
-        >
-          <span className="w-10 h-10 flex items-center justify-center rounded-full border border-blue-400">
-            ▶
-          </span>
-          <span>Watch how it works</span>
-        </button>
-      </div>
-    </div>
-  </div>
-</div>
 
         {/* Success Section */}
         <div className="bg-white py-12">
@@ -89,10 +85,8 @@ const HomePage:React.FC = () => {
           </div>
         </div>
       </div>
-      
-    </div>  
-    
-  )
-}
+    </div>
+  );
+};
 
-export default HomePage
+export default HomePage;

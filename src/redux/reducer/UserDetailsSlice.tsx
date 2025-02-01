@@ -1,5 +1,7 @@
 import { createSlice } from "@reduxjs/toolkit";
-import { getUserDetailsAction } from "../actions/getUserDetailsAction";
+import { GetUserDetailsAction } from "../actions/GetUserDetailsAction";
+// import { getUserDetailsAction } from "../actions/getUserDetailsAction";
+// import { getUserDetailsAction } from "../actions/getUserDetailsAction";
 
 interface UserState {
   userDetails: {
@@ -33,15 +35,15 @@ const userDetailsSlice = createSlice({
   },
   extraReducers: (builder) => {
     builder
-      .addCase(getUserDetailsAction.pending, (state) => {
+      .addCase(GetUserDetailsAction.pending, (state) => {
         state.loading = true;
         state.error = null;
       })
-      .addCase(getUserDetailsAction.fulfilled, (state, { payload }) => {
+      .addCase(GetUserDetailsAction.fulfilled, (state, { payload }) => {
         state.loading = false;
         state.userDetails = payload.user;
       })
-      .addCase(getUserDetailsAction.rejected, (state, action) => {
+      .addCase(GetUserDetailsAction.rejected, (state, action) => {
         state.loading = false;
         state.error = action.payload as string;
       });

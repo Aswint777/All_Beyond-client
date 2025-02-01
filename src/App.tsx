@@ -9,7 +9,11 @@ import Profile from './pages/common/Profile'
 import { useDispatch, useSelector } from 'react-redux'
 import { AppDispatch, RootState } from './redux/store'
 import { useEffect } from 'react'
-import { getUserDetailsAction } from './redux/actions/getUserDetailsAction'
+import { GetUserDetailsAction } from './redux/actions/GetUserDetailsAction'
+import InstructorApplyPage from './pages/common/InstructorApplyPage'
+import InstructorApplicationForm from './components/Forms/InstructorApplicationForm'
+import AddCategoryPage from './pages/Admin/AddCategoryPage'
+import categoryListPage from './pages/Admin/categoryListPage'
 
 function App() {
   const dispatch = useDispatch<AppDispatch>();
@@ -20,23 +24,31 @@ function App() {
   useEffect(() => {
     // ✅ Dispatch getUserDetailsAction ONLY if userDetails is null or undefined
     if (!userDetails) {
-      dispatch(getUserDetailsAction());
+      dispatch(GetUserDetailsAction());
     }
   }, [dispatch, userDetails]); // ✅ Depend on userDetails, so it only runs when necessary
 
   return (
     <>
-     {loading ? <p>Loading user details...</p> : <p>Welcome, {userDetails?.email}</p>}
+     {/* {loading ? <p>Loading user details...</p> : <p>Welcome, {userDetails?.email}</p>} */}
      {/* Other Routes */}
     <div>
       <BrowserRouter>
       <Routes>
+
         <Route path='/' Component={HomePage}/>
         <Route path='/login' Component={LoginPage}/>
         <Route path='/SignUP' Component={SignUpPage}/>
         <Route path='/OtpVerify' Component={OtpVerifyPage}/>
-        <Route path='/admin/AdminStudentsListPage' Component={AdminStudentsListPage}/>
         <Route path='/Profile' Component={Profile}/>
+        <Route path='/InstructorApplyPage' Component={InstructorApplyPage} />
+        <Route path='/InstructorApplicationForm' Component={InstructorApplicationForm} />
+
+
+        <Route path='/admin/AdminStudentsListPage' Component={AdminStudentsListPage}/>
+        <Route path='/admin/AddCategoryPage' Component={AddCategoryPage}/>
+        <Route path='/admin/categoryListPage' Component={categoryListPage} />
+
       </Routes>
 
 

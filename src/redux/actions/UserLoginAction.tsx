@@ -12,8 +12,8 @@ export const UserLoginAction = createAsyncThunk(
     async ({ email,password  }: LoginPayLoad, { rejectWithValue }) => {
         try {
             console.log(email,password,'login action');
-            
-            const API_URL = "http://localhost:5000"; // Update this URL as needed
+            const API_URL = import.meta.env.VITE_REACT_APP_API_URL!;
+
             const response = await axios.post(`${API_URL}/auth/login`, { email, password }, config);
             console.log(response,'response is here the login');
             
