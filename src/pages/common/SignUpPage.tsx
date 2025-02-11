@@ -4,30 +4,51 @@ import { AppDispatch, RootState } from "../../redux/store";
 import { sendSignUpData, updateField } from "../../redux/reducer/UserSlice";
 import { useNavigate } from "react-router-dom";
 import BasicNavbar from "../../components/layout/BasicNavbar";
+import { SignUpErrors, validateSignUp } from "../../components/validation/SignUpErrors";
+// import { validateSignUp, SignUpErrors } from "../../utils/validateSignUp"; // Import validation
 
 const SignUpPage: React.FC = () => {
   const navigate = useNavigate();
   const dispatch = useDispatch<AppDispatch>();
 
-  // const [error, setError] = useState<string>("");
   const { formValues, loading, error, requiresOTP } = useSelector(
     (state: RootState) => state.signUp
   );
-  console.log(error, "from use selecter");
 
-  console.log(requiresOTP, "signup page return require otp");
+  const [errors, setErrors] = useState<SignUpErrors>({});
 
   const handleChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
     await dispatch(updateField({ field: name, value }));
+
+    // Validate field in real-time
+    const validationErrors = validateSignUp(
+      name === "name" ? value : formValues.name,
+      name === "email" ? value : formValues.email,
+      name === "password" ? value : formValues.password,
+      name === "confirmPassword" ? value : formValues.confirmPassword
+    );
+    setErrors(validationErrors);
   };
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
+    const validationErrors = validateSignUp(
+      formValues.name,
+      formValues.email,
+      formValues.password,
+      formValues.confirmPassword
+    );
+
+    if (Object.keys(validationErrors).length > 0) {
+      setErrors(validationErrors);
+      return;
+    }
+
     await dispatch(sendSignUpData(formValues));
   };
+
   React.useEffect(() => {
-    console.log(requiresOTP, "requiresOTP state in useEffect");
     if (requiresOTP) {
       navigate("/OtpVerify");
     }
@@ -38,7 +59,7 @@ const SignUpPage: React.FC = () => {
       <BasicNavbar />
       <div className="flex justify-center items-center min-h-screen bg-slate-50">
         <img
-          src="\src\assets\images\Discover-the-Bright-Side-The-Surprising-Benefits-of-Online-Learning.png"
+          src="/src/assets/images/Discover-the-Bright-Side-The-Surprising-Benefits-of-Online-Learning.png"
           alt="Local Image"
           className="w-1/2 h-full object-cover"
         />
@@ -50,6 +71,7 @@ const SignUpPage: React.FC = () => {
           {error && (
             <div className="text-red-500 text-sm mb-4 text-center">{error}</div>
           )}
+
           <div className="mb-4">
             <label className="block text-sm font-medium text-gray-700 mb-1">
               Name
@@ -62,7 +84,11 @@ const SignUpPage: React.FC = () => {
               className="w-full px-3 py-2 border rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500"
               required
             />
+            {errors.name && (
+              <p className="text-red-500 text-xs mt-1">{errors.name}</p>
+            )}
           </div>
+
           <div className="mb-4">
             <label className="block text-sm font-medium text-gray-700 mb-1">
               Email
@@ -75,7 +101,11 @@ const SignUpPage: React.FC = () => {
               className="w-full px-3 py-2 border rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500"
               required
             />
+            {errors.email && (
+              <p className="text-red-500 text-xs mt-1">{errors.email}</p>
+            )}
           </div>
+
           <div className="mb-4">
             <label className="block text-sm font-medium text-gray-700 mb-1">
               Password
@@ -88,7 +118,11 @@ const SignUpPage: React.FC = () => {
               className="w-full px-3 py-2 border rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500"
               required
             />
+            {errors.password && (
+              <p className="text-red-500 text-xs mt-1">{errors.password}</p>
+            )}
           </div>
+
           <div className="mb-4">
             <label className="block text-sm font-medium text-gray-700 mb-1">
               Confirm Password
@@ -101,7 +135,11 @@ const SignUpPage: React.FC = () => {
               className="w-full px-3 py-2 border rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500"
               required
             />
+            {errors.confirmPassword && (
+              <p className="text-red-500 text-xs mt-1">{errors.confirmPassword}</p>
+            )}
           </div>
+
           <button
             type="submit"
             className="w-full bg-indigo-600 text-white py-2 rounded-lg hover:bg-indigo-700 transition"
