@@ -57,7 +57,7 @@ export const UserLoginAction = createAsyncThunk(
 
 export const UserLogOutAction = createAsyncThunk(
     "user/logOut",
-     async (_,{ rejectWithValue }) => {
+     async (_,{ dispatch,rejectWithValue }) => {
       try {
         
         const API_URL = import.meta.env.VITE_REACT_APP_API_URL!;
@@ -68,6 +68,7 @@ export const UserLogOutAction = createAsyncThunk(
         console.log('zzzzzzzzzzzz');
   
         console.log("User LogOut successful:", response.data);  
+        await dispatch(GetUserDetailsAction())
         return response.data;
       } catch (error: any) {
         console.log("LogOut error:", error);

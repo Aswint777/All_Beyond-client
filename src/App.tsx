@@ -45,7 +45,7 @@ function App() {
         <div>
           <BrowserRouter>
             <Routes>
-              \
+              
               <Route element={<HomeRout />}>
                 <Route path="/" element={<HomePage />} />
               </Route>
