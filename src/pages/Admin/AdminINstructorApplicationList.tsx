@@ -61,6 +61,27 @@ const AdminInstructorApplicationList = () => {
       alert("Failed to update status. Please try again.");
     }
   };
+  
+  const handleBlockUnblock = async (
+    _id: string,
+    status: boolean,
+    userid: string
+  ) => {
+    try {
+      const API_URL = import.meta.env.VITE_REACT_APP_API_URL!;
+      const response = await axios.put(`${API_URL}/admin/block_UnBlock`, {
+        userId: userid,
+        isBlocked: status,
+      });
+      if (response.status === 200) {
+        setStudents((prevStudents) =>
+          prevStudents.map((student) =>
+            student._id === _id ? { ...student, isBlocked: status } : student
+          )
+        );
+      }
+    } catch (error) {}
+  };
 
   // Pagination logic
   const totalPages = Math.ceil(students.length / itemsPerPage);
@@ -110,16 +131,20 @@ const AdminInstructorApplicationList = () => {
                 </td>
 
                 <td className="px-4 py-2 border">
-                  {student.isBlocked ? (
+                {student.isBlocked ? (
                     <button
-                      onClick={() => handleStatusChange(student._id, "approved")}
+                      onClick={() =>
+                        handleBlockUnblock(student._id, false, student.userId)
+                      }
                       className="px-4 py-1 bg-orange-500 text-white rounded-md"
                     >
                       Unblock
                     </button>
                   ) : (
                     <button
-                      onClick={() => handleStatusChange(student._id, "rejected")}
+                      onClick={() =>
+                        handleBlockUnblock(student._id, true, student.userId)
+                      }
                       className="px-4 py-1 bg-blue-500 text-white rounded-md"
                     >
                       Block

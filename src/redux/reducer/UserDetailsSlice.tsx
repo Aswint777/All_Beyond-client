@@ -5,6 +5,7 @@ import { GetUserDetailsAction } from "../actions/GetUserDetailsAction";
 
 interface UserState {
   userDetails: {
+     userId :string
     email: string;
     role: string;
     username: string;
@@ -13,7 +14,12 @@ interface UserState {
     lastName:string
     isBlocked:boolean
     isVerified:boolean   
-    contacts :Number 
+    contactNumber :string 
+    instagram:string
+    facebook:string
+    linkedin:string
+    profilePhoto:string
+
   } | null;
   loading: boolean;
   error: string | null;

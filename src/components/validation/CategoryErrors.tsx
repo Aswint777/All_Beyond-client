@@ -14,7 +14,7 @@ export interface categoryErrors {
     if (!name.trim()) {
       errors.name = "Name is required.";
     }
-    if (!description) {
+    if (!description.trim()) {
       errors.description = "description is required."
     } 
     if (!type) {

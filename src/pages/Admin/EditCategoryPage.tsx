@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 import axios from "axios";
 
@@ -13,22 +13,40 @@ const EditCategoryPage = () => {
     type: type || "Free",
   });
 
+  const [errorMessage, setErrorMessage] = useState<string | null>(null); // ✅ Error state
+
+  // ✅ Automatically clear errors after 30 seconds
+  useEffect(() => {
+    if (errorMessage) {
+      const timer = setTimeout(() => {
+        setErrorMessage(null);
+      }, 3000); // 30s delay
+
+      return () => clearTimeout(timer); // Cleanup timeout
+    }
+  }, [errorMessage]);
+
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>) => {
     const { name, value } = e.target;
     setFormData(prev => ({ ...prev, [name]: value }));
+
+    setErrorMessage(null); // ✅ Clear error when user starts typing
   };
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    
+
     try {
       const API_URL = import.meta.env.VITE_REACT_APP_API_URL;
-      console.log("id:",id,"formdata:",formData);
-      
+      console.log("id:", id, "formData:", formData);
+
       await axios.put(`${API_URL}/admin/editCategory/${id}`, formData);
       navigate("/admin/categoryListPage");
     } catch (err: any) {
-      console.error("Error updating category:", err.message);
+      console.error("Error updating category:", err);
+
+      // ✅ Capture and set API error message
+      setErrorMessage(err.response?.data?.error || "An unexpected error occurred.");
     }
   };
 
@@ -40,7 +58,12 @@ const EditCategoryPage = () => {
 
       <div className="bg-white shadow-lg rounded-lg p-8 max-w-lg w-full">
         <h2 className="text-2xl font-semibold mb-6 text-center">Edit Category</h2>
-        
+
+        {/* ✅ Show error message */}
+        {errorMessage && (
+          <p className="text-red-500 text-center mb-4">{errorMessage}</p>
+        )}
+
         <form onSubmit={handleSubmit} className="space-y-4">
           <div>
             <label className="block text-sm font-medium text-gray-700 mb-1">Category Name</label>

@@ -46,7 +46,7 @@ export const googleAuthAction = createAsyncThunk(
       
       if (response.data.success) {
         // localStorage.setItem("token", response.data); // ✅ Store JWT for authentication
-              dispatch(GetUserDetailsAction());
+            dispatch(GetUserDetailsAction());
         
         return response.data;
       } else {

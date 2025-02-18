@@ -4,26 +4,35 @@ import { useSelector } from "react-redux";
 import { RootState } from "../../redux/store";
 import UserNavbar from "../../components/layout/UserNavbar";
 import StudentSideBar from "../../components/layout/StudentSideBar";
+import axios from "axios";
+import { config } from "../../configaration/Config";
 
 const Profile: React.FC = () => {
   const { userDetails } = useSelector((state: RootState) => state.user);
+  
+  const [profileImage, setProfileImage] = useState<string>(
+    userDetails?.profilePhoto || dummyImage
+  );
+  const [selectedFile, setSelectedFile] = useState<File | null>(null); // ✅ Store selected image file
 
-  const [profileImage, setProfileImage] = useState<string>(dummyImage);
+
   const [formData, setFormData] = useState({
+    userId :userDetails?.userId,
     firstName: userDetails?.firstName || "",
     lastName: userDetails?.lastName || "",
     email: userDetails?.email || "",
-    phone: "",
-    linkedin: "",
-    facebook: "",
-    instagram: "",
+    contactNumber: userDetails?.contactNumber,
+    linkedin:userDetails?.linkedin|| "",
+    facebook:userDetails?.facebook|| "",
+    instagram: userDetails?.instagram||"",
     currentPassword: "",
     newPassword: "",
     confirmPassword: "",
   });
-
+  
+  console.log(formData,"????????????");
   useEffect(() => {
-    console.log("Profile updated:", userDetails);
+    console.log("Profile updated:", userDetails);    
   }, [userDetails]);
 
   // ✅ Handle Text Input Changes
@@ -32,20 +41,58 @@ const Profile: React.FC = () => {
     setFormData((prev) => ({ ...prev, [name]: value }));
   };
 
-  // ✅ Handle Profile Image Change
   const handleImageChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     const file = event.target.files?.[0];
     if (file) {
+      setSelectedFile(file); // ✅ Store file for upload
       const imageUrl = URL.createObjectURL(file);
       setProfileImage(imageUrl);
     }
   };
+  
+  
+
+  // ✅ Separate API Call for Profile Photo Upload
+  const uploadProfilePhoto = async () => {
+    if (!selectedFile) {
+      alert("Please select an image to upload.");
+      return;
+    }
+  
+    try {
+      const API_URL = import.meta.env.VITE_REACT_APP_API_URL;
+      const formData = new FormData();
+  
+      formData.append("profilePhoto", selectedFile); // ✅ Use selectedFile correctly
+      formData.append("userId", userDetails?.userId || "");
+  
+      console.log("Uploading file:", selectedFile); // ✅ Debugging log
+  
+      const response = await axios.put(`${API_URL}/auth/uploadProfilePhoto`, formData, {
+        headers: { "Content-Type": "multipart/form-data" },
+        withCredentials: true,
+      });
+  
+      if (response.status === 200) {
+        setProfileImage(response.data.profilePhoto); // ✅ Update UI
+        alert("Profile photo updated successfully!");
+      }
+    } catch (error) {
+      console.error("Error uploading profile photo:", error);
+      alert("Failed to upload profile photo.");
+    }
+  };
+  
+
 
   // ✅ Handle Form Submission
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async(e: React.FormEvent) => {
     e.preventDefault();
+    const API_URL = import.meta.env.VITE_REACT_APP_API_URL;
     console.log("Updated Profile Data:", formData);
     alert("Profile updated successfully!");
+    const updateProfile = await axios.put(`${API_URL}/auth/updateProfile`,formData,config)
+    if(updateProfile) alert('response is here success')
   };
 
   return (
@@ -67,7 +114,7 @@ const Profile: React.FC = () => {
 
           <form className="grid grid-cols-2 gap-6" onSubmit={handleSubmit}>
             {/* Personal Details */}
-            {["firstName", "lastName", "email", "phone"].map((field) => (
+            {["firstName", "lastName", "email", "contactNumber"].map((field) => (
               <div key={field}>
                 <label className="block text-sm font-medium mb-1">
                   {field.charAt(0).toUpperCase() + field.slice(1)}
@@ -155,6 +202,13 @@ const Profile: React.FC = () => {
             className="hidden"
             onChange={handleImageChange}
           />
+            <button
+            onClick={uploadProfilePhoto} // ✅ Upload Image Separately
+            className="mt-2 bg-blue-500 text-white px-4 py-2 rounded"
+            disabled={!selectedFile}
+          >
+            Update Photo
+          </button>
           <p className="mt-2 text-lg font-semibold text-gray-700">
             {formData.firstName}
           </p>

@@ -133,9 +133,9 @@ const OtpVerifyPage: React.FC = () => {
           </div>
           {error && <p className="text-red-500 text-sm">{error}</p>}
           {reduxError && <p className="text-red-500 text-sm">{reduxError}</p>}
-          {loading ? (
-            <p>Loading...</p>
-          ) : (
+
+          {/* ✅ Hide "Verify OTP" when "Resend OTP" is visible */}
+          {!resendEnabled && !loading && (
             <button
               type="submit"
               className="bg-blue-500 text-white py-2 px-4 rounded-lg hover:bg-blue-600 transition"
@@ -143,10 +143,14 @@ const OtpVerifyPage: React.FC = () => {
               Verify OTP
             </button>
           )}
+
+          {loading && <p>Loading...</p>}
+
           {isOtpVerified && (
             <p className="text-green-500 text-sm">OTP Verified Successfully!</p>
           )}
         </form>
+
         {/* Timer and Resend OTP Button */}
         <div className="mt-4 text-center">
           {resendEnabled ? (

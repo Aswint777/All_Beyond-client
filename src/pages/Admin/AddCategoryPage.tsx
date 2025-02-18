@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
 import { config } from "../../configaration/Config";
@@ -15,6 +15,18 @@ const AddCategoryPage: React.FC = () => {
 
   const [errors, setErrors] = useState<categoryErrors>({});
   const [successMessage, setSuccessMessage] = useState<string | null>(null);
+  const [apiError, setApiError] = useState<string | null>(null); // ✅ Added API error state
+
+  useEffect(() => {
+    if (apiError) {
+      const timer = setTimeout(() => {
+        setApiError(null);
+      }, 3000); // 30s delay
+
+      return () => clearTimeout(timer); // Cleanup timeout
+    }
+  }, [apiError]);
+
 
   const handleChange = (
     e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>
@@ -29,7 +41,6 @@ const AddCategoryPage: React.FC = () => {
       name === "type" ? value : formData.type
     );
   
-    // ✅ Remove error if field is now valid
     setErrors((prevErrors) => {
       if (!newErrors[name as keyof categoryErrors]) {
         const updatedErrors = { ...prevErrors };
@@ -38,8 +49,9 @@ const AddCategoryPage: React.FC = () => {
       }
       return { ...prevErrors, ...newErrors };
     });
+
+    setApiError(null); // ✅ Clear API errors when user starts typing
   };
-  
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -47,7 +59,6 @@ const AddCategoryPage: React.FC = () => {
     const validationErrors = validateCategory(formData.name, formData.description, formData.type);
     setErrors(validationErrors);
 
-    // ❌ FIX: Ensure we stop submission if validationErrors contains any values
     if (Object.values(validationErrors).some((error) => error)) {
       return;
     }
@@ -62,12 +73,17 @@ const AddCategoryPage: React.FC = () => {
         config
       );
 
-      if (response) {
+      if (response.status === 201) {
         setSuccessMessage("Category added successfully! 🎉");
+        setApiError(null); // ✅ Clear API errors if successful
+
         setTimeout(() => navigate("/admin/categoryListPage"), 2000);
       }
-    } catch (error) {
+    } catch (error: any) {
       console.error("Error adding category:", error);
+      
+      // ✅ Set API error message
+      setApiError(error.response?.data?.error || "An unexpected error occurred.");
     }
   };
 
@@ -80,12 +96,18 @@ const AddCategoryPage: React.FC = () => {
       >
         ← Back
       </button>
+
       <div className="relative bg-white shadow-lg rounded-lg p-8 max-w-lg w-full">
         <h2 className="text-2xl font-semibold mb-6 text-center">Add Category</h2>
 
         {/* ✅ Success Message */}
         {successMessage && (
           <p className="text-green-600 text-center mb-4">{successMessage}</p>
+        )}
+
+        {/* ✅ API Error Message */}
+        {apiError && (
+          <p className="text-red-500 text-center mb-4">{apiError}</p>
         )}
 
         <form onSubmit={handleSubmit} className="space-y-4">

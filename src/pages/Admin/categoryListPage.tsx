@@ -3,6 +3,7 @@ import { Edit, Ban, Plus } from "lucide-react"; // Import icons
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
 import EditCategoryPage from "./EditCategoryPage";
+import AdminSideBar from "../../components/layout/AdminSideBar";
 
 interface Category {
   _id: string;
@@ -74,73 +75,77 @@ const CategoryListPage: React.FC = () => {
     });
   };
   return (
-    <div className="min-h-screen p-8 bg-gray-100">
-      {/* Header Section */}
-      <div className="flex justify-between items-center mb-6">
-        <h2 className="text-3xl font-bold">Category List</h2>
-        <button
-          className="flex items-center gap-2 bg-blue-500 text-white px-4 py-2 rounded-lg hover:bg-blue-600 transition"
-          onClick={() => navigate("/admin/AddCategoryPage")}
-        >
-          <Plus size={20} /> Add Category
-        </button>
-      </div>
+    <div className="flex min-h-screen bg-gray-100">
+      {/* Sidebar (Fixed Left) */}
+      {/* <div className="w-1/4 min-h-screen bg-white shadow-lg sticky top-0"> */}
+        <AdminSideBar />
+      {/* </div> */}
 
-      {/* Category Grid */}
-      {loading ? (
-        <p>Loading categories...</p>
-      ) : error ? (
-        <p className="text-red-600">{error}</p>
-      ) : (
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-          {category.map(category => (
-            <div
-              key={category._id}
-              className={`p-6 rounded-lg shadow-lg flex flex-col justify-between ${
-                category.type === "Premium"
-                  ? "bg-purple-500 text-white"
-                  : "bg-white text-gray-900"
-              }`}
-            >
-              {/* Category Info */}
-              <div>
-                <h3 className="text-xl font-semibold">{category.name}</h3>
-                <span
-                  className={`inline-block mt-4 px-3 py-1 text-sm font-medium rounded ${
-                    category.type === "Premium"
-                      ? "bg-white text-purple-700"
-                      : "bg-gray-200 text-gray-700"
-                  }`}
-                >
-                  {category.type}
-                </span>
-                <p className="mt-2">{category.description}</p>
-              </div>
-
-              {/* Action Buttons */}
-              <div className="mt-4 flex justify-between">
-                <button
-                  onClick={() => handleEdit(category._id,category.name,category.description,category.type)}
-                  className="flex items-center gap-1 text-blue-600 hover:text-blue-800"
-                >
-                  <Edit size={18} /> Edit
-                </button>
-
-                <button
-                  onClick={() => handleBlock(category._id, category.isBlocked)}
-                  className={`flex items-center gap-1 ${
-                    category.isBlocked
-                      ? "text-green-600 hover:text-green-800"
-                      : "text-red-600 hover:text-red-800"
-                  }`}
-                >
-                  <Ban size={18} /> {category.isBlocked ? "Unblock" : "Block"}
-                </button>
-              </div>
-            </div>
-          ))}
+      {/* Main Content */}
+      <main className="flex-1 p-8">
+        {/* Header Section */}
+        <div className="flex justify-between items-center mb-6">
+          <h2 className="text-3xl font-bold">Category List</h2>
+          <button
+            className="flex items-center gap-2 bg-blue-500 text-white px-4 py-2 rounded-lg hover:bg-blue-600 transition"
+            onClick={() => navigate("/admin/AddCategoryPage")}
+          >
+            <Plus size={20} /> Add Category
+          </button>
         </div>
-      )}
+
+        {/* Category Grid */}
+        {loading ? (
+          <p>Loading categories...</p>
+        ) : error ? (
+          <p className="text-red-600">{error}</p>
+        ) : (
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+            {category.map((category) => (
+              <div
+                key={category._id}
+                className={`p-6 rounded-lg shadow-lg flex flex-col justify-between ${
+                  category.type === "Premium" ? "bg-purple-500 text-white" : "bg-white text-gray-900"
+                }`}
+              >
+                {/* Category Info */}
+                <div>
+                  <h3 className="text-xl font-semibold">{category.name}</h3>
+                  <span
+                    className={`inline-block mt-4 px-3 py-1 text-sm font-medium rounded ${
+                      category.type === "Premium"
+                        ? "bg-white text-purple-700"
+                        : "bg-gray-200 text-gray-700"
+                    }`}
+                  >
+                    {category.type}
+                  </span>
+                  <p className="mt-2">{category.description}</p>
+                </div>
+
+                {/* Action Buttons */}
+                <div className="mt-4 flex justify-between">
+                  <button
+                    onClick={() => handleEdit(category._id, category.name, category.description, category.type)}
+                    className="flex items-center gap-1 text-blue-600 hover:text-blue-800"
+                  >
+                    <Edit size={18} /> Edit
+                  </button>
+
+                  <button
+                    onClick={() => handleBlock(category._id, category.isBlocked)}
+                    className={`flex items-center gap-1 ${
+                      category.isBlocked ? "text-green-600 hover:text-green-800" : "text-red-600 hover:text-red-800"
+                    }`}
+                  >
+                    <Ban size={18} /> {category.isBlocked ? "Unblock" : "Block"}
+                  </button>
+                </div>
+              </div>
+            ))}
+          </div>
+        )}
+      </main>
     </div>
   );
 };

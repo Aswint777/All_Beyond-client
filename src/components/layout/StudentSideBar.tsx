@@ -4,16 +4,11 @@ import { NavLink } from 'react-router-dom';
 const StudentSideBar = () => {    
 
       const links = [
-        { name: "Overviewwww", path: "/admin/overview" },
-        { name: "Courses", path: "/admin/courses" },
-        { name: "Students", path: "/admin/AdminStudentsListPage" },
-        { name: "Instructors", path: "/admin/AdminInstructorApplicationList" },
-        { name: "Assessments", path: "/admin/assessments" },
-        { name: "Categories", path: "/admin/categoryListPage" },
-        { name: "Transactions", path: "/admin/transactions" },
-        { name: "Banners", path: "/admin/banners" },
-        { name: "Complaints", path: "/admin/complaints" },
-        { name: "Settings", path: "/admin/settings" },
+        { name: "Overview", path: "/overview" },
+        { name: "Courses", path: "/courses" },
+        { name: "Assessments", path: "/assessments" },
+        { name: "Complaints", path: "/complaints" },
+        { name: "Settings", path: "/settings" },
       ];
     
       return (
@@ -35,11 +30,7 @@ const StudentSideBar = () => {
                 {link.name}
               </NavLink>
             ))}
-            <button
-              className="block w-full text-left p-3 rounded-lg text-purple-700 hover:bg-purple-300"
-            >
-              LogOut
-            </button>
+
           </nav>
         </aside>
       );    
