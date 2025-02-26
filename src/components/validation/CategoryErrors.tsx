@@ -23,7 +23,7 @@ export interface categoryErrors {
     if(description.length < 10){
         errors.description = "description is too short."
     }
-    if(description.length > 30){
+    if(description.length > 60){
         errors.description = "description is too lengthy."
     }
     if (name.length < 3) {
