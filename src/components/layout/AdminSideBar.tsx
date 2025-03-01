@@ -1,9 +1,15 @@
 import axios from "axios";
 import React from "react";
-import { NavLink, useNavigate } from "react-router-dom";
+import { data, NavLink, useNavigate } from "react-router-dom";
+import { useModal } from "../context/ModalContext";
 
 const AdminSideBar = () => {
   const navigate = useNavigate();
+    const { openModal } = useModal(); // Use global modal
+    const test = `Are you sure you want to log out? Any unsaved changes will be lost. You can log in again anytime.`
+
+
+  
 
   const handleLogout = async () => {
     // const confirmLogout = window.confirm("Are you sure you want to log out?");
@@ -35,7 +41,7 @@ const AdminSideBar = () => {
     { name: "Overview", path: "/admin/overview" },
     { name: "Courses", path: "/admin/courses" },
     { name: "Students", path: "/admin/AdminStudentsListPage" },
-    { name: "Instructors", path: "/admin/AdminInstructorApplicationList" },
+    { name: "Instructors", path: "/admin/AdminInstructorListPage" },
     { name: "Assessments", path: "/admin/assessments" },
     { name: "Categories", path: "/admin/categoryListPage" },
     { name: "Transactions", path: "/admin/transactions" },
@@ -43,7 +49,7 @@ const AdminSideBar = () => {
     { name: "Complaints", path: "/admin/complaints" },
     { name: "Settings", path: "/admin/settings" },
   ];
-
+  
   return (
     <aside className="w-1/5 bg-purple-100 p-5 min-h-screen">
       <h1 className="text-xl font-bold mb-8 text-purple-700">Admin</h1>
@@ -65,7 +71,9 @@ const AdminSideBar = () => {
         ))}
         <button
           className="block w-full text-left p-3 rounded-lg text-purple-700 hover:bg-purple-300"
-          onClick={handleLogout}
+          // onClick={handleLogout}
+          onClick={() => openModal(handleLogout,test)}
+
         >
           LogOut
         </button>

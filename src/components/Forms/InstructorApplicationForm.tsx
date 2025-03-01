@@ -28,8 +28,9 @@ const InstructorApplicationForm: React.FC = () => {
   });
 
   const [formErrors, setFormErrors] = useState<InstructorApplicationErrors>({});
+  const [loading, setLoading] = useState(false); // ✅ Loading state
+  const [showSuccess, setShowSuccess] = useState(false); // ✅ Success popup state
 
-  // ✅ Validate form before submission
   const validateForm = () => {
     const errors = validateInstructorApplication(formData);
     setFormErrors(errors);
@@ -46,7 +47,6 @@ const InstructorApplicationForm: React.FC = () => {
     }));
   };
 
-  // ✅ Handle file upload and preview
   const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     if (e.target.files && e.target.files.length > 0) {
       const file = e.target.files[0];
@@ -61,15 +61,14 @@ const InstructorApplicationForm: React.FC = () => {
         ...prevErrors,
         [e.target.name]: "",
       }));
-
-      console.log(`Selected ${e.target.name}:`, file); // ✅ Debugging log
     }
   };
 
-  // ✅ Handle form submission
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!validateForm()) return;
+
+    setLoading(true); // ✅ Start loading
 
     const API_URL = import.meta.env.VITE_REACT_APP_API_URL!;
     const formDataObj = new FormData();
@@ -84,17 +83,20 @@ const InstructorApplicationForm: React.FC = () => {
       }
     });
 
-    console.log("Final FormData Contents:", [...formDataObj.entries()]); // ✅ Debugging log
-
     try {
       const _id = userDetails?._id;
       await axios.post(`${API_URL}/instructor/instructorApplication/${_id}`, formDataObj, {
         headers: { "Content-Type": "multipart/form-data" },
       });
 
-      navigate("/InstructorApplyPage");
-      alert("Application submitted successfully!");
+      setLoading(false);
+      setShowSuccess(true); // ✅ Show success popup
+      setTimeout(() => {
+        setShowSuccess(false);
+        navigate("/InstructorApplyPage");
+      }, 2000);
     } catch (error) {
+      setLoading(false);
       console.error("Error:", error);
       alert("An error occurred. Please try again.");
     }
@@ -105,7 +107,14 @@ const InstructorApplicationForm: React.FC = () => {
       <UserNavbar />
       <div className="relative flex flex-col items-center space-y-10 p-10">
         
-        {/* ✅ Profile Photo Preview & Upload (Top Right) */}
+        {/* ✅ Success Popup */}
+        {showSuccess && (
+          <div className="fixed top-20 right-10 bg-green-500 text-white px-6 py-3 rounded-lg shadow-lg">
+            🎉 Application submitted successfully!
+          </div>
+        )}
+
+        {/* ✅ Profile Photo Preview & Upload */}
         <div className="absolute top-5 right-5 flex flex-col items-center">
           <label htmlFor="profilePhotoInput" className="cursor-pointer">
             <img
@@ -174,9 +183,13 @@ const InstructorApplicationForm: React.FC = () => {
               {formErrors.educationFile && <p className="text-red-500 text-xs">{formErrors.educationFile}</p>}
             </div>
 
-            {/* ✅ Submit Button */}
-            <button type="submit" className="mt-4 bg-purple-500 text-white px-4 py-2 rounded-lg w-full">
-              Submit Application
+            {/* ✅ Submit Button with Loading */}
+            <button
+              type="submit"
+              className={`mt-4 px-4 py-2 rounded-lg w-full ${loading ? "bg-gray-400" : "bg-purple-500"} text-white`}
+              disabled={loading}
+            >
+              {loading ? "Submitting..." : "Submit Application"}
             </button>
           </form>
         </div>

@@ -34,7 +34,7 @@ const LoginPage: React.FC = () => {
     setErrors(validationErrors);
   };
 
-  const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
+  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     const validationErrors = validateLogin(loginValues.email, loginValues.password);
 
@@ -43,7 +43,7 @@ const LoginPage: React.FC = () => {
       return;
     }
 
-    dispatch(UserLoginAction(loginValues));
+    await dispatch(UserLoginAction(loginValues));
   };
 
   

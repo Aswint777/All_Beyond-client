@@ -1,4 +1,4 @@
-import { createSlice } from "@reduxjs/toolkit";
+import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 import { GetUserDetailsAction } from "../actions/GetUserDetailsAction";
 // import { getUserDetailsAction } from "../actions/getUserDetailsAction";
 // import { getUserDetailsAction } from "../actions/getUserDetailsAction";
@@ -38,6 +38,11 @@ const userDetailsSlice = createSlice({
     logoutUser: (state) => {
       state.userDetails = null; // Clear user details on logout
     },
+    updateProfilePhoto: (state, action: PayloadAction<string>) => {
+      if (state.userDetails) {
+        state.userDetails.profilePhoto = action.payload;
+      }
+    },
   },
   extraReducers: (builder) => {
     builder
@@ -56,5 +61,5 @@ const userDetailsSlice = createSlice({
   },
 });
 
-export const { logoutUser } = userDetailsSlice.actions;
+export const { logoutUser,updateProfilePhoto } = userDetailsSlice.actions;
 export default userDetailsSlice.reducer;

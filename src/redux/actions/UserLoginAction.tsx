@@ -1,36 +1,7 @@
-// import { createAsyncThunk } from "@reduxjs/toolkit"
-// import axios from "axios";
-// import { config } from "../../configaration/Config";
-
-// interface LoginPayLoad {
-//     email: string;
-//     password: string;
-//   }
-
-// export const UserLoginAction = createAsyncThunk(
-//     "auth/login",
-//     async ({ email,password  }: LoginPayLoad, { rejectWithValue }) => {
-//         try {
-//             console.log(email,password,'login action');
-//             const API_URL = import.meta.env.VITE_REACT_APP_API_URL!;
-
-//             const response = await axios.post(`${API_URL}/auth/login`, { email, password }, config);
-//             console.log(response,'response is here the login');
-            
-//             return response.data;
-//         } catch (error : any) {
-//             const errorResponse = error.response?.data;
-//       return rejectWithValue(errorResponse?.message || "An unknown error occurred");
-    
-//         }
-//     }
-// )
-
-
-
 import { createAsyncThunk } from "@reduxjs/toolkit";
 import axios from "axios";
 import { GetUserDetailsAction } from "./GetUserDetailsAction"; // Import it
+import { logoutUser } from "../reducer/UserDetailsSlice";
 
 export const UserLoginAction = createAsyncThunk(
   "user/login",
@@ -41,7 +12,7 @@ export const UserLoginAction = createAsyncThunk(
         withCredentials: true,
       });
 
-      console.log("User login successful:", response.data);
+      console.log("User login successful :", response.data);
 
       // ✅ Fetch user details immediately after login
       dispatch(GetUserDetailsAction());
@@ -68,7 +39,8 @@ export const UserLogOutAction = createAsyncThunk(
         console.log('zzzzzzzzzzzz');
   
         console.log("User LogOut successful:", response.data);  
-        await dispatch(GetUserDetailsAction())
+        // await dispatch(GetUserDetailsAction())
+        dispatch(logoutUser())
         return response.data;
       } catch (error: any) {
         console.log("LogOut error:", error);

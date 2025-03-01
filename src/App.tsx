@@ -21,6 +21,7 @@ import UserRoute from "./components/route/UserRoute";
 import CommonRout from "./components/route/CommonRout";
 import HomeRout from "./components/route/HomeRout";
 import { ModalProvider } from "./components/context/ModalContext";
+import AdminInstructorLIst from "./pages/Admin/AdminInstructorLIst";
 
 function App() {
   const dispatch = useDispatch<AppDispatch>();
@@ -86,6 +87,11 @@ function App() {
                 <Route
                   path="/admin/AdminStudentsListPage"
                   element={<AdminStudentsListPage />}
+                />
+
+                 <Route
+                  path="/admin/AdminInstructorListPage"
+                  element={<AdminInstructorLIst />}
                 />
               </Route>
             </Routes>
