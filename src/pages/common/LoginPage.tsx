@@ -4,17 +4,27 @@ import { useNavigate } from "react-router-dom";
 import { AppDispatch, RootState } from "../../redux/store";
 import { UserLoginAction } from "../../redux/actions/UserLoginAction";
 import BasicNavbar from "../../components/layout/BasicNavbar";
-import { LoginErrors, validateLogin } from "../../components/validation/LoginErrors";
-import { GoogleLogin, CredentialResponse } from "@react-oauth/google"; 
-import { googleAuthAction } from "../../redux/actions/GoogleAuthAction"; 
+import {
+  LoginErrors,
+  validateLogin,
+} from "../../components/validation/LoginErrors";
+import { GoogleLogin, CredentialResponse } from "@react-oauth/google";
+import { googleAuthAction } from "../../redux/actions/GoogleAuthAction";
 import { toast } from "react-toastify";
 
 const LoginPage: React.FC = () => {
   const navigate = useNavigate();
   const dispatch = useDispatch<AppDispatch>();
 
-  const { loading, error, isAuthenticated } = useSelector((state: RootState) => state.login);
+  // const { loading, error, isAuthenticated, userDetails } = useSelector(
+  //   (state: RootState) => state.user
+  // );
+
+  const { error, loading, isAuthenticated } = useSelector(
+    (state: RootState) => state.user
+  );
   const { userDetails } = useSelector((state: RootState) => state.user);
+  console.log(typeof error, "errrr");
 
   const [loginValues, setLoginValues] = useState({
     email: "",
@@ -22,6 +32,7 @@ const LoginPage: React.FC = () => {
   });
 
   const [errors, setErrors] = useState<LoginErrors>({});
+  const [localError, setLocalError] = useState<string | null>(null);
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
@@ -36,26 +47,51 @@ const LoginPage: React.FC = () => {
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    const validationErrors = validateLogin(loginValues.email, loginValues.password);
+    const validationErrors = validateLogin(
+      loginValues.email,
+      loginValues.password
+    );
 
     if (Object.keys(validationErrors).length > 0) {
       setErrors(validationErrors);
       return;
     }
 
-    await dispatch(UserLoginAction(loginValues));
+    // await dispatch(UserLoginAction(loginValues));
+    const response = await dispatch(UserLoginAction(loginValues));
+    //  alert(response.payload.data.role)
+    console.log(response, ";;;;;;;;;;;;;;;");
+
+    if (response.payload?.message) {
+      console.log("[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[");
+
+      setLocalError(response.payload.message); // Set local error
+      toast.error(response.payload.message); // Display error as a toast notification
+
+      // Hide the error after 2 seconds
+      setTimeout(() => setLocalError(null), 2000);
+      return;
+    }
+
+    if (response.payload.data.role === "admin") {
+      navigate("/admin/AdminStudentsListPage");
+    } else {
+      //  alert('here')
+      navigate("/");
+    }
   };
 
-  
   // ✅ Google Login Handler
-  const handleGoogleLoginSuccess = async (credentialResponse: CredentialResponse) => {
+  const handleGoogleLoginSuccess = async (
+    credentialResponse: CredentialResponse
+  ) => {
     try {
       const response = await dispatch(
         googleAuthAction({ credentials: credentialResponse, userType: "user" }) // ✅ Pass `userType`
       );
       if (response.payload.success) {
         console.log(response.payload.user);
-        
+
         navigate(`/`, { replace: true });
       } else {
         toast.error(response.payload.message ?? "Google login failed");
@@ -65,7 +101,7 @@ const LoginPage: React.FC = () => {
       toast.error("Google login failed");
     }
   };
-  
+
   // ✅ Google Login Failure Handler
   const handleGoogleLoginFailure = () => {
     toast.error("Google login failed");
@@ -90,13 +126,23 @@ const LoginPage: React.FC = () => {
           alt="Local Image"
           className="w-1/2 h-full object-cover"
         />
-        <form className="w-full max-w-md bg-white shadow-md rounded-lg p-6" onSubmit={handleSubmit}>
+        <form
+          className="w-full max-w-md bg-white shadow-md rounded-lg p-6"
+          onSubmit={handleSubmit}
+        >
           <h2 className="text-2xl font-bold text-center mb-4">Login</h2>
 
-          {error && <div className="text-red-500 text-sm mb-4 text-center">{error}</div>}
+          {/* {error && <div className="text-red-500 text-sm mb-4 text-center">{error}</div>} */}
+          {localError && (
+            <div className="text-red-500 text-sm mb-4 text-center transition-opacity duration-500">
+              {localError}
+            </div>
+          )}
 
           <div className="mb-4">
-            <label className="block text-sm font-medium text-gray-700 mb-1">Email</label>
+            <label className="block text-sm font-medium text-gray-700 mb-1">
+              Email
+            </label>
             <input
               type="email"
               name="email"
@@ -105,11 +151,15 @@ const LoginPage: React.FC = () => {
               className="w-full px-3 py-2 border rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500"
               required
             />
-            {errors.email && <p className="text-red-500 text-xs mt-1">{errors.email}</p>}
+            {errors.email && (
+              <p className="text-red-500 text-xs mt-1">{errors.email}</p>
+            )}
           </div>
 
           <div className="mb-4">
-            <label className="block text-sm font-medium text-gray-700 mb-1">Password</label>
+            <label className="block text-sm font-medium text-gray-700 mb-1">
+              Password
+            </label>
             <input
               type="password"
               name="password"
@@ -118,13 +168,17 @@ const LoginPage: React.FC = () => {
               className="w-full px-3 py-2 border rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500"
               required
             />
-            {errors.password && <p className="text-red-500 text-xs mt-1">{errors.password}</p>}
+            {errors.password && (
+              <p className="text-red-500 text-xs mt-1">{errors.password}</p>
+            )}
           </div>
 
           <button
             type="submit"
             className={`w-full py-2 rounded-lg transition ${
-              loading ? "bg-gray-400 cursor-not-allowed" : "bg-indigo-600 hover:bg-indigo-700 text-white"
+              loading
+                ? "bg-gray-400 cursor-not-allowed"
+                : "bg-indigo-600 hover:bg-indigo-700 text-white"
             }`}
             disabled={loading}
           >
@@ -135,9 +189,9 @@ const LoginPage: React.FC = () => {
           <div className="mt-4 flex justify-center">
             <GoogleLogin
               onSuccess={handleGoogleLoginSuccess}
-               onError={handleGoogleLoginFailure}
+              onError={handleGoogleLoginFailure}
             />
-         </div>
+          </div>
         </form>
       </div>
     </div>

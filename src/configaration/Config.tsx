@@ -14,7 +14,7 @@ export const appJson: AxiosRequestConfig = {
 };
 
 export const configMultiPart = {
-  headers: {
+  headers: {  
     "Content-Type": "multipart/form-data",
   },
   withCredentials: true,

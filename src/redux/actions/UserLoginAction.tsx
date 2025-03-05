@@ -15,7 +15,7 @@ export const UserLoginAction = createAsyncThunk(
       console.log("User login successful :", response.data);
 
       // ✅ Fetch user details immediately after login
-      dispatch(GetUserDetailsAction());
+      // dispatch(GetUserDetailsAction());
 
       return response.data;
     } catch (error: any) {

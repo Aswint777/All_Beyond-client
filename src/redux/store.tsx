@@ -1,14 +1,14 @@
 import { configureStore } from "@reduxjs/toolkit";
 import signUpReducer from "./reducer/UserSlice";
 import verifyOtpReducer from "./reducer/verifyOtpUserSlice";
-import loginReducer from "./reducer/UserLoginSlice";
+// import loginReducer from "./reducer/UserLoginSlice";
 import userDetailsReducer from "./reducer/UserDetailsSlice";
 
 const Store = configureStore({
   reducer: {
     signUp: signUpReducer,
     verifyOtp: verifyOtpReducer,
-    login: loginReducer,
+    // login: loginReducer,
     user: userDetailsReducer, 
   },
 });

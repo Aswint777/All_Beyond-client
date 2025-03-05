@@ -22,20 +22,27 @@ import CommonRout from "./components/route/CommonRout";
 import HomeRout from "./components/route/HomeRout";
 import { ModalProvider } from "./components/context/ModalContext";
 import AdminInstructorLIst from "./pages/Admin/AdminInstructorLIst";
+import { ROUTES } from "./utils/paths";
+import AdminDashboard from "./pages/Admin/AdminDashboard";
+// import { ROUTES } from "./constant";
 
 function App() {
   const dispatch = useDispatch<AppDispatch>();
   console.log("xxxxxxxxxxxxxx");
-  const { userDetails, loading } = useSelector(
+  const { userDetails } = useSelector(
     (state: RootState) => state.user
   );
   console.log(userDetails, "userDetails in the app.tsx");
 
   useEffect(() => {
     // ✅ Dispatch getUserDetailsAction ONLY if userDetails is null or undefined
-    if (!userDetails) {
-      dispatch(GetUserDetailsAction());
-    }
+    const fetchUserDetails = async () => {
+      if (!userDetails) {
+        await dispatch(GetUserDetailsAction());
+      }
+    };
+  
+    fetchUserDetails();
   }, [dispatch, userDetails]); // ✅ Depend on userDetails, so it only runs when necessary
 
   return (
@@ -48,49 +55,53 @@ function App() {
             <Routes>
               
               <Route element={<HomeRout />}>
-                <Route path="/" element={<HomePage />} />
+                <Route path={ROUTES.HOME} element={<HomePage />} />
               </Route>
               <Route element={<CommonRout />}>
-                <Route path="/SignUP" element={<SignUpPage />} />
-                <Route path="/login" element={<LoginPage />} />
-                <Route path="/OtpVerify" element={<OtpVerifyPage />} />
+                <Route path={ROUTES.SIGNUP} element={<SignUpPage />} />
+                <Route path={ROUTES.LOGIN} element={<LoginPage />} />
+                <Route path={ROUTES.OTP_VERIFY} element={<OtpVerifyPage />} />
               </Route>
               <Route element={<UserRoute />}>
-                <Route path="/Profile" element={<Profile />} />
+                <Route path={ROUTES.PROFILE} element={<Profile />} />
                 <Route
-                  path="/InstructorApplyPage"
+                  path={ROUTES.INSTRUCTOR_APPLY_PAGE}
                   element={<InstructorApplyPage />}
                 />
                 <Route
-                  path="/InstructorApplicationForm"
+                  path={ROUTES.INSTRUCTOR_APPLICATION_FORM}
                   element={<InstructorApplicationForm />}
                 />
               </Route>
               {/* Protected Admin Routes */}
               <Route element={<AdminRoute />}>
+              <Route
+                  path="/admin/AdminDashboard"
+                  element={<AdminDashboard />}
+                />
                 <Route
-                  path="/admin/AdminInstructorApplicationList"
+                  path={ROUTES.ADMIN_INSTRUCTOR_APPLICATION_LIST}
                   element={<AdminINstructorApplicationList />}
                 />
                 <Route
-                  path="/admin/categoryListPage"
+                  path={ROUTES.CATEGORY_LIST}
                   element={<CategoryListPage />}
                 />
                 <Route
-                  path="/admin/AddCategoryPage"
+                  path={ROUTES.ADD_CATEGORY}
                   element={<AddCategoryPage />}
                 />
                 <Route
-                  path="/admin/EditCategory"
+                  path={ROUTES.EDIT_CATEGORY}
                   element={<EditCategoryPage />}
                 />
                 <Route
-                  path="/admin/AdminStudentsListPage"
+                  path={ROUTES.ADMIN_STUDENT_LIST}
                   element={<AdminStudentsListPage />}
                 />
 
                  <Route
-                  path="/admin/AdminInstructorListPage"
+                  path={ROUTES.ADMIN_INSTRUCTOR_LIST}
                   element={<AdminInstructorLIst />}
                 />
               </Route>

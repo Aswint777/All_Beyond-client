@@ -60,7 +60,7 @@ export const sendSignUpData = createAsyncThunk(
         return rejectWithValue(
           errorResponse.errors
             .map((err: { message: string }) => err.message)
-            .join(", ")
+            .join(", ") 
         );
       }
       console.log(errorResponse?.message, "here error response 66");

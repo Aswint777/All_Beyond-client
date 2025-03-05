@@ -53,7 +53,9 @@ const EditCategoryPage = () => {
 
     try {
       const API_URL = import.meta.env.VITE_REACT_APP_API_URL;
-      await axios.put(`${API_URL}/admin/editCategory/${id}`, formData);
+      await axios.put(`${API_URL}/admin/editCategory/${id}`, formData, {
+        withCredentials: true,
+      });
       navigate("/admin/categoryListPage");
     } catch (err: any) {
       console.error("Error updating category:", err);

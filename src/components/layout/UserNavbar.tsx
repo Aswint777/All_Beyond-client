@@ -19,7 +19,9 @@ const UserNavbar: React.FC = () => {
     await dispatch(UserLogOutAction()).unwrap();
     localStorage.removeItem("jwtToken");
     localStorage.removeItem("access_token");
+    window.location.href = "/login";
     navigate("/login");
+
   };
 
   return (
