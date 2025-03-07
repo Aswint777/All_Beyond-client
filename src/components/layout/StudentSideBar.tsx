@@ -13,7 +13,7 @@ const StudentSideBar = () => {
     
       return (
         <aside className="w-1/5 bg-purple-100 p-5 min-h-screen">
-          <h1 className="text-xl font-bold mb-8 text-purple-700">Admin</h1>
+          <h1 className="text-xl font-bold mb-8 text-purple-700">Student</h1>
           <nav className="space-y-4">
             {links.map((link) => (
               <NavLink

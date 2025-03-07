@@ -7,6 +7,7 @@ import StudentSideBar from "../../components/layout/StudentSideBar";
 import axios from "axios";
 import { config } from "../../configaration/Config";
 import { updateProfilePhoto } from "../../redux/reducer/UserDetailsSlice";
+import InstructorSidebar from "../../components/layout/InstructorSidebar";
 
 const Profile: React.FC = () => {
   const dispatch = useDispatch(); // Initialize Redux dispatch
@@ -151,6 +152,7 @@ console.log(response);
           </div>
         )}
         <StudentSideBar />
+        {/* <InstructorSidebar/> */}
         <main className="flex-1 bg-white p-8">
           <h1 className="text-2xl font-bold text-red-600 mb-6">Edit Your Profile</h1>
 

@@ -24,6 +24,8 @@ import { ModalProvider } from "./components/context/ModalContext";
 import AdminInstructorLIst from "./pages/Admin/AdminInstructorLIst";
 import { ROUTES } from "./utils/paths";
 import AdminDashboard from "./pages/Admin/AdminDashboard";
+import AddCourse_Details from "./pages/Instructor/AddCourse_Details";
+import AddCourse_Content from "./pages/Instructor/AddCourse_Content";
 // import { ROUTES } from "./constant";
 
 function App() {
@@ -53,6 +55,10 @@ function App() {
         <div>
           <BrowserRouter>
             <Routes>
+
+              <Route path="/instructor/AddCourse_Details" element={<AddCourse_Details/>} />
+              <Route path="/instructor/AddCourse_Content" element={<AddCourse_Content/>} />
+
               
               <Route element={<HomeRout />}>
                 <Route path={ROUTES.HOME} element={<HomePage />} />
