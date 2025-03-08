@@ -26,6 +26,7 @@ import { ROUTES } from "./utils/paths";
 import AdminDashboard from "./pages/Admin/AdminDashboard";
 import AddCourse_Details from "./pages/Instructor/AddCourse_Details";
 import AddCourse_Content from "./pages/Instructor/AddCourse_Content";
+import AddCourse_Pricing from "./pages/Instructor/AddCourse_Pricing";
 // import { ROUTES } from "./constant";
 
 function App() {
@@ -55,10 +56,12 @@ function App() {
         <div>
           <BrowserRouter>
             <Routes>
-
+              
               <Route path="/instructor/AddCourse_Details" element={<AddCourse_Details/>} />
               <Route path="/instructor/AddCourse_Content" element={<AddCourse_Content/>} />
+              <Route path="/instructor/AddCourse_Pricing" element={<AddCourse_Pricing/>} />
 
+              
               
               <Route element={<HomeRout />}>
                 <Route path={ROUTES.HOME} element={<HomePage />} />
