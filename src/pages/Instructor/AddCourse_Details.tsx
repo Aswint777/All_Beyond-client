@@ -13,9 +13,8 @@ const AddCourse_Details = () => {
   const [category, setCategory] = useState("Personal Finance");
   const [instructorName, setInstructorName] = useState("");
   const [aboutInstructor, setAboutInstructor] = useState("");
-  const { updateFormData,formData } = useCourseForm();
+  const { updateFormData, formData } = useCourseForm();
   const navigate = useNavigate();
-
 
   const handleImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     if (e.target.files && e.target.files[0]) {
@@ -31,7 +30,7 @@ const AddCourse_Details = () => {
       instructorName,
       aboutInstructor,
       thumbnail: selectedImage,
-      isPaid,
+      // isPaid,
     });
     navigate("/instructor/AddCourse_Content");
   };
@@ -42,11 +41,10 @@ const AddCourse_Details = () => {
       setCategory(formData.category || "Personal Finance");
       setInstructorName(formData.instructorName || "");
       setAboutInstructor(formData.aboutInstructor || "");
-      setIsPaid(formData.isPaid || "");
+      // setIsPaid(formData.isPaid || "");
       setSelectedImage(formData.thumbnail || null);
     }
   }, [formData]);
-
 
   return (
     <div className="flex min-h-screen bg-gray-100">
@@ -73,6 +71,7 @@ const AddCourse_Details = () => {
             )}
             <input
               type="file"
+              // name="thumbnail"
               accept="image/*"
               onChange={handleImageChange}
               className="hidden"

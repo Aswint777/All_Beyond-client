@@ -19,41 +19,68 @@ const AddCourse_Pricing = () => {
         setFormData(prevData => ({ ...prevData, [name]: value }));
     };
     const { formData: contextData, resetFormData } = useCourseForm();
+    // const completeData = {
+    //           ...contextData,
+    //           ...formData,
+    //           isPaid: pricingOption,
+    //         };
 
-
-    const handleSubmit = async (e: React.FormEvent) => {
-        e.preventDefault();
-    
-        const completeData = {
-          ...contextData,
-          ...formData,
-          isPaid: pricingOption,
-        };
-    
-        try {
-            console.log(completeData,"complete data is here");
-            // let name = 'aswin'
-            const API_URL = import.meta.env.VITE_REACT_APP_API_URL;
-
-        //   const response = await axios.post("/instructor/createCourse", completeData,configMultiPart);
-        // const response = await axios.post(`${API_URL}/instructor/createCourse`, { name: "aswin" }, {
-        //     headers: { 
-        //         "Content-Type": "application/json" 
-        //     },
-        //     withCredentials: true,
-        // });
-        const response = await axios.post(`${API_URL}/instructor/createCourse`, completeData, configMultiPart);
-        
-        
-          console.log(response);
-          
-
-          console.log("Course added:", response.data);
-          resetFormData(); // Clear context data after successful submission
-        } catch (error) {
-          console.error("Error adding course:", error);
-        }
-      };
+            console.log(formData,'formData');   
+            console.log(contextData,'kkkk');
+                        
+            const handleSubmit = async (e: React.FormEvent) => {
+                e.preventDefault();
+            
+                if (!pricingOption) {
+                    console.error("Please select a pricing option.");
+                    return;
+                }
+            
+                const API_URL = import.meta.env.VITE_REACT_APP_API_URL;
+                const data = new FormData();
+            
+                data.append("title", contextData.title);
+                data.append("description", contextData.description);
+                data.append("category", contextData.category);
+                data.append("instructorName", contextData.instructorName);
+                data.append("aboutInstructor", contextData.aboutInstructor);
+                data.append("isPaid", pricingOption);
+            
+                if (pricingOption === "Premium") {
+                    data.append("price", formData.price);
+                    data.append("accountNumber", formData.accountNumber);
+                    data.append("email", formData.email);
+                    data.append("phone", formData.phone);
+                }
+            
+                if (contextData.thumbnail) {
+                    data.append("thumbnail", contextData.thumbnail);
+                }
+                // data.append("video",contextData.modules) 
+            
+                contextData.modules.forEach((module, moduleIndex) => {
+                    module.lessons.forEach((lesson, lessonIndex) => {
+                        if (lesson.video) {
+                            data.append(`video_${moduleIndex}_${lessonIndex}`, lesson.video);
+                        }
+                    });
+                });
+            
+                try {
+                    console.log("Submitting FormData...");
+                    const response = await axios.post(`${API_URL}/instructor/createCourse`, data, {
+                        headers: { "Content-Type": "multipart/form-data" },
+                        withCredentials: true,
+                    });
+            
+                    console.log("Course added successfully:", response.data);
+                    resetFormData();
+                    setFormData({ price: '', accountNumber: '', email: '', phone: '' }); // ✅ Reset local form data
+                    setPricingOption(""); // ✅ Reset pricing option
+                } catch (error) {
+                    console.error("Error adding course:", error);
+                }
+            };
 
     return (
         <div className="flex min-h-screen bg-gray-100">
