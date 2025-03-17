@@ -28,7 +28,7 @@ export interface categoryErrors {
     }
     if (name.length < 3) {
       errors.name = "Category Name is too short.";
-    } else if (name.length > 15) {
+    } else if (name.length > 25) {
       errors.name = "Category Name is too lengthy.";
     }
 

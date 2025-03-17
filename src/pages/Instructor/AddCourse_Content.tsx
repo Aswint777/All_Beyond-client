@@ -8,7 +8,7 @@ import { v4 as uuidv4 } from "uuid";
 type Lesson = {
   id: string;
   title: string;
-  description: string;
+  lessonDescription: string;
   video: File | null;
 };
 
@@ -79,7 +79,7 @@ const AddCourse_Content = () => {
               ...module,
               lessons: [
                 ...module.lessons,
-                { id: uuidv4(), title: "", description: "", video: null },
+                { id: uuidv4(), title: "", lessonDescription: "", video: null },
               ],
             }
           : module
@@ -143,7 +143,7 @@ const AddCourse_Content = () => {
                 <div key={lesson.id} className="mb-4 border rounded-lg p-4 bg-white">
                   <h4 className="text-lg font-semibold mb-2">
                     Lesson {lessonIndex + 1}
-                  </h4>
+                  </h4> 
 
                   <input
                     type="text"
@@ -158,9 +158,9 @@ const AddCourse_Content = () => {
 
                   <textarea
                     placeholder="Lesson Description"
-                    value={lesson.description}
+                    value={lesson.lessonDescription}
                     onChange={(e) =>
-                      handleLessonChange(moduleIndex, lessonIndex, "description", e.target.value)
+                      handleLessonChange(moduleIndex, lessonIndex, "lessonDescription", e.target.value)
                     }
                     className="w-full mb-2 p-2 border border-gray-300 rounded-lg"
                     required

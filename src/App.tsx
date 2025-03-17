@@ -27,6 +27,7 @@ import AdminDashboard from "./pages/Admin/AdminDashboard";
 import AddCourse_Details from "./pages/Instructor/AddCourse_Details";
 import AddCourse_Content from "./pages/Instructor/AddCourse_Content";
 import AddCourse_Pricing from "./pages/Instructor/AddCourse_Pricing";
+import CourseList from "./pages/Instructor/CourseList";
 // import { ROUTES } from "./constant";
 
 function App() {
@@ -56,7 +57,7 @@ function App() {
         <div>
           <BrowserRouter>
             <Routes>
-              
+              <Route path="/instructor/courses" element={<CourseList/>} />
               <Route path="/instructor/AddCourse_Details" element={<AddCourse_Details/>} />
               <Route path="/instructor/AddCourse_Content" element={<AddCourse_Content/>} />
               <Route path="/instructor/AddCourse_Pricing" element={<AddCourse_Pricing/>} />

@@ -3,16 +3,19 @@ import InstructorSidebar from "../../components/layout/InstructorSidebar";
 import { useNavigate } from "react-router-dom";
 import CourseProgress from "../../components/reusableComponents/CourseProgress";
 import { useCourseForm } from "../../components/context/CourseFormContext";
+import axios from "axios";
 // import { useCourseForm } from "../../context/CourseFormContext";
 
 const AddCourse_Details = () => {
   const [selectedImage, setSelectedImage] = useState<File | null>(null);
   const [isPaid, setIsPaid] = useState<"Free" | "Paid" | "">("");
   const [title, setTitle] = useState("");
-  const [description, setDescription] = useState("");
-  const [category, setCategory] = useState("Personal Finance");
+  const [courseDescription, setDescription] = useState("");
+  const [category, setCategory] = useState("");
+  const [categories, setCategories] = useState<string[]>([]);
   const [instructorName, setInstructorName] = useState("");
   const [aboutInstructor, setAboutInstructor] = useState("");
+
   const { updateFormData, formData } = useCourseForm();
   const navigate = useNavigate();
 
@@ -25,7 +28,7 @@ const AddCourse_Details = () => {
   const handleNext = () => {
     updateFormData({
       title,
-      description,
+      courseDescription,
       category,
       instructorName,
       aboutInstructor,
@@ -35,10 +38,34 @@ const AddCourse_Details = () => {
     navigate("/instructor/AddCourse_Content");
   };
   useEffect(() => {
+    // Fetch categories from backend
+    const fetchCategories = async () => {
+      try {
+        const API_URL = import.meta.env.VITE_REACT_APP_API_URL;
+
+        const response = await axios.get(
+          `${API_URL}/instructor/courseCategories`
+        );
+
+        console.log("API Response:", response.data.data); // Debugging log
+        const categoryNames = response.data.data.map(
+          (category: any) => category.name
+        );
+
+        setCategories(categoryNames); // Ensure it's always an array
+      } catch (error) {
+        console.error("Error fetching categories:", error);
+        setCategories([]); // Fallback to an empty array to prevent errors
+      }
+    };
+
+    fetchCategories();
+  }, []);
+  useEffect(() => {
     if (formData) {
       setTitle(formData.title || "");
-      setDescription(formData.description || "");
-      setCategory(formData.category || "Personal Finance");
+      setDescription(formData.courseDescription || "");
+      setCategory(formData.category || "");
       setInstructorName(formData.instructorName || "");
       setAboutInstructor(formData.aboutInstructor || "");
       // setIsPaid(formData.isPaid || "");
@@ -90,7 +117,7 @@ const AddCourse_Details = () => {
           <textarea
             placeholder="Description"
             className="w-full mb-4 p-2 border border-gray-300 rounded-lg"
-            value={description}
+            value={courseDescription}
             onChange={(e) => setDescription(e.target.value)}
             required
           ></textarea>
@@ -100,9 +127,20 @@ const AddCourse_Details = () => {
             value={category}
             onChange={(e) => setCategory(e.target.value)}
           >
-            <option value="Personal Finance">Personal Finance</option>
-            <option value="Programming">Programming</option>
-            <option value="Design">Design</option>
+            <option value="" disabled>
+              Select a category
+            </option>
+            {Array.isArray(categories) && categories.length > 0 ? (
+              categories.map((cat, index) => (
+                <option key={index} value={cat}>
+                  {cat}
+                </option>
+              ))
+            ) : (
+              <option value="" disabled>
+                Loading categories...
+              </option>
+            )}
           </select>
 
           <input
