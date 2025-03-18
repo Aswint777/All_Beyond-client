@@ -2,7 +2,7 @@ import React from "react";
 import { useNavigate } from "react-router-dom";
 
 const BasicNavbar: React.FC = () => {
-  const navigate = useNavigate();
+  const navigate = useNavigate();  
   return (
     <nav className="bg-gray-100 shadow-md">
       <div className="container mx-auto px-4 py-3 flex justify-between items-center">

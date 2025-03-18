@@ -4,14 +4,22 @@ import { AppDispatch, RootState } from "../../redux/store";
 import { useNavigate } from "react-router-dom";
 import { UserLogOutAction } from "../../redux/actions/UserLoginAction";
 import { useModal } from "../context/ModalContext"; // Import global modal hook
+import axios from "axios";
+import { config } from "../../configaration/Config";
+import { GetUserDetailsAction } from "../../redux/actions/GetUserDetailsAction";
+
 
 const UserNavbar: React.FC = () => {
   const dispatch = useDispatch<AppDispatch>();
   const navigate = useNavigate();
   const [dropdownOpen, setDropdownOpen] = useState(false);
   const { openModal } = useModal(); // Use global modal
-
+  const [isSwitching, setIsSwitching] = useState(false);
+  // const [selected, setSelected] = useState(userDetails?.role || "student");
+  
   const { userDetails } = useSelector((state: RootState) => state.user);
+  
+  const [userRole, setUserRole] = useState(userDetails?.role || "student");
   
   console.log(userDetails, "Profile Photo URL");
 
@@ -23,6 +31,42 @@ const UserNavbar: React.FC = () => {
     navigate("/login");
 
   };
+
+
+  // ✅ Switch between Instructor & Student
+
+  const handleRoleSwitch = async () => {
+    try {
+      const API_URL = import.meta.env.VITE_REACT_APP_API_URL;
+      setIsSwitching(true);
+  
+      const response = await axios.put(`${API_URL}/auth/switchUserRole`, {}, config);
+  
+      if (response.status === 200) {
+        console.log("✅ Role switched successfully:", response.data.data.role);
+  
+        // Extract role from API response
+        const newRole = response.data.data.role || 
+                        (userRole === "instructor" ? "student" : "instructor");
+  
+        // Update the state so UI re-renders without reloading
+        setUserRole(newRole);
+      // ✅ Dispatch to Redux Store
+      console.log(response.data.data,"//////////////////////////////////");
+      
+      await dispatch(GetUserDetailsAction());
+
+      } else {
+        console.error("❌ Failed to switch roles:", response.data);
+      }
+    } catch (error) {
+      console.error("❌ Error switching roles:", error);
+    } finally {
+      setIsSwitching(false);
+    }
+  };
+  
+
 
   return (
     <nav className="bg-gray-100 shadow-md">
@@ -49,6 +93,37 @@ const UserNavbar: React.FC = () => {
             Teach
           </li>
           <li className="hover:text-gray-900 cursor-pointer">About Us</li>
+            {/* ✅ Show Switch Button Only for Instructors */}
+            {/* {userDetails?.status === "approved" && (
+  <li>
+    <button
+      onClick={handleRoleSwitch}
+      className={`px-4 py-1 ml-3 text-white rounded ${
+        isSwitching ? "bg-gray-400 cursor-not-allowed" : "bg-blue-500 hover:bg-blue-600"
+      } transition`}
+      disabled={isSwitching}
+    >
+      {isSwitching 
+        ? "Switching..." 
+        : `Switch to ${
+            userDetails?.role === "instructor" ? "Student" : "Instructor"
+          }`}
+    </button>
+  </li>
+)} */}
+<button
+  onClick={handleRoleSwitch}
+  className={`px-4 py-1 ml-3 text-white rounded ${
+    isSwitching ? "bg-gray-400 cursor-not-allowed" : "bg-blue-500 hover:bg-blue-600"
+  } transition`}
+  disabled={isSwitching}
+>
+  {isSwitching 
+    ? "Switching..." 
+    : `Switch to ${userRole === "instructor" ? "Student" : "Instructor"}`}
+</button>
+
+          
         </ul>
 
         {/* Profile Section */}

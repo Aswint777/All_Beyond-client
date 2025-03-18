@@ -151,7 +151,9 @@ console.log(response);
             🎉 Application submitted successfully!
           </div>
         )}
-        <StudentSideBar />
+          {userDetails?.role === "student" ? <StudentSideBar /> : <InstructorSidebar />}
+
+        {/* <StudentSideBar /> */}
         {/* <InstructorSidebar/> */}
         <main className="flex-1 bg-white p-8">
           <h1 className="text-2xl font-bold text-red-600 mb-6">Edit Your Profile</h1>

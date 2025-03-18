@@ -20,6 +20,7 @@ interface UserState {
     linkedin: string;
     profilePhoto: string;
     isAppliedInstructor: boolean; 
+    status:string
   } | null;
   loading: boolean;
   error: string | null;

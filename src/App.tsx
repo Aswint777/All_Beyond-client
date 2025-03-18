@@ -1,4 +1,4 @@
-import { BrowserRouter, Route, Routes } from "react-router-dom";
+import { BrowserRouter, Route, Routes, useViewTransitionState } from "react-router-dom";
 import "./App.css";
 import SignUpPage from "./pages/common/SignUpPage";
 import HomePage from "./pages/common/HomePage";
@@ -28,6 +28,7 @@ import AddCourse_Details from "./pages/Instructor/AddCourse_Details";
 import AddCourse_Content from "./pages/Instructor/AddCourse_Content";
 import AddCourse_Pricing from "./pages/Instructor/AddCourse_Pricing";
 import CourseList from "./pages/Instructor/CourseList";
+import InstructorRoute from "./components/route/InstructorRoute";
 // import { ROUTES } from "./constant";
 
 function App() {
@@ -45,6 +46,7 @@ function App() {
         await dispatch(GetUserDetailsAction());
       }
     };
+    console.log(userDetails,"---------------------------------------")
   
     fetchUserDetails();
   }, [dispatch, userDetails]); // ✅ Depend on userDetails, so it only runs when necessary
@@ -57,21 +59,22 @@ function App() {
         <div>
           <BrowserRouter>
             <Routes>
-              <Route path="/instructor/courses" element={<CourseList/>} />
-              <Route path="/instructor/AddCourse_Details" element={<AddCourse_Details/>} />
-              <Route path="/instructor/AddCourse_Content" element={<AddCourse_Content/>} />
-              <Route path="/instructor/AddCourse_Pricing" element={<AddCourse_Pricing/>} />
+             
+              {/* Home page  */}
 
-              
-              
-              <Route element={<HomeRout />}>
-                <Route path={ROUTES.HOME} element={<HomePage />} />
+                <Route element={<HomeRout />}>
+                <Route path={ROUTES.HOME} element={<HomePage />} /> 
               </Route>
+
+              {/* Common pages  */}
               <Route element={<CommonRout />}>
                 <Route path={ROUTES.SIGNUP} element={<SignUpPage />} />
                 <Route path={ROUTES.LOGIN} element={<LoginPage />} />
                 <Route path={ROUTES.OTP_VERIFY} element={<OtpVerifyPage />} />
               </Route>
+
+              {/* user pages  */}
+
               <Route element={<UserRoute />}>
                 <Route path={ROUTES.PROFILE} element={<Profile />} />
                 <Route
@@ -82,7 +85,19 @@ function App() {
                   path={ROUTES.INSTRUCTOR_APPLICATION_FORM}
                   element={<InstructorApplicationForm />}
                 />
+
+              {/* Instructor pages  */}
+
+               {/* <Route element={<InstructorRoute/>}> */}
+                
+              <Route path="/instructor/courses" element={<CourseList/>} />
+              <Route path="/instructor/AddCourse_Details" element={<AddCourse_Details/>} />
+              <Route path="/instructor/AddCourse_Content" element={<AddCourse_Content/>} />
+              <Route path="/instructor/AddCourse_Pricing" element={<AddCourse_Pricing/>} />
+               {/* </Route> */}
+
               </Route>
+
               {/* Protected Admin Routes */}
               <Route element={<AdminRoute />}>
               <Route
