@@ -111,10 +111,12 @@ const UserNavbar: React.FC = () => {
     </button>
   </li>
 )} */}
+             {userDetails?.status === "approved" && (
+
 <button
   onClick={handleRoleSwitch}
   className={`px-4 py-1 ml-3 text-white rounded ${
-    isSwitching ? "bg-gray-400 cursor-not-allowed" : "bg-blue-500 hover:bg-blue-600"
+    isSwitching ? "bg-gray-400 cursor-not-allowed" : "bg-gray-500 hover:bg-gray-700"
   } transition`}
   disabled={isSwitching}
 >
@@ -122,7 +124,7 @@ const UserNavbar: React.FC = () => {
     ? "Switching..." 
     : `Switch to ${userRole === "instructor" ? "Student" : "Instructor"}`}
 </button>
-
+             )}
           
         </ul>
 
@@ -156,7 +158,7 @@ const UserNavbar: React.FC = () => {
               <ul className="py-2">
                 <li
                   className="px-4 py-2 hover:bg-gray-100 cursor-pointer"
-                  onClick={() => navigate("/profile")}
+                  onClick={() => navigate("/profile")}  
                 >
                   Profile
                 </li>

@@ -177,6 +177,7 @@ const InstructorApplicationForm: React.FC = () => {
                 type="file"
                 name="educationFile"
                 className="border p-2 rounded w-full"
+                accept="application/pdf"
                 onChange={handleFileChange}
                 required
               />
