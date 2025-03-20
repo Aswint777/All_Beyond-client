@@ -1,6 +1,7 @@
 import axios from "axios";
 import React, { useEffect, useState } from "react";
 import AdminSideBar from "../../components/layout/AdminSideBar";
+import { useNavigate } from "react-router-dom";
 
 interface Student {
   _id: string;
@@ -21,6 +22,7 @@ const AdminInstructorApplicationList = () => {
   const [students, setStudents] = useState<Student[]>([]);
   const [loading, setLoading] = useState<boolean>(true);
   const [error, setError] = useState<string | null>(null);
+  const navigate = useNavigate()
 
   useEffect(() => {
     const fetchStudents = async () => {
@@ -76,6 +78,9 @@ const AdminInstructorApplicationList = () => {
       alert("Failed to update status. Please try again.");
     }
   };
+  const handleViewDetails = (userId:string) => {
+    navigate(`/admin/user_details/${userId}`);
+  };
 
   const handleBlockUnblock = async (
     _id: string,
@@ -122,11 +127,9 @@ const AdminInstructorApplicationList = () => {
               <th className="px-4 py-2 border">ID</th>
               <th className="px-4 py-2 border">Name</th>
               <th className="px-4 py-2 border">Email</th>
-              <th className="px-4 py-2 border">Contacts</th>
-              <th className="px-4 py-2 border">Qualification</th>
-              {/* <th className="px-4 py-2 border">Age</th> */}
               <th className="px-4 py-2 border">Status</th>
               <th className="px-4 py-2 border">Actions</th>
+              <th className="px-4 py-2 border">About</th>
             </tr>
           </thead>
           <tbody>
@@ -135,9 +138,6 @@ const AdminInstructorApplicationList = () => {
                 <td className="px-4 py-2 border">{student.userId}</td>
                 <td className="px-4 py-2 border">{student.username}</td>
                 <td className="px-4 py-2 border">{student.email}</td>
-                <td className="px-4 py-2 border">{student.contactNumber}</td>
-                <td className="px-4 py-2 border">{student.qualification}</td>
-                {/* <td className="px-4 py-2 border">{student.age}</td> */}
 
                 {/* ✅ Dropdown for Status */}
                 <td className="px-4 py-2 border">
@@ -178,6 +178,15 @@ const AdminInstructorApplicationList = () => {
                     </button>
                   )}
                 </td>
+                <td>
+
+      
+                    <button onClick={() => handleViewDetails(student.userId)} className="px-4 py-1 bg-green-500 text-white rounded-md">
+          View
+        </button>
+      
+    
+    </td>
               </tr>
             ))}
           </tbody>
@@ -217,106 +226,3 @@ const AdminInstructorApplicationList = () => {
 };
 
 export default AdminInstructorApplicationList;
-
-// import axios from "axios";
-// import React, { useEffect, useState } from "react";
-// import AdminSideBar from "../../components/layout/AdminSideBar";
-// import InstructorList from "../../components/reusableComponents/InstructorList";
-// import { useNavigate } from "react-router-dom";
-
-// interface Student {
-//   _id: string;
-//   username: string;
-//   email: string;
-//   isBlocked: boolean;
-//   userId: string;
-//   contactNumber: number;
-//   qualification: string;
-//   age: number;
-//   status: "pending" | "approved" | "rejected";
-// }
-
-// const AdminInstructorApplicationList = () => {
-//   const [students, setStudents] = useState<Student[]>([]);
-//   const [loading, setLoading] = useState<boolean>(true);
-//   const [error, setError] = useState<string | null>(null);
-//   const navigate = useNavigate();
-
-//   useEffect(() => {
-//     const fetchStudents = async () => {
-//       try {
-//         const API_URL = import.meta.env.VITE_REACT_APP_API_URL!;
-//         const response = await axios.get(`${API_URL}/admin/AdminInstructorApplicationList`);
-//         setStudents(response.data.data);
-//       } catch (err: any) {
-//         setError(err.message || "An error occurred while fetching students.");
-//       } finally {
-//         setLoading(false);
-//       }
-//     };
-//     fetchStudents();
-//   }, []);
-
-//   const handleStatusChange = async (id: string, newStatus: "pending" | "approved" | "rejected") => {
-//     try {
-//       const API_URL = import.meta.env.VITE_REACT_APP_API_URL!;
-//       const response = await axios.put(`${API_URL}/admin/updateInstructorStatus`, {
-//         Id: id,
-//         status: newStatus,
-//       });
-
-//       if (response.status === 200) {
-//         setStudents((prevStudents) =>
-//           prevStudents.map((student) => (student._id === id ? { ...student, status: newStatus } : student))
-//         );
-//       }
-//     } catch (error) {
-//       console.error("Error updating status:", error);
-//       alert("Failed to update status. Please try again.");
-//     }
-//   };
-
-//   const handleBlockUnblock = async (_id: string, status: boolean, userId: string) => {
-//     try {
-//       const API_URL = import.meta.env.VITE_REACT_APP_API_URL!;
-//       const response = await axios.put(`${API_URL}/admin/block_UnBlock`, {
-//         userId: userId,
-//         isBlocked: status,
-//       });
-//       if (response.status === 200) {
-//         setStudents((prevStudents) =>
-//           prevStudents.map((student) => (student._id === _id ? { ...student, isBlocked: status } : student))
-//         );
-//       }
-//     } catch (error) {
-//       console.error("Error updating block status:", error);
-//     }
-//   };
-
-//   return (
-//     <div className="min-h-screen bg-gray-100 flex">
-//       <AdminSideBar />
-
-//       <main className="flex-1 p-8">
-
-//         {loading ? (
-//           <p>Loading...</p>
-//         ) : error ? (
-//           <p className="text-red-500">{error}</p>
-//         ) : (
-//           <>
-//             {/* Pending & Rejected Instructors */}
-//             <InstructorList
-//               title="Instructor Applications"
-//               students={students.filter((s) => s.status !== "approved")}
-//               onStatusChange={handleStatusChange}
-//               onBlockUnblock={handleBlockUnblock}
-//             />
-//           </>
-//         )}
-//       </main>
-//     </div>
-//   );
-// };
-
-// export default AdminInstructorApplicationList;

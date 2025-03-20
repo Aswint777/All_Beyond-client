@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 
 export interface TableColumn<T> {
   label: string;
@@ -9,9 +9,24 @@ export interface TableColumn<T> {
 interface TableProps<T> {
   columns: TableColumn<T>[]; // Table columns
   data: T[]; // Table data
+  itemsPerPage?: number; // Items per page (optional)
 }
 
-const TableComponent = <T,>({ columns, data }: TableProps<T>) => {
+const TableComponent = <T,>({ columns, data, itemsPerPage = 5 }: TableProps<T>) => {
+  const [currentPage, setCurrentPage] = useState(1);
+
+  const totalPages = Math.ceil(data.length / itemsPerPage);
+  const startIndex = (currentPage - 1) * itemsPerPage;
+  const paginatedData = data.slice(startIndex, startIndex + itemsPerPage);
+
+  const goToPreviousPage = () => {
+    if (currentPage > 1) setCurrentPage(currentPage - 1);
+  };
+
+  const goToNextPage = () => {
+    if (currentPage < totalPages) setCurrentPage(currentPage + 1);
+  };
+
   return (
     <div className="overflow-x-auto">
       <table className="w-full border-collapse border border-gray-300">
@@ -25,14 +40,14 @@ const TableComponent = <T,>({ columns, data }: TableProps<T>) => {
           </tr>
         </thead>
         <tbody>
-          {data.length === 0 ? (
+          {paginatedData.length === 0 ? (
             <tr>
               <td colSpan={columns.length} className="text-center p-4">
                 No data available
               </td>
             </tr>
           ) : (
-            data.map((item, rowIndex) => (
+            paginatedData.map((item, rowIndex) => (
               <tr key={rowIndex} className="text-center">
                 {columns.map((col, colIndex) => (
                   <td key={colIndex} className="px-4 py-2 border">
@@ -48,6 +63,39 @@ const TableComponent = <T,>({ columns, data }: TableProps<T>) => {
           )}
         </tbody>
       </table>
+
+      {/* Pagination Controls */}
+      {totalPages > 1 && (
+        <div className="flex justify-center items-center gap-4 mt-4">
+          <button
+            onClick={goToPreviousPage}
+            disabled={currentPage === 1}
+            className={`px-3 py-1 border rounded ${
+              currentPage === 1 ? "bg-gray-300 cursor-not-allowed" : "bg-gray-300 text-white"
+            }`}
+          >
+            «
+            {/* Previous */}
+          </button>
+          <button className="px-3 py-1 border rounded-md text-sm bg-purple-500">
+
+      
+          {currentPage}
+            {/* Page {currentPage} of {totalPages} */}
+
+          </button>
+          <button
+            onClick={goToNextPage}
+            disabled={currentPage === totalPages}
+            className={`px-3 py-1 border rounded ${
+              currentPage === totalPages ? "bg-gray-300 cursor-not-allowed" : "bg-gray-400 text-white"
+            }`}
+          >
+            »
+            {/* Next */}
+          </button>
+        </div>
+      )}
     </div>
   );
 };

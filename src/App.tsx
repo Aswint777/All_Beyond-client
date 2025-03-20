@@ -29,6 +29,7 @@ import AddCourse_Content from "./pages/Instructor/AddCourse_Content";
 import AddCourse_Pricing from "./pages/Instructor/AddCourse_Pricing";
 import CourseList from "./pages/Instructor/CourseList";
 import InstructorRoute from "./components/route/InstructorRoute";
+import AdminUserDetails from "./pages/Admin/AdminUserDetails";
 // import { ROUTES } from "./constant";
 
 function App() {
@@ -129,6 +130,7 @@ function App() {
                   path={ROUTES.ADMIN_INSTRUCTOR_LIST}
                   element={<AdminInstructorLIst />}
                 />
+                <Route path="/admin/user_details/:userId" element={<AdminUserDetails/>} />
               </Route>
             </Routes>
           </BrowserRouter>

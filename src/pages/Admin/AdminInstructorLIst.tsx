@@ -33,6 +33,7 @@ const AdminInstructorListPage = () => {
   const [instructors, setInstructors] = useState<Instructor[]>([]);
   const [loading, setLoading] = useState<boolean>(true);
   const [error, setError] = useState<string | null>(null);
+  const navigate = useNavigate()
   // const [students, setStudents] = useState<Instructor[]>([]);
 
   const Navigate = useNavigate();
@@ -58,6 +59,10 @@ const AdminInstructorListPage = () => {
     };
     fetchInstructors();
   }, []);
+
+  const handleViewDetails = (instructor: Instructor) => {
+    navigate(`/admin/user_details/${instructor.userId}`);
+  };
 
   const handleBlockUnblock = async (
     id: string,
@@ -96,8 +101,8 @@ const AdminInstructorListPage = () => {
     { label: "ID", key: "userId" },
     { label: "Name", key: "username" },
     { label: "Email", key: "email" },
-    { label: "Qualification", key: "qualification" },
-    { label: "Age", key: "age" },
+    { label: "Contacts", key: "contactNumber" },
+    // { label: "Age", key: "age" },
     {
       label: "Actions",
       render: (instructor: Instructor) =>
@@ -128,6 +133,14 @@ const AdminInstructorListPage = () => {
             Block
           </button>
         ),
+    },
+    {
+      label: "About",
+      render: (instructor: Instructor) => (
+        <button onClick={() => handleViewDetails(instructor)} className="px-4 py-1 bg-green-500 text-white rounded-md">
+          View
+        </button>
+      ),
     },
   ];
 
