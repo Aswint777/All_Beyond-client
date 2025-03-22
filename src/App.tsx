@@ -1,4 +1,9 @@
-import { BrowserRouter, Route, Routes, useViewTransitionState } from "react-router-dom";
+import {
+  BrowserRouter,
+  Route,
+  Routes,
+  useViewTransitionState,
+} from "react-router-dom";
 import "./App.css";
 import SignUpPage from "./pages/common/SignUpPage";
 import HomePage from "./pages/common/HomePage";
@@ -30,14 +35,13 @@ import AddCourse_Pricing from "./pages/Instructor/AddCourse_Pricing";
 import CourseList from "./pages/Instructor/CourseList";
 import InstructorRoute from "./components/route/InstructorRoute";
 import AdminUserDetails from "./pages/Admin/AdminUserDetails";
+import AllCourses from "./pages/common/AllCourses";
 // import { ROUTES } from "./constant";
 
 function App() {
   const dispatch = useDispatch<AppDispatch>();
   console.log("xxxxxxxxxxxxxx");
-  const { userDetails } = useSelector(
-    (state: RootState) => state.user
-  );
+  const { userDetails } = useSelector((state: RootState) => state.user);
   console.log(userDetails, "userDetails in the app.tsx");
 
   useEffect(() => {
@@ -47,8 +51,8 @@ function App() {
         await dispatch(GetUserDetailsAction());
       }
     };
-    console.log(userDetails,"---------------------------------------")
-  
+    console.log(userDetails, "---------------------------------------");
+
     fetchUserDetails();
   }, [dispatch, userDetails]); // ✅ Depend on userDetails, so it only runs when necessary
 
@@ -60,11 +64,10 @@ function App() {
         <div>
           <BrowserRouter>
             <Routes>
-             
               {/* Home page  */}
 
-                <Route element={<HomeRout />}>
-                <Route path={ROUTES.HOME} element={<HomePage />} /> 
+              <Route element={<HomeRout />}>
+                <Route path={ROUTES.HOME} element={<HomePage />} />
               </Route>
 
               {/* Common pages  */}
@@ -72,6 +75,7 @@ function App() {
                 <Route path={ROUTES.SIGNUP} element={<SignUpPage />} />
                 <Route path={ROUTES.LOGIN} element={<LoginPage />} />
                 <Route path={ROUTES.OTP_VERIFY} element={<OtpVerifyPage />} />
+                <Route path="/courses" element={<AllCourses/>} />
               </Route>
 
               {/* user pages  */}
@@ -87,21 +91,29 @@ function App() {
                   element={<InstructorApplicationForm />}
                 />
 
-              {/* Instructor pages  */}
+                {/* Instructor pages  */}
 
-               {/* <Route element={<InstructorRoute/>}> */}
-                
-              <Route path="/instructor/courses" element={<CourseList/>} />
-              <Route path="/instructor/AddCourse_Details" element={<AddCourse_Details/>} />
-              <Route path="/instructor/AddCourse_Content" element={<AddCourse_Content/>} />
-              <Route path="/instructor/AddCourse_Pricing" element={<AddCourse_Pricing/>} />
-               {/* </Route> */}
+                {/* <Route element={<InstructorRoute/>}> */}
 
+                <Route path="/instructor/courses" element={<CourseList />} />
+                <Route
+                  path="/instructor/AddCourse_Details"
+                  element={<AddCourse_Details />}
+                />
+                <Route
+                  path="/instructor/AddCourse_Content"
+                  element={<AddCourse_Content />}
+                />
+                <Route
+                  path="/instructor/AddCourse_Pricing"
+                  element={<AddCourse_Pricing />}
+                />
+                {/* </Route> */}
               </Route>
 
               {/* Protected Admin Routes */}
               <Route element={<AdminRoute />}>
-              <Route
+                <Route
                   path="/admin/AdminDashboard"
                   element={<AdminDashboard />}
                 />
@@ -126,11 +138,14 @@ function App() {
                   element={<AdminStudentsListPage />}
                 />
 
-                 <Route
+                <Route
                   path={ROUTES.ADMIN_INSTRUCTOR_LIST}
                   element={<AdminInstructorLIst />}
                 />
-                <Route path="/admin/user_details/:userId" element={<AdminUserDetails/>} />
+                <Route
+                  path="/admin/user_details/:userId"
+                  element={<AdminUserDetails />}
+                />
               </Route>
             </Routes>
           </BrowserRouter>

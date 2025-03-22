@@ -28,12 +28,12 @@ interface ICourse {
     _id: string;
     name: string;
   };
-  thumbnailUrl?: string; 
+  thumbnailUrl?: string;
   rating?: number;
   reviews?: number;
 }
 
-const CourseList = () => {
+const AllCourses = () => {
   const navigate = useNavigate();
   const [courses, setCourses] = useState<ICourse[]>([]);
   const API_URL = import.meta.env.VITE_REACT_APP_API_URL;
@@ -42,7 +42,10 @@ const CourseList = () => {
     const fetchCourses = async () => {
       try {
         console.log("Fetching courses...");
-        const response = await axios.get<{ data: ICourse[] }>(`${API_URL}/instructor/courses`, config);
+        const response = await axios.get<{ data: ICourse[] }>(
+          `${API_URL}/courses`,
+          config
+        );
         console.log("Courses fetched:", response.data.data);
         setCourses(response.data.data);
       } catch (error) {
@@ -61,24 +64,30 @@ const CourseList = () => {
       {/* Main Content */}
       <div className="flex-1 p-8">
         <div className="flex justify-between items-center mb-6">
-          <h1 className="text-2xl font-bold">My Courses</h1>
-          <button
-            className="border-2 border-gray-500 p-3 text-white bg-black rounded-full hover:bg-gray-800 transition duration-300"
-            onClick={() => navigate("/instructor/AddCourse_Details")}
-          >
-            Create Course
-          </button>
+          <h1 className="text-2xl font-bold">All Courses</h1>
         </div>
 
         {/* Courses Grid */}
         <div className="grid grid-cols-3 gap-6 ">
           {courses.map((course) => (
-            <div key={course._id} className="bg-white shadow-md rounded-lg overflow-hidden bg-slate-300">
-              <img src={course.thumbnailUrl || "/default-course.jpg"} alt={course.courseTitle} className="w-full h-40 object-cover" /> {/* ✅ Uses thumbnailUrl */}
+            <div
+              key={course._id}
+              className="bg-white shadow-md rounded-lg overflow-hidden bg-slate-300"
+            >
+              <img
+                src={course.thumbnailUrl || "/default-course.jpg"}
+                alt={course.courseTitle}
+                className="w-full h-40 object-cover"
+              />{" "}
+              {/* ✅ Uses thumbnailUrl */}
               <div className="p-4">
                 <h2 className="text-lg font-semibold">{course.courseTitle}</h2>
-                <p className="text-sm text-gray-600">Instructor: {course.user?.name || "Unknown"}</p>
-                <p className="text-sm font-bold mt-2">⭐ {course.rating || 0} ({course.reviews || 0} Reviews)</p>
+                <p className="text-sm text-gray-600">
+                  Instructor: {course.user?.name || "Unknown"}
+                </p>
+                <p className="text-sm font-bold mt-2">
+                  ⭐ {course.rating || 0} ({course.reviews || 0} Reviews)
+                </p>
                 <button
                   onClick={() => navigate(`/course/${course._id}`)}
                   className="mt-3 block text-center w-full bg-blue-500 text-white py-2 rounded-md hover:bg-blue-600 transition"
@@ -91,10 +100,12 @@ const CourseList = () => {
         </div>
 
         {/* No Courses Found */}
-        {courses.length === 0 && <p className="text-center text-gray-500 mt-10">No courses found.</p>}
+        {courses.length === 0 && (
+          <p className="text-center text-gray-500 mt-10">No courses found.</p>
+        )}
       </div>
     </div>
   );
 };
 
-export default CourseList;
+export default AllCourses;

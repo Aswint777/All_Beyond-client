@@ -24,7 +24,7 @@ const BasicNavbar: React.FC = () => {
           >
             Home
           </li>
-          <li className="hover:text-gray-900 cursor-pointer">Courses</li>
+          <li onClick={()=>navigate("/courses")} className="hover:text-gray-900 cursor-pointer">Courses</li>
           <li className="hover:text-gray-900 cursor-pointer">Careers</li>
           <li className="hover:text-gray-900 cursor-pointer">Blog</li>
           <li className="hover:text-gray-900 cursor-pointer">About Us</li>
