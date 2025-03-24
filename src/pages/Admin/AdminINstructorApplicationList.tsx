@@ -22,7 +22,7 @@ const AdminInstructorApplicationList = () => {
   const [students, setStudents] = useState<Student[]>([]);
   const [loading, setLoading] = useState<boolean>(true);
   const [error, setError] = useState<string | null>(null);
-  const navigate = useNavigate()
+  const navigate = useNavigate();
 
   useEffect(() => {
     const fetchStudents = async () => {
@@ -78,7 +78,7 @@ const AdminInstructorApplicationList = () => {
       alert("Failed to update status. Please try again.");
     }
   };
-  const handleViewDetails = (userId:string) => {
+  const handleViewDetails = (userId: string) => {
     navigate(`/admin/user_details/${userId}`);
   };
 
@@ -89,12 +89,16 @@ const AdminInstructorApplicationList = () => {
   ) => {
     try {
       const API_URL = import.meta.env.VITE_REACT_APP_API_URL!;
-      const response = await axios.put(`${API_URL}/admin/block_UnBlock`, {
-        userId: userid,
-        isBlocked: status,
-      }, {
-        withCredentials: true,
-      });
+      const response = await axios.put(
+        `${API_URL}/admin/block_UnBlock`,
+        {
+          userId: userid,
+          isBlocked: status,
+        },
+        {
+          withCredentials: true,
+        }
+      );
       console.log(response, "response");
 
       if (response.status === 200) {
@@ -179,14 +183,13 @@ const AdminInstructorApplicationList = () => {
                   )}
                 </td>
                 <td>
-
-      
-                    <button onClick={() => handleViewDetails(student.userId)} className="px-4 py-1 bg-green-500 text-white rounded-md">
-          View
-        </button>
-      
-    
-    </td>
+                  <button
+                    onClick={() => handleViewDetails(student.userId)}
+                    className="px-4 py-1 bg-green-500 text-white rounded-md"
+                  >
+                    View
+                  </button>
+                </td>
               </tr>
             ))}
           </tbody>

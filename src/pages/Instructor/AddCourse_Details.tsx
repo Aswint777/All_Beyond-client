@@ -1,175 +1,397 @@
 import React, { useEffect, useState } from "react";
+import { Formik, Form, Field, ErrorMessage } from "formik";
+import * as Yup from "yup";
 import InstructorSidebar from "../../components/layout/InstructorSidebar";
 import { useNavigate } from "react-router-dom";
 import CourseProgress from "../../components/reusableComponents/CourseProgress";
 import { useCourseForm } from "../../components/context/CourseFormContext";
 import axios from "axios";
-// import { useCourseForm } from "../../context/CourseFormContext";
 
-const AddCourse_Details = () => {
-  const [selectedImage, setSelectedImage] = useState<File | null>(null);
-  const [isPaid, setIsPaid] = useState<"Free" | "Paid" | "">("");
-  const [title, setTitle] = useState("");
-  const [courseDescription, setDescription] = useState("");
-  const [category, setCategory] = useState("");
+interface FormValues {
+  title: string;
+  courseDescription: string;
+  category: string;
+  instructorName: string;
+  aboutInstructor: string;
+  thumbnail: File | null;
+}
+
+const AddCourse_Details: React.FC = () => {
   const [categories, setCategories] = useState<string[]>([]);
-  const [instructorName, setInstructorName] = useState("");
-  const [aboutInstructor, setAboutInstructor] = useState("");
-
+  const [thumbnailPreviewUrl, setThumbnailPreviewUrl] = useState<string | null>(null); // Use URL string for preview
   const { updateFormData, formData } = useCourseForm();
   const navigate = useNavigate();
 
-  const handleImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    if (e.target.files && e.target.files[0]) {
-      setSelectedImage(e.target.files[0]);
-    }
-  };
-
-  const handleNext = () => {
-    updateFormData({
-      title,
-      courseDescription,
-      category,
-      instructorName,
-      aboutInstructor,
-      thumbnail: selectedImage,
-      // isPaid,
-    });
-    navigate("/instructor/AddCourse_Content");
-  };
   useEffect(() => {
-    // Fetch categories from backend
     const fetchCategories = async () => {
       try {
         const API_URL = import.meta.env.VITE_REACT_APP_API_URL;
-
-        const response = await axios.get(
-          `${API_URL}/instructor/courseCategories`
-        );
-
-        console.log("API Response:", response.data.data); // Debugging log
-        const categoryNames = response.data.data.map(
-          (category: any) => category.name
-        );
-
-        setCategories(categoryNames); // Ensure it's always an array
+        const response = await axios.get(`${API_URL}/instructor/courseCategories`);
+        const categoryNames = response.data.data.map((category: any) => category.name);
+        setCategories(categoryNames);
       } catch (error) {
         console.error("Error fetching categories:", error);
-        setCategories([]); // Fallback to an empty array to prevent errors
+        setCategories([]);
       }
     };
-
     fetchCategories();
   }, []);
+
   useEffect(() => {
-    if (formData) {
-      setTitle(formData.title || "");
-      setDescription(formData.courseDescription || "");
-      setCategory(formData.category || "");
-      setInstructorName(formData.instructorName || "");
-      setAboutInstructor(formData.aboutInstructor || "");
-      // setIsPaid(formData.isPaid || "");
-      setSelectedImage(formData.thumbnail || null);
+    // Sync thumbnail preview with formData.thumbnail on mount or change
+    if (formData.thumbnail) {
+      const url = URL.createObjectURL(formData.thumbnail);
+      setThumbnailPreviewUrl(url);
+      console.log("Initial thumbnail URL from context:", url);
+      // Cleanup URL on unmount or change
+      return () => URL.revokeObjectURL(url);
     }
-  }, [formData]);
+  }, [formData.thumbnail]);
+
+  const validationSchema = Yup.object().shape({
+    title: Yup.string().required("Course title is required"),
+    courseDescription: Yup.string().required("Description is required"),
+    category: Yup.string().required("Please select a category"),
+    instructorName: Yup.string().required("Instructor name is required"),
+    aboutInstructor: Yup.string(),
+    thumbnail: Yup.mixed().required("Thumbnail is required"),
+  });
+
+  const initialValues: FormValues = {
+    title: formData.title || "",
+    courseDescription: formData.courseDescription || "",
+    category: formData.category || "",
+    instructorName: formData.instructorName || "",
+    aboutInstructor: formData.aboutInstructor || "",
+    thumbnail: formData.thumbnail || null,
+  };
 
   return (
     <div className="flex min-h-screen bg-gray-100">
       <InstructorSidebar />
-
       <div className="flex-1 p-6">
         <CourseProgress />
+        <Formik
+          initialValues={initialValues}
+          validationSchema={validationSchema}
+          onSubmit={(values) => {
+            console.log("Submitting values:", values);
+            updateFormData(values);
+            navigate("/instructor/AddCourse_Content");
+          }}
+        >
+          {({ setFieldValue, values }) => (
+            <Form className="max-w-xl mx-auto p-6 bg-white rounded-lg shadow-md">
+              <h1 className="text-2xl p-3">Course Details</h1>
 
-        <form className="max-w-xl mx-auto p-6 bg-white rounded-lg shadow-md">
-          <h1 className="text-2xl p-3">Course Details</h1>
+              {/* Thumbnail Upload */}
+              <label
+                htmlFor="thumbnail-upload"
+                className="flex flex-col items-center justify-center border-2 border-dashed border-gray-300 rounded-lg h-40 mb-4 cursor-pointer"
+              >
+                {thumbnailPreviewUrl ? (
+                  <img
+                    src={thumbnailPreviewUrl}
+                    alt="Selected Thumbnail"
+                    className="h-full w-full object-cover rounded-lg"
+                    onError={() => console.error("Thumbnail image failed to load")}
+                  />
+                ) : (
+                  <div className="text-gray-500 text-center">
+                    <span className="text-3xl">📷</span>
+                    <p>Upload Thumbnail</p>
+                  </div>
+                )}
+                <input
+                  id="thumbnail-upload"
+                  type="file"
+                  accept="image/*"
+                  onChange={(event: React.ChangeEvent<HTMLInputElement>) => {
+                    const file = event.target.files?.[0] || null;
+                    if (file) {
+                      console.log("Selected file:", file);
+                      const url = URL.createObjectURL(file);
+                      setThumbnailPreviewUrl(url);
+                      setFieldValue("thumbnail", file);
+                      updateFormData({ thumbnail: file });
+                      console.log("Generated thumbnail URL:", url);
+                    }
+                  }}
+                  className="hidden"
+                />
+              </label>
+              <ErrorMessage name="thumbnail" component="div" className="text-red-500" />
 
-          <label className="flex flex-col items-center justify-center border-2 border-dashed border-gray-300 rounded-lg h-40 mb-4 cursor-pointer">
-            {selectedImage ? (
-              <img
-                src={URL.createObjectURL(selectedImage)}
-                alt="Selected"
-                className="h-full w-full object-cover rounded-lg"
+              {/* Course Title */}
+              <Field
+                type="text"
+                name="title"
+                placeholder="Course Title"
+                className="w-full mb-4 p-2 border border-gray-300 rounded-lg"
+                onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
+                  setFieldValue("title", e.target.value);
+                  updateFormData({ title: e.target.value });
+                }}
               />
-            ) : (
-              <div className="text-gray-500 text-center">
-                <span className="text-3xl">📷</span>
-                <p>Upload Thumbnail</p>
-              </div>
-            )}
-            <input
-              type="file"
-              // name="thumbnail"
-              accept="image/*"
-              onChange={handleImageChange}
-              className="hidden"
-            />
-          </label>
+              <ErrorMessage name="title" component="div" className="text-red-500" />
 
-          <input
-            type="text"
-            placeholder="Course Title"
-            className="w-full mb-4 p-2 border border-gray-300 rounded-lg"
-            value={title}
-            onChange={(e) => setTitle(e.target.value)}
-            required
-          />
+              {/* Description */}
+              <Field
+                as="textarea"
+                name="courseDescription"
+                placeholder="Description"
+                className="w-full mb-4 p-2 border border-gray-300 rounded-lg"
+                onChange={(e: React.ChangeEvent<HTMLTextAreaElement>) => {
+                  setFieldValue("courseDescription", e.target.value);
+                  updateFormData({ courseDescription: e.target.value });
+                }}
+              />
+              <ErrorMessage name="courseDescription" component="div" className="text-red-500" />
 
-          <textarea
-            placeholder="Description"
-            className="w-full mb-4 p-2 border border-gray-300 rounded-lg"
-            value={courseDescription}
-            onChange={(e) => setDescription(e.target.value)}
-            required
-          ></textarea>
-
-          <select
-            className="w-full mb-4 p-2 border border-gray-300 rounded-lg"
-            value={category}
-            onChange={(e) => setCategory(e.target.value)}
-          >
-            <option value="" disabled>
-              Select a category
-            </option>
-            {Array.isArray(categories) && categories.length > 0 ? (
-              categories.map((cat, index) => (
-                <option key={index} value={cat}>
-                  {cat}
+              {/* Category */}
+              <Field
+                as="select"
+                name="category"
+                className="w-full mb-4 p-2 border border-gray-300 rounded-lg"
+                onChange={(e: React.ChangeEvent<HTMLSelectElement>) => {
+                  setFieldValue("category", e.target.value);
+                  updateFormData({ category: e.target.value });
+                }}
+              >
+                <option value="" disabled>
+                  Select a category
                 </option>
-              ))
-            ) : (
-              <option value="" disabled>
-                Loading categories...
-              </option>
-            )}
-          </select>
+                {Array.isArray(categories) && categories.length > 0 ? (
+                  categories.map((cat, index) => (
+                    <option key={index} value={cat}>
+                      {cat}
+                    </option>
+                  ))
+                ) : (
+                  <option value="" disabled>
+                    Loading categories...
+                  </option>
+                )}
+              </Field>
+              <ErrorMessage name="category" component="div" className="text-red-500" />
 
-          <input
-            type="text"
-            placeholder="Instructor Name"
-            className="w-full mb-4 p-2 border border-gray-300 rounded-lg"
-            value={instructorName}
-            onChange={(e) => setInstructorName(e.target.value)}
-            required
-          />
+              {/* Instructor Name */}
+              <Field
+                type="text"
+                name="instructorName"
+                placeholder="Instructor Name"
+                className="w-full mb-4 p-2 border border-gray-300 rounded-lg"
+                onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
+                  setFieldValue("instructorName", e.target.value);
+                  updateFormData({ instructorName: e.target.value });
+                }}
+              />
+              <ErrorMessage name="instructorName" component="div" className="text-red-500" />
 
-          <textarea
-            placeholder="Additional Details"
-            className="w-full mb-4 p-2 border border-gray-300 rounded-lg"
-            value={aboutInstructor}
-            onChange={(e) => setAboutInstructor(e.target.value)}
-          ></textarea>
+              {/* About Instructor */}
+              <Field
+                as="textarea"
+                name="aboutInstructor"
+                placeholder="Additional Details"
+                className="w-full mb-4 p-2 border border-gray-300 rounded-lg"
+                onChange={(e: React.ChangeEvent<HTMLTextAreaElement>) => {
+                  setFieldValue("aboutInstructor", e.target.value);
+                  updateFormData({ aboutInstructor: e.target.value });
+                }}
+              />
+              <ErrorMessage name="aboutInstructor" component="div" className="text-red-500" />
 
-          <button
-            type="button"
-            className="w-full p-2 bg-violet-600 text-white rounded-lg hover:bg-violet-800"
-            onClick={handleNext}
-          >
-            Next
-          </button>
-        </form>
+              {/* Submit Button */}
+              <button
+                type="submit"
+                className="w-full p-2 bg-violet-600 text-white rounded-lg hover:bg-violet-800"
+              >
+                Next
+              </button>
+            </Form>
+          )}
+        </Formik>
       </div>
     </div>
   );
 };
 
 export default AddCourse_Details;
+
+// import React, { useEffect, useState } from "react";
+// // import { Formik, Form, Field, ErrorMessage } from "formik";
+// // import * as yup from "yup";
+// import InstructorSidebar from "../../components/layout/InstructorSidebar";
+// import { useNavigate } from "react-router-dom";
+// import CourseProgress from "../../components/reusableComponents/CourseProgress";
+// import { useCourseForm } from "../../components/context/CourseFormContext";
+// import axios from "axios";
+// // import { useCourseForm } from "../../context/CourseFormContext";
+
+// const AddCourse_Details = () => {
+//   const [selectedImage, setSelectedImage] = useState<File | null>(null);
+//   const [isPaid, setIsPaid] = useState<"Free" | "Paid" | "">("");
+//   const [title, setTitle] = useState("");
+//   const [courseDescription, setDescription] = useState("");
+//   const [category, setCategory] = useState("");
+//   const [categories, setCategories] = useState<string[]>([]);
+//   const [instructorName, setInstructorName] = useState("");
+//   const [aboutInstructor, setAboutInstructor] = useState("");
+
+//   const { updateFormData, formData } = useCourseForm();
+//   const navigate = useNavigate();
+
+//   const handleImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+//     if (e.target.files && e.target.files[0]) {
+//       setSelectedImage(e.target.files[0]);
+//     }
+//   };
+
+//   const handleNext = () => {
+//     updateFormData({
+//       title,
+//       courseDescription,
+//       category,
+//       instructorName,
+//       aboutInstructor,
+//       thumbnail: selectedImage,
+//       // isPaid,
+//     });
+//     navigate("/instructor/AddCourse_Content");
+//   };
+//   useEffect(() => {
+//     // Fetch categories from backend
+//     const fetchCategories = async () => {
+//       try {
+//         const API_URL = import.meta.env.VITE_REACT_APP_API_URL;
+
+//         const response = await axios.get(
+//           `${API_URL}/instructor/courseCategories`
+//         );
+
+//         console.log("API Response:", response.data.data); // Debugging log
+//         const categoryNames = response.data.data.map(
+//           (category: any) => category.name
+//         );
+
+//         setCategories(categoryNames); // Ensure it's always an array
+//       } catch (error) {
+//         console.error("Error fetching categories:", error);
+//         setCategories([]); // Fallback to an empty array to prevent errors
+//       }
+//     };
+
+//     fetchCategories();
+//   }, []);
+//   useEffect(() => {
+//     if (formData) {
+//       setTitle(formData.title || "");
+//       setDescription(formData.courseDescription || "");
+//       setCategory(formData.category || "");
+//       setInstructorName(formData.instructorName || "");
+//       setAboutInstructor(formData.aboutInstructor || "");
+//       // setIsPaid(formData.isPaid || "");
+//       setSelectedImage(formData.thumbnail || null);
+//     }
+//   }, [formData]);
+
+//   return (
+//     <div className="flex min-h-screen bg-gray-100">
+//       <InstructorSidebar />
+
+//       <div className="flex-1 p-6">
+//         <CourseProgress />
+
+//         <form className="max-w-xl mx-auto p-6 bg-white rounded-lg shadow-md">
+//           <h1 className="text-2xl p-3">Course Details</h1>
+
+//           <label className="flex flex-col items-center justify-center border-2 border-dashed border-gray-300 rounded-lg h-40 mb-4 cursor-pointer">
+//             {selectedImage ? (
+//               <img
+//                 src={URL.createObjectURL(selectedImage)}
+//                 alt="Selected"
+//                 className="h-full w-full object-cover rounded-lg"
+//               />
+//             ) : (
+//               <div className="text-gray-500 text-center">
+//                 <span className="text-3xl">📷</span>
+//                 <p>Upload Thumbnail</p>
+//               </div>
+//             )}
+//             <input
+//               type="file"
+//               // name="thumbnail"
+//               accept="image/*"
+//               onChange={handleImageChange}
+//               className="hidden"
+//             />
+//           </label>
+
+//           <input
+//             type="text"
+//             placeholder="Course Title"
+//             className="w-full mb-4 p-2 border border-gray-300 rounded-lg"
+//             value={title}
+//             onChange={(e) => setTitle(e.target.value)}
+//             required
+//           />
+
+//           <textarea
+//             placeholder="Description"
+//             className="w-full mb-4 p-2 border border-gray-300 rounded-lg"
+//             value={courseDescription}
+//             onChange={(e) => setDescription(e.target.value)}
+//             required
+//           ></textarea>
+
+//           <select
+//             className="w-full mb-4 p-2 border border-gray-300 rounded-lg"
+//             value={category}
+//             onChange={(e) => setCategory(e.target.value)}
+//           >
+//             <option value="" disabled>
+//               Select a category
+//             </option>
+//             {Array.isArray(categories) && categories.length > 0 ? (
+//               categories.map((cat, index) => (
+//                 <option key={index} value={cat}>
+//                   {cat}
+//                 </option>
+//               ))
+//             ) : (
+//               <option value="" disabled>
+//                 Loading categories...
+//               </option>
+//             )}
+//           </select>
+
+//           <input
+//             type="text"
+//             placeholder="Instructor Name"
+//             className="w-full mb-4 p-2 border border-gray-300 rounded-lg"
+//             value={instructorName}
+//             onChange={(e) => setInstructorName(e.target.value)}
+//             required
+//           />
+
+//           <textarea
+//             placeholder="Additional Details"
+//             className="w-full mb-4 p-2 border border-gray-300 rounded-lg"
+//             value={aboutInstructor}
+//             onChange={(e) => setAboutInstructor(e.target.value)}
+//           ></textarea>
+
+//           <button
+//             type="button"
+//             className="w-full p-2 bg-violet-600 text-white rounded-lg hover:bg-violet-800"
+//             onClick={handleNext}
+//           >
+//             Next
+//           </button>
+//         </form>
+//       </div>
+//     </div>
+//   );
+// };
+
+// export default AddCourse_Details;

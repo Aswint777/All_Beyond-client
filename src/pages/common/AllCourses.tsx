@@ -3,6 +3,10 @@ import { useNavigate } from "react-router-dom";
 import InstructorSidebar from "../../components/layout/InstructorSidebar";
 import axios from "axios";
 import { config } from "../../configaration/Config";
+import UserNavbar from "../../components/layout/UserNavbar";
+import BasicNavbar from "../../components/layout/BasicNavbar";
+import { useSelector } from "react-redux";
+import { RootState } from "../../redux/store";
 
 // Define Course Interface
 interface ICourse {
@@ -35,15 +39,22 @@ interface ICourse {
 
 const AllCourses = () => {
   const navigate = useNavigate();
+  const { userDetails } = useSelector((state: RootState) => state.user);
+    const [navbarKey, setNavbarKey] = useState(0)
   const [courses, setCourses] = useState<ICourse[]>([]);
   const API_URL = import.meta.env.VITE_REACT_APP_API_URL;
+    useEffect(() => {
+      if (userDetails) {
+        setNavbarKey(prevKey => prevKey + 1) 
+      }
+    }, [userDetails])
 
   useEffect(() => {
     const fetchCourses = async () => {
       try {
         console.log("Fetching courses...");
-        const response = await axios.get<{ data: ICourse[] }>(
-          `${API_URL}/courses`,
+        const response = await axios.get(
+          `${API_URL}/auth/courses`,
           config
         );
         console.log("Courses fetched:", response.data.data);
@@ -56,10 +67,17 @@ const AllCourses = () => {
     fetchCourses();
   }, []);
 
+  const handleViewDetails=(courseId:string)=>{
+    navigate(`/courseDetails/${courseId}`)
+  }
+
   return (
+    <div className="bg-violet-100">
+      {userDetails ? <UserNavbar /> : <BasicNavbar />}
+
     <div className="flex min-h-screen">
       {/* Sidebar */}
-      <InstructorSidebar />
+      {/* <InstructorSidebar /> */}
 
       {/* Main Content */}
       <div className="flex-1 p-8">
@@ -89,7 +107,7 @@ const AllCourses = () => {
                   ⭐ {course.rating || 0} ({course.reviews || 0} Reviews)
                 </p>
                 <button
-                  onClick={() => navigate(`/course/${course._id}`)}
+                  onClick={() =>handleViewDetails(course._id) }
                   className="mt-3 block text-center w-full bg-blue-500 text-white py-2 rounded-md hover:bg-blue-600 transition"
                 >
                   View Course
@@ -104,6 +122,7 @@ const AllCourses = () => {
           <p className="text-center text-gray-500 mt-10">No courses found.</p>
         )}
       </div>
+    </div>
     </div>
   );
 };

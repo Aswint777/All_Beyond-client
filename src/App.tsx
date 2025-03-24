@@ -36,6 +36,7 @@ import CourseList from "./pages/Instructor/CourseList";
 import InstructorRoute from "./components/route/InstructorRoute";
 import AdminUserDetails from "./pages/Admin/AdminUserDetails";
 import AllCourses from "./pages/common/AllCourses";
+import CourseDetails from "./pages/common/CourseDetails";
 // import { ROUTES } from "./constant";
 
 function App() {
@@ -68,6 +69,8 @@ function App() {
 
               <Route element={<HomeRout />}>
                 <Route path={ROUTES.HOME} element={<HomePage />} />
+                <Route path="/courses" element={<AllCourses/>} />
+                <Route path="/courseDetails/:courseId" element={<CourseDetails/>} />
               </Route>
 
               {/* Common pages  */}
@@ -75,7 +78,6 @@ function App() {
                 <Route path={ROUTES.SIGNUP} element={<SignUpPage />} />
                 <Route path={ROUTES.LOGIN} element={<LoginPage />} />
                 <Route path={ROUTES.OTP_VERIFY} element={<OtpVerifyPage />} />
-                <Route path="/courses" element={<AllCourses/>} />
               </Route>
 
               {/* user pages  */}
