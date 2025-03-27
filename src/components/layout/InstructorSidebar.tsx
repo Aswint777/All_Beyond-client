@@ -1,10 +1,12 @@
+import path from 'path';
 import React from 'react'
 import { NavLink } from 'react-router-dom';
 
 const InstructorSidebar = () => {
     const links = [
         { name: "Overview", path: "/overview" },
-        { name: "Courses", path: "/instructor/courses" },
+        { name: "Profile", path:"/profile" },
+        { name: "My Courses", path: "/instructor/courses" },
         { name: "Assessments", path: "/assessments" },
         { name: "Complaints", path: "/complaints" },
         { name: "Settings", path: "/settings" },

@@ -37,6 +37,9 @@ import InstructorRoute from "./components/route/InstructorRoute";
 import AdminUserDetails from "./pages/Admin/AdminUserDetails";
 import AllCourses from "./pages/common/AllCourses";
 import CourseDetails from "./pages/common/CourseDetails";
+// import EditCourse from "./pages/Instructor/EditCourse";
+import NotFound from "./pages/common/404";
+import EditCourse from "./pages/Instructor/EditCourse";
 // import { ROUTES } from "./constant";
 
 function App() {
@@ -112,6 +115,7 @@ function App() {
                 />
                 {/* </Route> */}
               </Route>
+                <Route path="/instructor/EditCourse/:courseId" element={<EditCourse/>} />
 
               {/* Protected Admin Routes */}
               <Route element={<AdminRoute />}>
@@ -149,6 +153,8 @@ function App() {
                   element={<AdminUserDetails />}
                 />
               </Route>
+              <Route path="*" element={<NotFound />} />
+
             </Routes>
           </BrowserRouter>
         </div>

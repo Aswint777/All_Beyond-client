@@ -5,7 +5,7 @@ const StudentSideBar = () => {
 
       const links = [
         { name: "Overview", path: "/overview" },
-        { name: "Courses", path: "/courses" },
+        { name: "My Courses", path: "/courses" },
         { name: "Assessments", path: "/assessments" },
         { name: "Complaints", path: "/complaints" },
         { name: "Settings", path: "/settings" },

@@ -10,7 +10,6 @@ const AddCategoryPage: React.FC = () => {
   const [formData, setFormData] = useState({
     name: "",
     description: "",
-    type: "Free",
   });
 
   const [errors, setErrors] = useState<categoryErrors>({});
@@ -38,7 +37,6 @@ const AddCategoryPage: React.FC = () => {
     const newErrors = validateCategory(
       name === "name" ? value : formData.name,
       name === "description" ? value : formData.description,
-      name === "type" ? value : formData.type
     );
   
     setErrors((prevErrors) => {
@@ -56,7 +54,7 @@ const AddCategoryPage: React.FC = () => {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
 
-    const validationErrors = validateCategory(formData.name, formData.description, formData.type);
+    const validationErrors = validateCategory(formData.name, formData.description);
     setErrors(validationErrors);
 
     if (Object.values(validationErrors).some((error) => error)) {
@@ -144,22 +142,7 @@ const AddCategoryPage: React.FC = () => {
             {errors.description && <p className="text-red-500 text-xs mt-1">{errors.description}</p>}
           </div>
 
-          {/* Type (Free/Premium) */}
-          <div>
-            <label className="block text-sm font-medium text-gray-700 mb-1">
-              Type
-            </label>
-            <select
-              name="type"
-              value={formData.type}
-              onChange={handleChange}
-              className="border p-2 rounded w-full"
-              required
-            >
-              <option value="Free">Free</option>
-              <option value="Premium">Premium</option>
-            </select>
-          </div>
+
 
           {/* Submit Button */}
           <button

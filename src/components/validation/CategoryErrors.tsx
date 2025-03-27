@@ -1,13 +1,11 @@
 export interface categoryErrors {
     name?: string;
     description?: string;
-    type?: string;
   }
 
   export const validateCategory = (
     name: string,
     description: string,
-    type: string,
   ): categoryErrors => {
     const errors: categoryErrors = {};
 
@@ -17,9 +15,7 @@ export interface categoryErrors {
     if (!description.trim()) {
       errors.description = "description is required."
     } 
-    if (!type) {
-      errors.type = "type is required.";
-    }
+
     if(description.length < 10){
         errors.description = "description is too short."
     }

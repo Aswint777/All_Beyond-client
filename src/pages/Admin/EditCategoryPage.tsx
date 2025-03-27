@@ -7,12 +7,11 @@ import { categoryErrors, validateCategory } from "../../components/validation/Ca
 const EditCategoryPage = () => {
   const navigate = useNavigate();
   const location = useLocation();
-  const { id, name, description, type } = location.state || {}; // Get passed data
+  const { id, name, description} = location.state || {}; // Get passed data
 
   const [formData, setFormData] = useState({
     name: name || "",
     description: description || "",
-    type: type || "Free",
   });
 
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
@@ -45,7 +44,7 @@ const EditCategoryPage = () => {
     e.preventDefault();
 
     // ✅ Run validation
-    const errors = validateCategory(formData.name, formData.description, formData.type);
+    const errors = validateCategory(formData.name, formData.description);
     setValidationErrors(errors);
 
     // ✅ If errors exist, stop submission
@@ -53,13 +52,13 @@ const EditCategoryPage = () => {
 
     try {
       const API_URL = import.meta.env.VITE_REACT_APP_API_URL;
-      await axios.put(`${API_URL}/admin/editCategory/${id}`, formData, {
+      const response = await axios.put(`${API_URL}/admin/editCategory/${id}`, formData, {
         withCredentials: true,
       });
       navigate("/admin/categoryListPage");
     } catch (err: any) {
       console.error("Error updating category:", err);
-      setErrorMessage(err.response?.data?.error || "An unexpected error occurred.");
+      setErrorMessage(err.response?.data?.message || "An unexpected error occurred.");
     }
   };
 
@@ -87,14 +86,7 @@ const EditCategoryPage = () => {
             {validationErrors.description && <p className="text-red-500 text-sm">{validationErrors.description}</p>}
           </div>
 
-          <div>
-            <label className="block text-sm font-medium text-gray-700 mb-1">Type</label>
-            <select name="type" value={formData.type} onChange={handleChange} className="border p-2 rounded w-full" required>
-              <option value="Free">Free</option>
-              <option value="Premium">Premium</option>
-            </select>
-            {validationErrors.type && <p className="text-red-500 text-sm">{validationErrors.type}</p>}
-          </div>
+
 
           <button type="submit" className="bg-purple-500 text-white px-4 py-2 rounded-lg w-full hover:bg-purple-600 transition">
             Update Category

@@ -8,7 +8,6 @@ interface Category {
   _id: string;
   name: string;
   description: string;
-  type: "Free" | "Premium";
   isBlocked: boolean;
 }
 
@@ -54,8 +53,8 @@ const CategoryListPage: React.FC = () => {
     }
   };
 
-  const handleEdit = (id: string, name: string, description: string, type: string) => {
-    navigate("/admin/editCategory", { state: { id, name, description, type } });
+  const handleEdit = (id: string, name: string, description: string) => {
+    navigate("/admin/editCategory", { state: { id, name, description } });
   };
 
   // Pagination Logic
@@ -86,26 +85,19 @@ const CategoryListPage: React.FC = () => {
               {currentData.map((category) => (
                 <div
                   key={category._id}
-                  className={`p-6 rounded-lg shadow-lg flex flex-col justify-between ${
-                    category.type === "Premium" ? "bg-purple-500 text-white" : "bg-white text-gray-900"
-                  }`}
+                  className={`p-6 rounded-lg shadow-lg flex flex-col justify-between`}
                 >
                   <div>
                     <h3 className="text-xl font-semibold">{category.name}</h3>
-                    <span className={`inline-block mt-4 px-3 py-1 text-sm font-medium rounded ${
-                        category.type === "Premium"
-                          ? "bg-white text-purple-700"
-                          : "bg-gray-200 text-gray-700"
-                      }`}
+                    <span className={`inline-block mt-4 px-3 py-1 text-sm font-medium rounded`}
                     >
-                      {category.type}
                     </span>
                     <p className="mt-2">{category.description}</p>
                   </div>
 
                   <div className="mt-4 flex justify-between">
                     <button
-                      onClick={() => handleEdit(category._id, category.name, category.description, category.type)}
+                      onClick={() => handleEdit(category._id, category.name, category.description)}
                       className="flex items-center gap-1 text-blue-600 hover:text-blue-800"
                     >
                       <Edit size={18} /> Edit
