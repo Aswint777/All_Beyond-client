@@ -18,7 +18,9 @@ interface FormValues {
 
 const AddCourse_Details: React.FC = () => {
   const [categories, setCategories] = useState<string[]>([]);
-  const [thumbnailPreviewUrl, setThumbnailPreviewUrl] = useState<string | null>(null); // Use URL string for preview
+  const [thumbnailPreviewUrl, setThumbnailPreviewUrl] = useState<string | null>(
+    null
+  ); // Use URL string for preview
   const { updateFormData, formData } = useCourseForm();
   const navigate = useNavigate();
 
@@ -26,8 +28,12 @@ const AddCourse_Details: React.FC = () => {
     const fetchCategories = async () => {
       try {
         const API_URL = import.meta.env.VITE_REACT_APP_API_URL;
-        const response = await axios.get(`${API_URL}/instructor/courseCategories`);
-        const categoryNames = response.data.data.map((category: any) => category.name);
+        const response = await axios.get(
+          `${API_URL}/instructor/courseCategories`
+        );
+        const categoryNames = response.data.data.map(
+          (category: any) => category.name
+        );
         setCategories(categoryNames);
       } catch (error) {
         console.error("Error fetching categories:", error);
@@ -94,7 +100,9 @@ const AddCourse_Details: React.FC = () => {
                     src={thumbnailPreviewUrl}
                     alt="Selected Thumbnail"
                     className="h-full w-full object-cover rounded-lg"
-                    onError={() => console.error("Thumbnail image failed to load")}
+                    onError={() =>
+                      console.error("Thumbnail image failed to load")
+                    }
                   />
                 ) : (
                   <div className="text-gray-500 text-center">
@@ -120,7 +128,11 @@ const AddCourse_Details: React.FC = () => {
                   className="hidden"
                 />
               </label>
-              <ErrorMessage name="thumbnail" component="div" className="text-red-500" />
+              <ErrorMessage
+                name="thumbnail"
+                component="div"
+                className="text-red-500"
+              />
 
               {/* Course Title */}
               <Field
@@ -133,20 +145,28 @@ const AddCourse_Details: React.FC = () => {
                   updateFormData({ title: e.target.value });
                 }}
               />
-              <ErrorMessage name="title" component="div" className="text-red-500" />
+              <ErrorMessage
+                name="title"
+                component="div"
+                className="text-red-500"
+              />
 
               {/* Description */}
               <Field
                 as="textarea"
                 name="courseDescription"
                 placeholder="Description"
-                className="w-full mb-4 p-2 border border-gray-300 rounded-lg"
+                className="w-full h-32 mb-4 p-2 border border-gray-300 rounded-lg"
                 onChange={(e: React.ChangeEvent<HTMLTextAreaElement>) => {
                   setFieldValue("courseDescription", e.target.value);
                   updateFormData({ courseDescription: e.target.value });
                 }}
               />
-              <ErrorMessage name="courseDescription" component="div" className="text-red-500" />
+              <ErrorMessage
+                name="courseDescription"
+                component="div"
+                className="text-red-500"
+              />
 
               {/* Category */}
               <Field
@@ -173,7 +193,11 @@ const AddCourse_Details: React.FC = () => {
                   </option>
                 )}
               </Field>
-              <ErrorMessage name="category" component="div" className="text-red-500" />
+              <ErrorMessage
+                name="category"
+                component="div"
+                className="text-red-500"
+              />
 
               {/* Instructor Name */}
               <Field
@@ -186,20 +210,28 @@ const AddCourse_Details: React.FC = () => {
                   updateFormData({ instructorName: e.target.value });
                 }}
               />
-              <ErrorMessage name="instructorName" component="div" className="text-red-500" />
+              <ErrorMessage
+                name="instructorName"
+                component="div"
+                className="text-red-500"
+              />
 
               {/* About Instructor */}
               <Field
                 as="textarea"
                 name="aboutInstructor"
                 placeholder="Additional Details"
-                className="w-full mb-4 p-2 border border-gray-300 rounded-lg"
+                className="w-full h-32 mb-4 p-2 border border-gray-300 rounded-lg"
                 onChange={(e: React.ChangeEvent<HTMLTextAreaElement>) => {
                   setFieldValue("aboutInstructor", e.target.value);
                   updateFormData({ aboutInstructor: e.target.value });
                 }}
               />
-              <ErrorMessage name="aboutInstructor" component="div" className="text-red-500" />
+              <ErrorMessage
+                name="aboutInstructor"
+                component="div"
+                className="text-red-500"
+              />
 
               {/* Submit Button */}
               <button

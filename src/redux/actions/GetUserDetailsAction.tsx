@@ -15,7 +15,7 @@ export const GetUserDetailsAction = createAsyncThunk(
     console.log(response,"user data is here at GetUserDetailsAction");
     
     return response.data;
-
+    
       } catch (error: any) {
         console.log('0000000000');
         

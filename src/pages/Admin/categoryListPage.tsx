@@ -40,11 +40,13 @@ const CategoryListPage: React.FC = () => {
   const handleBlock = async (id: string, status: boolean) => {
     try {
       const API_URL = import.meta.env.VITE_REACT_APP_API_URL;
-      await axios.put(`${API_URL}/admin/blockCategory`, { id, status: !status }, {
-        withCredentials: true,
-      });
-      setCategory(prevCategories =>
-        prevCategories.map(category =>
+      await axios.put(
+        `${API_URL}/admin/blockCategory`,
+        { id, status: !status },
+        { withCredentials: true }
+      );
+      setCategory((prevCategories) =>
+        prevCategories.map((category) =>
           category._id === id ? { ...category, isBlocked: !status } : category
         )
       );
@@ -59,16 +61,19 @@ const CategoryListPage: React.FC = () => {
 
   // Pagination Logic
   const totalPages = Math.ceil(category.length / itemsPerPage);
-  const currentData = category.slice((currentPage - 1) * itemsPerPage, currentPage * itemsPerPage);
+  const currentData = category.slice(
+    (currentPage - 1) * itemsPerPage,
+    currentPage * itemsPerPage
+  );
 
   return (
-    <div className="flex min-h-screen bg-gray-100">
+    <div className="min-h-screen bg-gradient-to-br from-gray-50 to-gray-200 flex">
       <AdminSideBar />
-      <main className="flex-1 p-8">
-        <div className="flex justify-between items-center mb-6">
-          <h2 className="text-3xl font-bold">Category List</h2>
+      <main className="flex-1 p-6 lg:p-8">
+        <div className="flex justify-between items-center mb-8">
+          <h2 className="text-3xl font-bold text-gray-800">Category List</h2>
           <button
-            className="flex items-center gap-2 bg-blue-500 text-white px-4 py-2 rounded-lg hover:bg-blue-600 transition"
+            className="flex items-center gap-2 bg-gradient-to-r from-blue-500 to-blue-600 text-white px-5 py-2 rounded-lg shadow-md hover:from-blue-600 hover:to-blue-700 transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2"
             onClick={() => navigate("/admin/AddCategoryPage")}
           >
             <Plus size={20} /> Add Category
@@ -76,40 +81,47 @@ const CategoryListPage: React.FC = () => {
         </div>
 
         {loading ? (
-          <p>Loading categories...</p>
+          <p className="text-center text-gray-500 text-lg">Loading categories...</p>
         ) : error ? (
-          <p className="text-red-600">{error}</p>
+          <p className="text-center text-red-500 text-lg">{error}</p>
+        ) : currentData.length === 0 ? (
+          <p className="text-center text-gray-600 text-lg">No categories found.</p>
         ) : (
           <>
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
               {currentData.map((category) => (
                 <div
                   key={category._id}
-                  className={`p-6 rounded-lg shadow-lg flex flex-col justify-between`}
+                  className={`p-6 rounded-xl shadow-lg bg-white transform transition-all duration-200 hover:shadow-xl flex flex-col justify-between ${
+                    category.isBlocked ? "border-l-4 border-green-500" : "border-l-4 border-red-500"
+                  }`}
                 >
                   <div>
-                    <h3 className="text-xl font-semibold">{category.name}</h3>
-                    <span className={`inline-block mt-4 px-3 py-1 text-sm font-medium rounded`}
-                    >
-                    </span>
-                    <p className="mt-2">{category.description}</p>
+                    <h3 className="text-xl font-semibold text-gray-800 mb-2">
+                      {category.name}
+                    </h3>
+                    <p className="text-gray-600 text-sm line-clamp-3">
+                      {category.description}
+                    </p>
                   </div>
-
-                  <div className="mt-4 flex justify-between">
+                  <div className="mt-4 flex justify-between items-center">
                     <button
-                      onClick={() => handleEdit(category._id, category.name, category.description)}
-                      className="flex items-center gap-1 text-blue-600 hover:text-blue-800"
+                      onClick={() =>
+                        handleEdit(category._id, category.name, category.description)
+                      }
+                      className="flex items-center gap-1 px-3 py-1 bg-blue-100 text-blue-700 rounded-md hover:bg-blue-200 transition-all duration-200"
                     >
                       <Edit size={18} /> Edit
                     </button>
-
                     <button
                       onClick={() => handleBlock(category._id, category.isBlocked)}
-                      className={`flex items-center gap-1 ${
-                        category.isBlocked ? "text-green-600 hover:text-green-800" : "text-red-600 hover:text-red-800"
+                      className={`flex items-center gap-1 px-3 py-1 rounded-md transition-all duration-200 ${
+                        category.isBlocked
+                        ? "bg-red-100 text-red-700 hover:bg-red-200"
+                          : "bg-green-100 text-green-700 hover:bg-green-200"
                       }`}
                     >
-                      <Ban size={18} /> {category.isBlocked ? "Unblock" : "Block"}
+                      <Ban size={18} /> {category.isBlocked ? "Block" : "Unblock"}
                     </button>
                   </div>
                 </div>
@@ -117,21 +129,21 @@ const CategoryListPage: React.FC = () => {
             </div>
 
             {/* Pagination Controls */}
-            <div className="flex justify-center items-center mt-6 gap-4">
+            <div className="flex justify-center items-center mt-8 gap-4">
               <button
-                onClick={() => setCurrentPage(prev => Math.max(prev - 1, 1))}
+                onClick={() => setCurrentPage((prev) => Math.max(prev - 1, 1))}
                 disabled={currentPage === 1}
-                className="px-3 py-1 border rounded disabled:opacity-50"
+                className="px-4 py-2 bg-gray-200 text-gray-700 rounded-lg hover:bg-gray-300 transition-all duration-200 disabled:bg-gray-100 disabled:text-gray-400 disabled:cursor-not-allowed"
               >
                 <ChevronLeft size={20} />
               </button>
-
-              <span className="text-lg font-semibold">Page {currentPage} of {totalPages}</span>
-
+              <span className="text-lg font-semibold text-gray-700">
+                Page {currentPage} of {totalPages}
+              </span>
               <button
-                onClick={() => setCurrentPage(prev => Math.min(prev + 1, totalPages))}
+                onClick={() => setCurrentPage((prev) => Math.min(prev + 1, totalPages))}
                 disabled={currentPage === totalPages}
-                className="px-3 py-1 border rounded disabled:opacity-50"
+                className="px-4 py-2 bg-gray-200 text-gray-700 rounded-lg hover:bg-gray-300 transition-all duration-200 disabled:bg-gray-100 disabled:text-gray-400 disabled:cursor-not-allowed"
               >
                 <ChevronRight size={20} />
               </button>

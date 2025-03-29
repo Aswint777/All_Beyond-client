@@ -12,6 +12,7 @@ interface ICourse {
   courseTitle: string;
   courseDescription?: string;
   categoryName?: string;
+  instructor?:string
   aboutInstructor?: string;
   content?: {
     moduleTitle: string;
@@ -22,7 +23,7 @@ interface ICourse {
     }[];
   }[];
   pricingOption?: "Premium" | "Free";
-  Price?: number;
+  price?: number;
   user?: {
     _id: string;
     name: string;
@@ -85,7 +86,7 @@ const CourseDetails: React.FC = () => {
   return (
     <div className="bg-gray-100 min-h-screen">
       {userDetails ? <UserNavbar /> : <BasicNavbar />}
-      <div className="max-w-6xl mx-auto p-6">
+      <div className="max-w-6xl mx-auto p-6  mt-24">
         {/* Course Overview Section */}
         <div className="bg-white p-6 rounded-lg shadow-md flex flex-col lg:flex-row">
           <img
@@ -95,12 +96,12 @@ const CourseDetails: React.FC = () => {
           />
           <div className="lg:ml-6 mt-4 lg:mt-0 flex flex-col justify-between">
             <h1 className="text-3xl font-bold text-gray-900">{course.courseTitle}</h1>
-            <p className="text-gray-700 mt-2">Instructor: {course.user?.name || "Unknown"}</p>
+            <p className="text-gray-700 mt-2">Instructor: {course.instructor || "Unknown"}</p>
             {/* <p className="text-lg text-gray-600 mt-4">{course.courseDescription}</p> */}
             <p className="text-sm font-bold mt-2">
                   ⭐ {course.rating || 0} ({course.reviews || 0} Reviews)
                 </p>
-            <p className="mt-4 font-semibold">Price: {course.pricingOption === "Premium" ? `₹${course.Price}` : "Free"}</p>
+            <p className="mt-4 font-semibold">Price: {course.pricingOption === "Premium" ? `₹${course.price}` : "Free"}</p>
             <button className="mt-4 bg-purple-600 text-white py-2 px-4 rounded-lg hover:bg-purple-700">
               Purchase Course
             </button>

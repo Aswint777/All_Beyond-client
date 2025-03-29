@@ -12,7 +12,7 @@ interface Student {
   contactNumber: number;
   qualification: string;
   age: number;
-  status: "pending" | "approved" | "rejected"; // Use the enum types
+  status: "pending" | "approved" | "rejected";
 }
 
 const AdminInstructorApplicationList = () => {
@@ -30,15 +30,10 @@ const AdminInstructorApplicationList = () => {
         const API_URL = import.meta.env.VITE_REACT_APP_API_URL!;
         const response = await axios.get(
           `${API_URL}/admin/AdminInstructorApplicationList`,
-          {
-            withCredentials: true,
-          }
+          { withCredentials: true }
         );
         setStudents(response.data.data);
-        console.log(
-          response.data.data,
-          "......................................."
-        );
+        console.log(response.data.data, ".......................................");
       } catch (err: any) {
         setError(err.message || "An error occurred while fetching students.");
       } finally {
@@ -48,7 +43,6 @@ const AdminInstructorApplicationList = () => {
     fetchStudents();
   }, []);
 
-  // 🛑 Handle Status Change
   const handleStatusChange = async (
     id: string,
     newStatus: "pending" | "approved" | "rejected"
@@ -57,13 +51,8 @@ const AdminInstructorApplicationList = () => {
       const API_URL = import.meta.env.VITE_REACT_APP_API_URL!;
       const response = await axios.put(
         `${API_URL}/admin/updateInstructorStatus`,
-        {
-          Id: id,
-          status: newStatus,
-        },
-        {
-          withCredentials: true,
-        }
+        { Id: id, status: newStatus },
+        { withCredentials: true }
       );
 
       if (response.status === 200) {
@@ -78,26 +67,18 @@ const AdminInstructorApplicationList = () => {
       alert("Failed to update status. Please try again.");
     }
   };
+
   const handleViewDetails = (userId: string) => {
     navigate(`/admin/user_details/${userId}`);
   };
 
-  const handleBlockUnblock = async (
-    _id: string,
-    status: boolean,
-    userid: string
-  ) => {
+  const handleBlockUnblock = async (_id: string, status: boolean, userid: string) => {
     try {
       const API_URL = import.meta.env.VITE_REACT_APP_API_URL!;
       const response = await axios.put(
         `${API_URL}/admin/block_UnBlock`,
-        {
-          userId: userid,
-          isBlocked: status,
-        },
-        {
-          withCredentials: true,
-        }
+        { userId: userid, isBlocked: status },
+        { withCredentials: true }
       );
       console.log(response, "response");
 
@@ -119,87 +100,104 @@ const AdminInstructorApplicationList = () => {
   );
 
   return (
-    <div className="min-h-screen bg-gray-100 flex">
+    <div className="min-h-screen bg-gradient-to-br from-gray-50 to-gray-200 flex">
       <AdminSideBar />
 
-      <main className="flex-1 p-8">
-        <h2 className="text-2xl font-bold mb-6">Instructor Applications</h2>
+      <main className="flex-1 p-6 lg:p-8 overflow-x-auto">
+        <h2 className="text-3xl font-bold text-gray-800 mb-8">Instructor Applications</h2>
 
-        <table className="w-full table-auto border-collapse border">
-          <thead>
-            <tr className="bg-gray-200">
-              <th className="px-4 py-2 border">ID</th>
-              <th className="px-4 py-2 border">Name</th>
-              <th className="px-4 py-2 border">Email</th>
-              <th className="px-4 py-2 border">Status</th>
-              <th className="px-4 py-2 border">Actions</th>
-              <th className="px-4 py-2 border">About</th>
-            </tr>
-          </thead>
-          <tbody>
-            {currentStudents.map((student) => (
-              <tr key={student._id} className="text-center">
-                <td className="px-4 py-2 border">{student.userId}</td>
-                <td className="px-4 py-2 border">{student.username}</td>
-                <td className="px-4 py-2 border">{student.email}</td>
-
-                {/* ✅ Dropdown for Status */}
-                <td className="px-4 py-2 border">
-                  <select
-                    value={student.status}
-                    onChange={(e) =>
-                      handleStatusChange(
-                        student._id,
-                        e.target.value as "pending" | "approved" | "rejected"
-                      )
-                    }
-                    className="border p-1 rounded-md"
-                  >
-                    <option value="pending">Pending</option>
-                    <option value="approved">Approved</option>
-                    <option value="rejected">Rejected</option>
-                  </select>
-                </td>
-
-                <td className="px-4 py-2 border">
-                  {student.isBlocked ? (
-                    <button
-                      onClick={() =>
-                        handleBlockUnblock(student._id, false, student.userId)
-                      }
-                      className="px-4 py-1 bg-orange-500 text-white rounded-md"
-                    >
-                      Unblock
-                    </button>
-                  ) : (
-                    <button
-                      onClick={() =>
-                        handleBlockUnblock(student._id, true, student.userId)
-                      }
-                      className="px-4 py-1 bg-blue-500 text-white rounded-md"
-                    >
-                      Block
-                    </button>
-                  )}
-                </td>
-                <td>
-                  <button
-                    onClick={() => handleViewDetails(student.userId)}
-                    className="px-4 py-1 bg-green-500 text-white rounded-md"
-                  >
-                    View
-                  </button>
-                </td>
+        {/* Table */}
+        <div className="bg-white shadow-xl rounded-xl overflow-hidden">
+          <table className="w-full border-collapse">
+            <thead>
+              <tr className="bg-gray-100 text-gray-700 text-sm font-semibold uppercase tracking-wide">
+                <th className="px-6 py-4 text-left">ID</th>
+                <th className="px-6 py-4 text-left">Name</th>
+                <th className="px-6 py-4 text-left">Email</th>
+                <th className="px-6 py-4 text-left">Status</th>
+                <th className="px-6 py-4 text-left">Actions</th>
+                <th className="px-6 py-4 text-left">About</th>
               </tr>
-            ))}
-          </tbody>
-        </table>
+            </thead>
+            <tbody className="divide-y divide-gray-200">
+              {loading ? (
+                <tr>
+                  <td colSpan={6} className="px-6 py-4 text-center text-gray-500">
+                    Loading...
+                  </td>
+                </tr>
+              ) : error ? (
+                <tr>
+                  <td colSpan={6} className="px-6 py-4 text-center text-red-500">
+                    {error}
+                  </td>
+                </tr>
+              ) : currentStudents.length === 0 ? (
+                <tr>
+                  <td colSpan={6} className="px-6 py-4 text-center text-gray-500">
+                    No instructor applications found.
+                  </td>
+                </tr>
+              ) : (
+                currentStudents.map((student) => (
+                  <tr
+                    key={student._id}
+                    className="hover:bg-gray-50 transition-all duration-200"
+                  >
+                    <td className="px-6 py-4 text-gray-700">{student.userId}</td>
+                    <td className="px-6 py-4 text-gray-700">{student.username}</td>
+                    <td className="px-6 py-4 text-gray-700">{student.email}</td>
+                    <td className="px-6 py-4">
+                      <select
+                        value={student.status}
+                        onChange={(e) =>
+                          handleStatusChange(
+                            student._id,
+                            e.target.value as "pending" | "approved" | "rejected"
+                          )
+                        }
+                        className="w-full px-3 py-2 border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-transparent transition-all duration-200"
+                      >
+                        <option value="pending">Pending</option>
+                        <option value="approved">Approved</option>
+                        <option value="rejected">Rejected</option>
+                      </select>
+                    </td>
+                    <td className="px-6 py-4">
+                      <button
+                        onClick={() =>
+                          handleBlockUnblock(student._id, !student.isBlocked, student.userId)
+                        }
+                        className={`px-4 py-2 rounded-lg shadow-md text-white transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-offset-2 ${
+                          student.isBlocked
+                            ? "bg-orange-500 hover:bg-orange-600 focus:ring-orange-400"
+                            : "bg-blue-500 hover:bg-blue-600 focus:ring-blue-400"
+                        }`}
+                      >
+                        {student.isBlocked ? "Unblock" : "Block"}
+                      </button>
+                    </td>
+                    <td className="px-6 py-4">
+                      <button
+                        onClick={() => handleViewDetails(student.userId)}
+                        className="px-4 py-2 bg-green-500 text-white rounded-lg shadow-md hover:bg-green-600 transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-green-400 focus:ring-offset-2"
+                      >
+                        View
+                      </button>
+                    </td>
+                  </tr>
+                ))
+              )}
+            </tbody>
+          </table>
+        </div>
 
         {/* Pagination */}
-        <div className="flex justify-center items-center mt-4 space-x-2">
+        <div className="flex justify-center items-center mt-8 space-x-2">
           <button
             onClick={() => setCurrentPage((prev) => Math.max(prev - 1, 1))}
-            className="px-3 py-1 border rounded-md bg-gray-300"
+            disabled={currentPage === 1}
+            className="px-4 py-2 bg-gray-200 text-gray-700 rounded-lg hover:bg-gray-300 transition-all duration-200 disabled:bg-gray-100 disabled:text-gray-400 disabled:cursor-not-allowed"
           >
             «
           </button>
@@ -207,18 +205,19 @@ const AdminInstructorApplicationList = () => {
             <button
               key={i + 1}
               onClick={() => setCurrentPage(i + 1)}
-              className={`px-3 py-1 border rounded-md ${
-                currentPage === i + 1 ? "bg-purple-500 text-white" : ""
+              className={`px-4 py-2 rounded-lg transition-all duration-200 ${
+                currentPage === i + 1
+                  ? "bg-purple-500 text-white shadow-md"
+                  : "bg-gray-200 text-gray-700 hover:bg-gray-300"
               }`}
             >
               {i + 1}
             </button>
           ))}
           <button
-            onClick={() =>
-              setCurrentPage((prev) => Math.min(prev + 1, totalPages))
-            }
-            className="px-3 py-1 border rounded-md bg-gray-300"
+            onClick={() => setCurrentPage((prev) => Math.min(prev + 1, totalPages))}
+            disabled={currentPage === totalPages}
+            className="px-4 py-2 bg-gray-200 text-gray-700 rounded-lg hover:bg-gray-300 transition-all duration-200 disabled:bg-gray-100 disabled:text-gray-400 disabled:cursor-not-allowed"
           >
             »
           </button>

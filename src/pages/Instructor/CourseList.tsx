@@ -19,7 +19,7 @@ interface ICourse {
       video?: string;
     }[];
   }[];
-  pricingOption?: "Premium" | "Free" | "Blocked"; // Added "Blocked" as a valid option
+  pricingOption?: "Premium" | "Free";
   price?: number;
   accountNumber?: number;
   additionalEmail?: string;
@@ -31,13 +31,14 @@ interface ICourse {
   thumbnailUrl?: string;
   rating?: number;
   reviews?: number;
+  isBlocked?: boolean;
 }
 
 const CourseList = () => {
   const navigate = useNavigate();
   const [courses, setCourses] = useState<ICourse[]>([]);
   const [isModalOpen, setIsModalOpen] = useState(false);
-  const [courseToBlock, setCourseToBlock] = useState<string | null>(null);
+  const [courseToToggle, setCourseToToggle] = useState<{ id: string; action: "block" | "unblock" } | null>(null);
   const API_URL = import.meta.env.VITE_REACT_APP_API_URL;
 
   useEffect(() => {
@@ -55,31 +56,39 @@ const CourseList = () => {
     fetchCourses();
   }, []);
 
-  const handleBlockCourse = async (courseId: string) => {
+  const handleToggleCourse = async (courseId: string, action: "block" | "unblock") => {
     try {
-      const response = await axios.put(`${API_URL}/instructor/blockCourse/${courseId}`, {}, config);
-      console.log("Course blocked:", response.data);
+      const endpoint = `${API_URL}/instructor/blockCourse/${courseId}`;
+      const response = await axios.put(endpoint, {}, config);
+      console.log(`Course ${action}ed:`, response.data);
+
+      // Update the course with the full response data
       setCourses((prevCourses) =>
         prevCourses.map((course) =>
-          course._id === courseId ? { ...course, pricingOption: "Blocked" } : course
+          course._id === courseId ? { ...course, ...response.data.course } : course
         )
       );
       setIsModalOpen(false);
-      setCourseToBlock(null);
+      setCourseToToggle(null);
     } catch (error) {
-      console.error("Error blocking course:", error);
-      alert("Failed to block course. Please try again.");
+      console.error(`Error ${action}ing course:`, error);
+      alert(`Failed to ${action} course. Please try again.`);
     }
   };
 
-  const openBlockModal = (courseId: string) => {
-    setCourseToBlock(courseId);
+  const openToggleModal = (courseId: string, action: "block" | "unblock") => {
+    setCourseToToggle({ id: courseId, action });
     setIsModalOpen(true);
   };
 
-  const closeBlockModal = () => {
+  const closeToggleModal = () => {
     setIsModalOpen(false);
-    setCourseToBlock(null);
+    setCourseToToggle(null);
+  };
+
+  const handleToggleAction = () => {
+    if (!courseToToggle) return;
+    handleToggleCourse(courseToToggle.id, courseToToggle.action);
   };
 
   return (
@@ -129,20 +138,21 @@ const CourseList = () => {
                       <button
                         onClick={() => navigate(`/instructor/EditCourse/${course._id}`)}
                         className="flex-1 py-2 bg-indigo-500 text-white rounded-md hover:bg-indigo-600 transition duration-200 focus:outline-none focus:ring-2 focus:ring-indigo-400 focus:ring-offset-1"
-                        disabled={course.pricingOption === "Blocked"} // Disable if blocked
+                        disabled={course.isBlocked} // Disable if blocked
                       >
                         View/Edit
                       </button>
                       <button
-                        onClick={() => openBlockModal(course._id)}
+                        onClick={() =>
+                          openToggleModal(course._id, course.isBlocked ? "unblock" : "block")
+                        }
                         className={`flex-1 py-2 text-white rounded-md transition duration-200 focus:outline-none focus:ring-2 focus:ring-offset-1 ${
-                          course.pricingOption === "Blocked"
-                            ? "bg-gray-400 cursor-not-allowed"
+                          course.isBlocked
+                            ? "bg-green-500 hover:bg-green-600 focus:ring-green-400"
                             : "bg-red-500 hover:bg-red-600 focus:ring-red-400"
                         }`}
-                        disabled={course.pricingOption === "Blocked"} // Disable if already blocked
                       >
-                        {course.pricingOption === "Blocked" ? "Blocked" : "Block"}
+                        {course.isBlocked ? "Unblock" : "Block"}
                       </button>
                     </div>
                   </div>
@@ -171,24 +181,31 @@ const CourseList = () => {
         </div>
       </div>
 
-      {/* Block Confirmation Modal */}
+      {/* Toggle Confirmation Modal */}
       {isModalOpen && (
         <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
           <div className="bg-white rounded-lg p-6 w-full max-w-md shadow-xl">
-            <h3 className="text-lg font-semibold text-gray-800 mb-4">Confirm Block</h3>
+            <h3 className="text-lg font-semibold text-gray-800 mb-4">
+              Confirm {courseToToggle?.action === "block" ? "Block" : "Unblock"}
+            </h3>
             <p className="text-gray-600 mb-6">
-              Are you sure you want to block this course? This action cannot be undone without
-              contacting support.
+              Are you sure you want to {courseToToggle?.action === "block" ? "block" : "unblock"} this course?
             </p>
             <div className="flex gap-4">
               <button
-                onClick={() => handleBlockCourse(courseToBlock!)}
-                className="flex-1 py-2 bg-red-600 text-white rounded-md hover:bg-red-700 transition duration-200 focus:outline-none focus:ring-2 focus:ring-red-500 focus:ring-offset-1"
+                onClick={handleToggleAction}
+                className={`flex-1 py-2 text-white rounded-md hover:${
+                  courseToToggle?.action === "block" ? "bg-red-700" : "bg-green-700"
+                } transition duration-200 focus:outline-none focus:ring-2 focus:ring-offset-1 ${
+                  courseToToggle?.action === "block"
+                    ? "bg-red-600 focus:ring-red-500"
+                    : "bg-green-600 focus:ring-green-500"
+                }`}
               >
-                Yes, Block
+                Yes, {courseToToggle?.action === "block" ? "Block" : "Unblock"}
               </button>
               <button
-                onClick={closeBlockModal}
+                onClick={closeToggleModal}
                 className="flex-1 py-2 bg-gray-300 text-gray-700 rounded-md hover:bg-gray-400 transition duration-200 focus:outline-none focus:ring-2 focus:ring-gray-400 focus:ring-offset-1"
               >
                 Cancel

@@ -2,12 +2,11 @@ import React, { useState, useEffect } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 import axios from "axios";
 import { categoryErrors, validateCategory } from "../../components/validation/CategoryErrors";
-// import { validateCategory, categoryErrors } from "../../utils/validation"; // ✅ Import validation functions
 
 const EditCategoryPage = () => {
   const navigate = useNavigate();
   const location = useLocation();
-  const { id, name, description} = location.state || {}; // Get passed data
+  const { id, name, description } = location.state || {};
 
   const [formData, setFormData] = useState({
     name: name || "",
@@ -15,7 +14,7 @@ const EditCategoryPage = () => {
   });
 
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
-  const [validationErrors, setValidationErrors] = useState<categoryErrors>({}); // ✅ Validation state
+  const [validationErrors, setValidationErrors] = useState<categoryErrors>({});
 
   useEffect(() => {
     if (errorMessage) {
@@ -25,6 +24,7 @@ const EditCategoryPage = () => {
       return () => clearTimeout(timer);
     }
   }, [errorMessage]);
+
   useEffect(() => {
     if (Object.keys(validationErrors).length > 0) {
       const timer = setTimeout(() => setValidationErrors({}), 2000);
@@ -32,29 +32,30 @@ const EditCategoryPage = () => {
     }
   }, [validationErrors]);
 
-  const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>) => {
+  const handleChange = (
+    e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>
+  ) => {
     const { name, value } = e.target;
-    setFormData(prev => ({ ...prev, [name]: value }));
-
+    setFormData((prev) => ({ ...prev, [name]: value }));
     setErrorMessage(null);
-    setValidationErrors(prev => ({ ...prev, [name]: "" })); // ✅ Clear field-specific validation error
+    setValidationErrors((prev) => ({ ...prev, [name]: "" }));
   };
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
 
-    // ✅ Run validation
     const errors = validateCategory(formData.name, formData.description);
     setValidationErrors(errors);
 
-    // ✅ If errors exist, stop submission
     if (Object.keys(errors).length > 0) return;
 
     try {
       const API_URL = import.meta.env.VITE_REACT_APP_API_URL;
-      const response = await axios.put(`${API_URL}/admin/editCategory/${id}`, formData, {
-        withCredentials: true,
-      });
+      const response = await axios.put(
+        `${API_URL}/admin/editCategory/${id}`,
+        formData,
+        { withCredentials: true }
+      );
       navigate("/admin/categoryListPage");
     } catch (err: any) {
       console.error("Error updating category:", err);
@@ -63,32 +64,86 @@ const EditCategoryPage = () => {
   };
 
   return (
-    <div className="flex flex-col items-center justify-center min-h-screen p-6 bg-gray-100">
-      <button onClick={() => navigate("/admin/categoryListPage")} className="absolute top-4 left-4 bg-gray-400 text-white px-3 py-1 rounded-md hover:bg-gray-500 transition">
-        ← Back
+    <div className="min-h-screen bg-gradient-to-br from-gray-50 to-gray-200 flex items-center justify-center p-4 sm:p-6 lg:p-8">
+      {/* Back Button */}
+      <button
+        onClick={() => navigate("/admin/categoryListPage")}
+        className="absolute top-4 left-4 flex items-center space-x-2 bg-gray-700 text-white px-4 py-2 rounded-full shadow-md hover:bg-gray-800 transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-gray-500 focus:ring-offset-2"
+      >
+        <svg
+          className="w-4 h-4"
+          fill="none"
+          stroke="currentColor"
+          viewBox="0 0 24 24"
+          xmlns="http://www.w3.org/2000/svg"
+        >
+          <path
+            strokeLinecap="round"
+            strokeLinejoin="round"
+            strokeWidth="2"
+            d="M15 19l-7-7 7-7"
+          />
+        </svg>
+        <span>Back</span>
       </button>
 
-      <div className="bg-white shadow-lg rounded-lg p-8 max-w-lg w-full">
-        <h2 className="text-2xl font-semibold mb-6 text-center">Edit Category</h2>
+      {/* Form Container */}
+      <div className="bg-white shadow-xl rounded-2xl p-8 w-full max-w-lg transform transition-all duration-300 hover:shadow-2xl">
+        <h2 className="text-3xl font-bold text-gray-800 mb-6 text-center">Edit Category</h2>
 
-        {errorMessage && <p className="text-red-500 text-center mb-4">{errorMessage}</p>}
+        {/* Error Message */}
+        {errorMessage && (
+          <div className="bg-red-100 border-l-4 border-red-500 text-red-700 p-4 rounded-lg mb-6 animate-fade-in">
+            {errorMessage}
+          </div>
+        )}
 
-        <form onSubmit={handleSubmit} className="space-y-4">
+        {/* Form */}
+        <form onSubmit={handleSubmit} className="space-y-6">
+          {/* Category Name */}
           <div>
-            <label className="block text-sm font-medium text-gray-700 mb-1">Category Name</label>
-            <input type="text" name="name" value={formData.name} onChange={handleChange} className="border p-2 rounded w-full" required />
-            {validationErrors.name && <p className="text-red-500 text-sm">{validationErrors.name}</p>}
+            <label className="block text-sm font-semibold text-gray-700 mb-2">
+              Category Name
+            </label>
+            <input
+              type="text"
+              name="name"
+              value={formData.name}
+              onChange={handleChange}
+              className="w-full px-4 py-3 border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-transparent transition-all duration-200"
+              required
+            />
+            {validationErrors.name && (
+              <p className="text-red-500 text-xs mt-2 animate-fade-in">
+                {validationErrors.name}
+              </p>
+            )}
           </div>
 
+          {/* Description */}
           <div>
-            <label className="block text-sm font-medium text-gray-700 mb-1">Description</label>
-            <textarea name="description" value={formData.description} onChange={handleChange} className="border p-2 rounded w-full h-24" required />
-            {validationErrors.description && <p className="text-red-500 text-sm">{validationErrors.description}</p>}
+            <label className="block text-sm font-semibold text-gray-700 mb-2">
+              Description
+            </label>
+            <textarea
+              name="description"
+              value={formData.description}
+              onChange={handleChange}
+              className="w-full px-4 py-3 border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-transparent transition-all duration-200 resize-none h-32"
+              required
+            />
+            {validationErrors.description && (
+              <p className="text-red-500 text-xs mt-2 animate-fade-in">
+                {validationErrors.description}
+              </p>
+            )}
           </div>
 
-
-
-          <button type="submit" className="bg-purple-500 text-white px-4 py-2 rounded-lg w-full hover:bg-purple-600 transition">
+          {/* Submit Button */}
+          <button
+            type="submit"
+            className="w-full bg-gradient-to-r from-purple-500 to-purple-600 text-white px-6 py-3 rounded-lg shadow-md hover:from-purple-600 hover:to-purple-700 transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-purple-500 focus:ring-offset-2"
+          >
             Update Category
           </button>
         </form>

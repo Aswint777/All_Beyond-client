@@ -1,51 +1,141 @@
-import React from "react";
+import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 
 const BasicNavbar: React.FC = () => {
-  const navigate = useNavigate();  
+  const navigate = useNavigate();
+  const [isMenuOpen, setIsMenuOpen] = useState(false);
+
+  const toggleMenu = () => setIsMenuOpen(!isMenuOpen);
+
   return (
-    <nav className="bg-gray-100 shadow-md">
-      <div className="container mx-auto px-4 py-3 flex justify-between items-center">
+    <nav className="bg-white shadow-lg fixed w-full z-50 top-0">
+      <div className="container mx-auto px-4 py-4 flex justify-between items-center">
         {/* Logo */}
         <div className="flex items-center space-x-3">
           <img
             src="\src\assets\images\B (4).png" // Replace with your logo path
             alt="Logo"
-            className="h-8"
+            className="h-10 w-auto"
           />
-          <span className="text-xl font-bold text-gray-800">All Beyond</span>
+          <span className="text-2xl font-bold text-gray-800 tracking-tight">All Beyond</span>
         </div>
 
-        {/* Links */}
-        <ul className="flex space-x-6 text-gray-700">
+        {/* Desktop Links */}
+        <ul className="hidden md:flex space-x-8 text-gray-700 font-medium">
           <li
             onClick={() => navigate("/")}
-            className="hover:text-gray-900 cursor-pointer"
+            className="cursor-pointer hover:text-indigo-600 transition-colors duration-200"
           >
             Home
           </li>
-          <li onClick={()=>navigate("/courses")} className="hover:text-gray-900 cursor-pointer">Courses</li>
-          <li className="hover:text-gray-900 cursor-pointer">Careers</li>
-          <li className="hover:text-gray-900 cursor-pointer">Blog</li>
-          <li className="hover:text-gray-900 cursor-pointer">About Us</li>
+          <li
+            onClick={() => navigate("/courses")}
+            className="cursor-pointer hover:text-indigo-600 transition-colors duration-200"
+          >
+            Courses
+          </li>
+          <li className="cursor-pointer hover:text-indigo-600 transition-colors duration-200">
+            Careers
+          </li>
+          <li className="cursor-pointer hover:text-indigo-600 transition-colors duration-200">
+            Blog
+          </li>
+          <li className="cursor-pointer hover:text-indigo-600 transition-colors duration-200">
+            About Us
+          </li>
         </ul>
 
-        {/* Buttons */}
-        <div className="flex space-x-3">
+        {/* Desktop Buttons */}
+        <div className="hidden md:flex space-x-4">
           <button
             onClick={() => navigate("/login")}
-            className="px-4 py-2 border rounded-full shadow-md text-gray-800 bg-white hover:bg-gray-200"
+            className="px-5 py-2 border border-gray-300 rounded-full text-gray-800 bg-white hover:bg-gray-100 hover:border-gray-400 transition-all duration-200 shadow-sm"
           >
             Login
           </button>
           <button
             onClick={() => navigate("/SignUp")}
-            className="px-4 py-2 border rounded-full shadow-md bg-gray-800 text-white hover:bg-gray-900"
+            className="px-5 py-2 bg-indigo-600 text-white rounded-full hover:bg-indigo-700 transition-all duration-200 shadow-md"
           >
             Sign Up
           </button>
         </div>
+
+        {/* Hamburger Menu (Mobile) */}
+        <div className="md:hidden flex items-center">
+          <button onClick={toggleMenu} className="text-gray-800 focus:outline-none">
+            <svg
+              className="w-6 h-6"
+              fill="none"
+              stroke="currentColor"
+              viewBox="0 0 24 24"
+              xmlns="http://www.w3.org/2000/svg"
+            >
+              <path
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                strokeWidth="2"
+                d={isMenuOpen ? "M6 18L18 6M6 6l12 12" : "M4 6h16M4 12h16M4 18h16"}
+              />
+            </svg>
+          </button>
+        </div>
       </div>
+
+      {/* Mobile Menu */}
+      {isMenuOpen && (
+        <div className="md:hidden bg-white shadow-lg">
+          <ul className="flex flex-col space-y-4 px-4 py-4 text-gray-700 font-medium">
+            <li
+              onClick={() => {
+                navigate("/");
+                setIsMenuOpen(false);
+              }}
+              className="cursor-pointer hover:text-indigo-600 transition-colors duration-200"
+            >
+              Home
+            </li>
+            <li
+              onClick={() => {
+                navigate("/courses");
+                setIsMenuOpen(false);
+              }}
+              className="cursor-pointer hover:text-indigo-600 transition-colors duration-200"
+            >
+              Courses
+            </li>
+            <li className="cursor-pointer hover:text-indigo-600 transition-colors duration-200">
+              Careers
+            </li>
+            <li className="cursor-pointer hover:text-indigo-600 transition-colors duration-200">
+              Blog
+            </li>
+            <li className="cursor-pointer hover:text-indigo-600 transition-colors duration-200">
+              About Us
+            </li>
+          </ul>
+          <div className="flex flex-col space-y-4 px-4 pb-6">
+            <button
+              onClick={() => {
+                navigate("/login");
+                setIsMenuOpen(false);
+              }}
+              className="px-5 py-2 border border-gray-300 rounded-full text-gray-800 bg-white hover:bg-gray-100 hover:border-gray-400 transition-all duration-200 shadow-sm"
+            >
+              Login
+            </button>
+            <button
+              onClick={() => {
+                navigate("/SignUp");
+                setIsMenuOpen(false);
+              }}
+              className="px-5 py-2 bg-indigo-600 text-white rounded-full hover:bg-indigo-700 transition-all duration-200 shadow-md"
+            >
+              Sign Up
+            </button>
+          </div>
+        </div>
+      )}
     </nav>
   );
 };

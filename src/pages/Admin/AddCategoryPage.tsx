@@ -14,31 +14,29 @@ const AddCategoryPage: React.FC = () => {
 
   const [errors, setErrors] = useState<categoryErrors>({});
   const [successMessage, setSuccessMessage] = useState<string | null>(null);
-  const [apiError, setApiError] = useState<string | null>(null); // ✅ Added API error state
+  const [apiError, setApiError] = useState<string | null>(null);
 
   useEffect(() => {
     if (apiError) {
       const timer = setTimeout(() => {
         setApiError(null);
-      }, 3000); // 30s delay
+      }, 3000);
 
-      return () => clearTimeout(timer); // Cleanup timeout
+      return () => clearTimeout(timer);
     }
   }, [apiError]);
-
 
   const handleChange = (
     e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>
   ) => {
     const { name, value } = e.target;
     setFormData((prev) => ({ ...prev, [name]: value }));
-  
-    // Validate only the changed field
+
     const newErrors = validateCategory(
       name === "name" ? value : formData.name,
-      name === "description" ? value : formData.description,
+      name === "description" ? value : formData.description
     );
-  
+
     setErrors((prevErrors) => {
       if (!newErrors[name as keyof categoryErrors]) {
         const updatedErrors = { ...prevErrors };
@@ -48,7 +46,7 @@ const AddCategoryPage: React.FC = () => {
       return { ...prevErrors, ...newErrors };
     });
 
-    setApiError(null); // ✅ Clear API errors when user starts typing
+    setApiError(null);
   };
 
   const handleSubmit = async (e: React.FormEvent) => {
@@ -65,53 +63,68 @@ const AddCategoryPage: React.FC = () => {
       const API_URL = import.meta.env.VITE_REACT_APP_API_URL!;
       console.log(API_URL, "Backend URL");
 
-      const response = await axios.post(
-        `${API_URL}/admin/addCategory`,
-        formData,
-        config
-      );
+      const response = await axios.post(`${API_URL}/admin/addCategory`, formData, config);
 
       if (response.status === 201) {
         setSuccessMessage("Category added successfully! 🎉");
-        setApiError(null); // ✅ Clear API errors if successful
+        setApiError(null);
 
         setTimeout(() => navigate("/admin/categoryListPage"), 2000);
       }
     } catch (error: any) {
       console.error("Error adding category:", error);
-      
-      // ✅ Set API error message
       setApiError(error.response?.data?.error || "An unexpected error occurred.");
     }
   };
 
   return (
-    <div className="flex flex-col items-center justify-center min-h-screen p-6 bg-gray-100">
+    <div className="min-h-screen bg-gradient-to-br from-gray-50 to-gray-200 flex items-center justify-center p-4 sm:p-6 lg:p-8">
+      {/* Back Button */}
       <button
         type="button"
         onClick={() => navigate("/admin/categoryListPage")}
-        className="absolute top-4 left-4 bg-gray-400 text-white px-3 py-1 rounded-md hover:bg-gray-500 transition"
+        className="absolute top-4 left-4 flex items-center space-x-2 bg-gray-700 text-white px-4 py-2 rounded-full shadow-md hover:bg-gray-800 transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-gray-500 focus:ring-offset-2"
       >
-        ← Back
+        <svg
+          className="w-4 h-4"
+          fill="none"
+          stroke="currentColor"
+          viewBox="0 0 24 24"
+          xmlns="http://www.w3.org/2000/svg"
+        >
+          <path
+            strokeLinecap="round"
+            strokeLinejoin="round"
+            strokeWidth="2"
+            d="M15 19l-7-7 7-7"
+          />
+        </svg>
+        <span>Back</span>
       </button>
 
-      <div className="relative bg-white shadow-lg rounded-lg p-8 max-w-lg w-full">
-        <h2 className="text-2xl font-semibold mb-6 text-center">Add Category</h2>
+      {/* Form Container */}
+      <div className="bg-white shadow-xl rounded-2xl p-8 w-full max-w-lg transform transition-all duration-300 hover:shadow-2xl">
+        <h2 className="text-3xl font-bold text-gray-800 mb-6 text-center">Add Category</h2>
 
-        {/* ✅ Success Message */}
+        {/* Success Message */}
         {successMessage && (
-          <p className="text-green-600 text-center mb-4">{successMessage}</p>
+          <div className="bg-green-100 border-l-4 border-green-500 text-green-700 p-4 rounded-lg mb-6 animate-fade-in">
+            {successMessage}
+          </div>
         )}
 
-        {/* ✅ API Error Message */}
+        {/* API Error Message */}
         {apiError && (
-          <p className="text-red-500 text-center mb-4">{apiError}</p>
+          <div className="bg-red-100 border-l-4 border-red-500 text-red-700 p-4 rounded-lg mb-6 animate-fade-in">
+            {apiError}
+          </div>
         )}
 
-        <form onSubmit={handleSubmit} className="space-y-4">
+        {/* Form */}
+        <form onSubmit={handleSubmit} className="space-y-6">
           {/* Category Name */}
           <div>
-            <label className="block text-sm font-medium text-gray-700 mb-1">
+            <label className="block text-sm font-semibold text-gray-700 mb-2">
               Category Name
             </label>
             <input
@@ -119,35 +132,37 @@ const AddCategoryPage: React.FC = () => {
               name="name"
               value={formData.name}
               onChange={handleChange}
-              className="border p-2 rounded w-full"
+              className="w-full px-4 py-3 border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-transparent transition-all duration-200"
               placeholder="Enter category name"
               required
             />
-            {errors.name && <p className="text-red-500 text-xs mt-1">{errors.name}</p>}
+            {errors.name && (
+              <p className="text-red-500 text-xs mt-2 animate-fade-in">{errors.name}</p>
+            )}
           </div>
 
           {/* Description */}
           <div>
-            <label className="block text-sm font-medium text-gray-700 mb-1">
+            <label className="block text-sm font-semibold text-gray-700 mb-2">
               Description
             </label>
             <textarea
               name="description"
               value={formData.description}
               onChange={handleChange}
-              className="border p-2 rounded w-full h-24"
+              className="w-full px-4 py-3 border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-transparent transition-all duration-200 resize-none h-32"
               placeholder="Enter category description"
               required
             />
-            {errors.description && <p className="text-red-500 text-xs mt-1">{errors.description}</p>}
+            {errors.description && (
+              <p className="text-red-500 text-xs mt-2 animate-fade-in">{errors.description}</p>
+            )}
           </div>
-
-
 
           {/* Submit Button */}
           <button
             type="submit"
-            className="bg-purple-500 text-white px-4 py-2 rounded-lg w-full hover:bg-purple-600 transition"
+            className="w-full bg-gradient-to-r from-purple-500 to-purple-600 text-white px-6 py-3 rounded-lg shadow-md hover:from-purple-600 hover:to-purple-700 transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-purple-500 focus:ring-offset-2"
           >
             Add Category
           </button>
