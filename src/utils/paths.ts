@@ -1,22 +1,42 @@
+import AddCourse_Content from "../pages/Instructor/AddCourse_Content"
+
 export const ROUTES = {
-    // COMMON PAGES 
-    HOME : "/" ,
-    SIGNUP : "/SignUP",
-    LOGIN : "/login" ,
-    OTP_VERIFY: "/OtpVerify",
 
-    // USER
-    PROFILE :"/Profile",
-    INSTRUCTOR_APPLY_PAGE:"/InstructorApplyPage",
-    INSTRUCTOR_APPLICATION_FORM:"/InstructorApplicationForm",
+  // Home routes
+  HOME: "/",
+  COURSES:'/courses',
+  COURSE_DETAILS:"/courseDetails/:courseId",
 
-    // ADMIN
-    ADMIN_INSTRUCTOR_APPLICATION_LIST:"/admin/AdminInstructorApplicationList",
-    CATEGORY_LIST:"/admin/categoryListPage",
-    ADD_CATEGORY:"/admin/AddCategoryPage",
-    EDIT_CATEGORY:"/admin/EditCategory",
-    ADMIN_STUDENT_LIST:"/admin/AdminStudentsListPage",
-    ADMIN_INSTRUCTOR_LIST:"/admin/AdminInstructorListPage",
-    
+  // AuThentication routes
+  SIGNUP: "/SignUP",
+  LOGIN: "/login",
+  OTP_VERIFY: "/OtpVerify",
 
-}
+  // USER
+  USER:'/user/',
+  PROFILE: "profile",
+  INSTRUCTOR_APPLY_PAGE: "InstructorApplyPage",
+  INSTRUCTOR_APPLICATION_FORM: "InstructorApplicationForm",
+
+  // ADMIN
+  ADMIN:'/admin',
+  ADMIN_INSTRUCTOR_APPLICATION_LIST: "/AdminInstructorApplicationList",
+  CATEGORY_LIST: "/categoryListPage",
+  ADD_CATEGORY: "/AddCategoryPage",
+  EDIT_CATEGORY: "/EditCategory",
+  ADMIN_STUDENT_LIST: "/AdminStudentsListPage",
+  ADMIN_INSTRUCTOR_LIST: "/AdminInstructorListPage",
+  ADMIN_USER_DETAILS:"/user_details/",
+
+
+  // INSTRUCTOR
+  INSTRUCTOR:'/instructor',
+  INSTRUCTOR_COURSE:"/courses",
+  ADD_COURSE_DETAILS:"/add-course-details",
+  ADD_COURSE_CONTENT:"/add-course-content" ,
+  ADD_COURSE_PRICING:"/add-course-pricing",
+  EDIT_COURSE :"/edit-course/",
+
+  // STUDENT ROUTES
+
+};

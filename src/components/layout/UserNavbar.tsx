@@ -7,6 +7,7 @@ import { useModal } from "../context/ModalContext";
 import axios from "axios";
 import { config } from "../../configaration/Config";
 import { GetUserDetailsAction } from "../../redux/actions/GetUserDetailsAction";
+import { ROUTES } from "../../utils/paths";
 
 const UserNavbar: React.FC = () => {
   const dispatch = useDispatch<AppDispatch>();
@@ -34,11 +35,17 @@ const UserNavbar: React.FC = () => {
       const API_URL = import.meta.env.VITE_REACT_APP_API_URL;
       setIsSwitching(true);
 
-      const response = await axios.put(`${API_URL}/auth/switchUserRole`, {}, config);
+      const response = await axios.put(
+        `${API_URL}/auth/switchUserRole`,
+        {},
+        config
+      );
 
       if (response.status === 200) {
         console.log("✅ Role switched successfully:", response.data.data.role);
-        const newRole = response.data.data.role || (userRole === "instructor" ? "student" : "instructor");
+        const newRole =
+          response.data.data.role ||
+          (userRole === "instructor" ? "student" : "instructor");
         setUserRole(newRole);
         await dispatch(GetUserDetailsAction());
       } else {
@@ -63,19 +70,21 @@ const UserNavbar: React.FC = () => {
             alt="Logo"
             className="h-10 w-auto"
           />
-          <span className="text-2xl font-bold text-gray-800 tracking-tight">All Beyond</span>
+          <span className="text-2xl font-bold text-gray-800 tracking-tight">
+            All Beyond
+          </span>
         </div>
 
         {/* Desktop Links */}
         <ul className="hidden md:flex items-center space-x-8 text-gray-700 font-medium">
           <li
-            onClick={() => navigate("/")}
+            onClick={() => navigate(ROUTES.HOME)}
             className="cursor-pointer hover:text-indigo-600 transition-colors duration-200"
           >
             Home
           </li>
           <li
-            onClick={() => navigate("/courses")}
+            onClick={() => navigate(`${ROUTES.COURSES}`)}
             className="cursor-pointer hover:text-indigo-600 transition-colors duration-200"
           >
             Courses
@@ -87,7 +96,7 @@ const UserNavbar: React.FC = () => {
             Blog
           </li>
           <li
-            onClick={() => navigate("/InstructorApplyPage")}
+            onClick={() => navigate(`${ROUTES.USER}${ROUTES.INSTRUCTOR_APPLY_PAGE}`)}
             className="cursor-pointer hover:text-indigo-600 transition-colors duration-200"
           >
             Teach
@@ -108,7 +117,9 @@ const UserNavbar: React.FC = () => {
               >
                 {isSwitching
                   ? "Switching..."
-                  : `Switch to ${userRole === "instructor" ? "Student" : "Instructor"}`}
+                  : `Switch to ${
+                      userRole === "instructor" ? "Student" : "Instructor"
+                    }`}
               </button>
             </li>
           )}
@@ -122,7 +133,9 @@ const UserNavbar: React.FC = () => {
             className="w-10 h-10 rounded-full border border-gray-300 object-cover"
           />
           <div className="flex flex-col">
-            <p className="text-sm font-semibold text-gray-800">{userDetails?.username}</p>
+            <p className="text-sm font-semibold text-gray-800">
+              {userDetails?.username}
+            </p>
             <p className="text-xs text-gray-500">{userDetails?.email}</p>
           </div>
           <button
@@ -136,7 +149,7 @@ const UserNavbar: React.FC = () => {
               <ul className="py-2">
                 <li
                   className="px-4 py-2 hover:bg-gray-100 cursor-pointer"
-                  onClick={() => navigate("/profile")}
+                  onClick={() => navigate(`${ROUTES.USER}${ROUTES.PROFILE}`)}
                 >
                   Profile
                 </li>
@@ -159,7 +172,10 @@ const UserNavbar: React.FC = () => {
 
         {/* Hamburger Menu (Mobile) */}
         <div className="md:hidden flex items-center">
-          <button onClick={toggleMenu} className="text-gray-800 focus:outline-none">
+          <button
+            onClick={toggleMenu}
+            className="text-gray-800 focus:outline-none"
+          >
             <svg
               className="w-6 h-6"
               fill="none"
@@ -171,7 +187,11 @@ const UserNavbar: React.FC = () => {
                 strokeLinecap="round"
                 strokeLinejoin="round"
                 strokeWidth="2"
-                d={isMenuOpen ? "M6 18L18 6M6 6l12 12" : "M4 6h16M4 12h16M4 18h16"}
+                d={
+                  isMenuOpen
+                    ? "M6 18L18 6M6 6l12 12"
+                    : "M4 6h16M4 12h16M4 18h16"
+                }
               />
             </svg>
           </button>
@@ -234,7 +254,9 @@ const UserNavbar: React.FC = () => {
                 >
                   {isSwitching
                     ? "Switching..."
-                    : `Switch to ${userRole === "instructor" ? "Student" : "Instructor"}`}
+                    : `Switch to ${
+                        userRole === "instructor" ? "Student" : "Instructor"
+                      }`}
                 </button>
               </li>
             )}
@@ -242,12 +264,16 @@ const UserNavbar: React.FC = () => {
           <div className="flex flex-col items-center space-y-4 px-4 pb-6">
             <div className="flex items-center space-x-3">
               <img
-                src={userDetails?.profilePhoto || "https://via.placeholder.com/40"}
+                src={
+                  userDetails?.profilePhoto || "https://via.placeholder.com/40"
+                }
                 alt="Profile"
                 className="w-10 h-10 rounded-full border border-gray-300 object-cover"
               />
               <div className="flex flex-col">
-                <p className="text-sm font-semibold text-gray-800">{userDetails?.username}</p>
+                <p className="text-sm font-semibold text-gray-800">
+                  {userDetails?.username}
+                </p>
                 <p className="text-xs text-gray-500">{userDetails?.email}</p>
               </div>
             </div>

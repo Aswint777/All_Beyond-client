@@ -3,6 +3,7 @@ import UserNavbar from "../../components/layout/UserNavbar";
 import { useNavigate } from "react-router-dom";
 import { useSelector } from "react-redux";
 import { RootState } from "../../redux/store";
+import { ROUTES } from "../../utils/paths";
 
 const InstructorApplyPage: React.FC = () => {
   const navigate = useNavigate();
@@ -51,7 +52,7 @@ const InstructorApplyPage: React.FC = () => {
                   : "bg-purple-500 text-white"
               }`}
               disabled={isAppliedInstructor}
-              onClick={() => navigate('/InstructorApplicationForm')}
+              onClick={() => navigate(`${ROUTES.USER}${ROUTES.INSTRUCTOR_APPLICATION_FORM}`)}
             >
               {isAppliedInstructor ? "Already Applied" : "Apply Now"}
             </button>

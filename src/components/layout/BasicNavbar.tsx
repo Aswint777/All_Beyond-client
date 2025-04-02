@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
+import { ROUTES } from "../../utils/paths";
 
 const BasicNavbar: React.FC = () => {
   const navigate = useNavigate();
@@ -23,13 +24,13 @@ const BasicNavbar: React.FC = () => {
         {/* Desktop Links */}
         <ul className="hidden md:flex space-x-8 text-gray-700 font-medium">
           <li
-            onClick={() => navigate("/")}
+            onClick={() => navigate(ROUTES.HOME)}
             className="cursor-pointer hover:text-indigo-600 transition-colors duration-200"
           >
             Home
           </li>
           <li
-            onClick={() => navigate("/courses")}
+            onClick={() => navigate(ROUTES.COURSES)}
             className="cursor-pointer hover:text-indigo-600 transition-colors duration-200"
           >
             Courses
@@ -48,13 +49,13 @@ const BasicNavbar: React.FC = () => {
         {/* Desktop Buttons */}
         <div className="hidden md:flex space-x-4">
           <button
-            onClick={() => navigate("/login")}
+            onClick={() => navigate(ROUTES.LOGIN)}
             className="px-5 py-2 border border-gray-300 rounded-full text-gray-800 bg-white hover:bg-gray-100 hover:border-gray-400 transition-all duration-200 shadow-sm"
           >
             Login
           </button>
           <button
-            onClick={() => navigate("/SignUp")}
+            onClick={() => navigate(ROUTES.SIGNUP)}
             className="px-5 py-2 bg-indigo-600 text-white rounded-full hover:bg-indigo-700 transition-all duration-200 shadow-md"
           >
             Sign Up
@@ -88,7 +89,7 @@ const BasicNavbar: React.FC = () => {
           <ul className="flex flex-col space-y-4 px-4 py-4 text-gray-700 font-medium">
             <li
               onClick={() => {
-                navigate("/");
+                navigate(ROUTES.HOME);
                 setIsMenuOpen(false);
               }}
               className="cursor-pointer hover:text-indigo-600 transition-colors duration-200"
@@ -97,7 +98,7 @@ const BasicNavbar: React.FC = () => {
             </li>
             <li
               onClick={() => {
-                navigate("/courses");
+                navigate(ROUTES.COURSES);
                 setIsMenuOpen(false);
               }}
               className="cursor-pointer hover:text-indigo-600 transition-colors duration-200"
@@ -117,7 +118,7 @@ const BasicNavbar: React.FC = () => {
           <div className="flex flex-col space-y-4 px-4 pb-6">
             <button
               onClick={() => {
-                navigate("/login");
+                navigate(ROUTES.LOGIN);
                 setIsMenuOpen(false);
               }}
               className="px-5 py-2 border border-gray-300 rounded-full text-gray-800 bg-white hover:bg-gray-100 hover:border-gray-400 transition-all duration-200 shadow-sm"
@@ -126,7 +127,7 @@ const BasicNavbar: React.FC = () => {
             </button>
             <button
               onClick={() => {
-                navigate("/SignUp");
+                navigate(ROUTES.SIGNUP);
                 setIsMenuOpen(false);
               }}
               className="px-5 py-2 bg-indigo-600 text-white rounded-full hover:bg-indigo-700 transition-all duration-200 shadow-md"

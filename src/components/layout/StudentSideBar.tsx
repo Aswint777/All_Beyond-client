@@ -4,7 +4,7 @@ import { NavLink } from 'react-router-dom';
 const StudentSideBar = () => {
   const links = [
     { name: "Overview", path: "/overview" },
-    { name: "My Courses", path: "/courses" },
+    { name: "My Courses", path: "/coursesmm" },
     { name: "Assessments", path: "/assessments" },
     { name: "Complaints", path: "/complaints" },
     { name: "Settings", path: "/settings" },
@@ -42,7 +42,7 @@ const StudentSideBar = () => {
         } md:translate-x-0 md:w-64 w-3/4 md:relative md:shadow-lg`}
       >
         {/* Title */}
-        <h1 className="text-2xl font-bold mb-10 text-purple-200 tracking-tight">Student</h1>
+        <h1 className="text-2xl font-bold mb-10 text-purple-200 tracking-tight mt-14">Student</h1>
 
         {/* Navigation */}
         <nav className="space-y-2">

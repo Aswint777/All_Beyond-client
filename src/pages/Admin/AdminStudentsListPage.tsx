@@ -4,6 +4,7 @@ import AdminSideBar from "../../components/layout/AdminSideBar";
 import axios from "axios";
 import { useModal } from "../../components/context/ModalContext";
 import TableComponent, { TableColumn } from "../../components/reusableComponents/TableComponent";
+import { ROUTES } from "../../utils/paths";
 
 interface Student {
   _id: string;
@@ -49,7 +50,7 @@ const AdminStudentsListPage: React.FC = () => {
   }, []);
 
   const handleViewDetails = (student: Student) => {
-    navigate(`/admin/user_details/${student.userId}`);
+    navigate(`${ROUTES.ADMIN}${ROUTES.ADMIN_USER_DETAILS}${student.userId}`);
   };
 
   const handleBlockUnblock = async (id: string, status: boolean, userId: string) => {

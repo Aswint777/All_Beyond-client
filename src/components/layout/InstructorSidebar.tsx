@@ -1,11 +1,12 @@
 import React, { useState } from 'react';
 import { NavLink } from 'react-router-dom';
+import { ROUTES } from '../../utils/paths';
 
 const InstructorSidebar = () => {
   const links = [
     { name: "Overview", path: "/overview" },
-    { name: "Profile", path: "/profile" },
-    { name: "My Courses", path: "/instructor/courses" },
+    { name: "Profile", path:`${ROUTES.USER}${ROUTES.PROFILE}`},
+    { name: "My Courses", path:`${ROUTES.INSTRUCTOR}${ROUTES.INSTRUCTOR_COURSE}` },
     { name: "Assessments", path: "/assessments" },
     { name: "Complaints", path: "/complaints" },
     { name: "Settings", path: "/settings" },
@@ -15,6 +16,7 @@ const InstructorSidebar = () => {
 
   return (
     <>
+    
       {/* Mobile Toggle Button */}
       <button
         onClick={() => setIsOpen(!isOpen)}
@@ -43,7 +45,7 @@ const InstructorSidebar = () => {
         } md:translate-x-0 md:w-64 w-3/4 md:relative md:shadow-lg`}
       >
         {/* Title */}
-        <h1 className="text-2xl font-bold mb-10 text-indigo-200 tracking-tight">Instructor</h1>
+        <h1 className="text-2xl font-bold mb-10 text-indigo-200 tracking-tight mt-14">Instructor</h1>
 
         {/* Navigation */}
         <nav className="space-y-2">

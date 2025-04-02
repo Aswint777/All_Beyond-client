@@ -13,7 +13,7 @@ interface ICourse {
   courseTitle: string;
   courseDescription?: string;
   categoryName?: string;
-  instructor?:string
+  instructor?: string;
   aboutInstructor?: string;
   content?: {
     moduleTitle: string;
@@ -37,7 +37,17 @@ interface ICourse {
   reviews?: number;
 }
 
-const AllCourses = () => {
+interface ICategory {
+  _id: string;
+  name: string;
+  description: string;
+  isBlocked: boolean;
+  createdAt: string;
+  updatedAt: string;
+  __v: number;
+}
+
+const AllCourses: React.FC = () => {
   const navigate = useNavigate();
   const { userDetails } = useSelector((state: RootState) => state.user);
   const [navbarKey, setNavbarKey] = useState(0);
@@ -45,7 +55,10 @@ const AllCourses = () => {
   const [currentPage, setCurrentPage] = useState(1);
   const [totalPages, setTotalPages] = useState(1);
   const [loading, setLoading] = useState(false);
-  const limit = 9; 
+  const [searchQuery, setSearchQuery] = useState("");
+  const [selectedCategory, setSelectedCategory] = useState("");
+  const [categories, setCategories] = useState<ICategory[]>([]);
+  const limit = 6;
 
   const API_URL = import.meta.env.VITE_REACT_APP_API_URL;
 
@@ -56,21 +69,36 @@ const AllCourses = () => {
   }, [userDetails]);
 
   useEffect(() => {
+    const fetchCategories = async () => {
+      try {
+        const response = await axios.get(`${API_URL}/auth/allCategory`, config);
+        console.log("Categories Response:", response.data);
+        setCategories(response.data.data || []);
+      } catch (error) {
+        console.error("Error fetching categories:", error);
+      }
+    };
+    fetchCategories();
+  }, [API_URL]);
+
+  useEffect(() => {
     const fetchCourses = async () => {
       setLoading(true);
-      console.log('kkkkkkkkkkkkkkkkkkkkkkkkkkkkk');
-      
       try {
-        const response = await axios.get(
-          `${API_URL}/auth/courses?page=${currentPage}&limit=${limit}`,
-          config
-        );
-        
-        // Log the full response to debug
-        console.log("API Response:", response.data);
+        const response = await axios.get(`${API_URL}/auth/courses`, {
+          ...config,
+          params: {
+            page: currentPage,
+            limit,
+            search: searchQuery,
+            category: selectedCategory,
+          },
+        });
+
+        console.log("Courses API Response:", response.data);
 
         const { courses, totalPages: pages } = response.data.data;
-        
+
         if (!Array.isArray(courses)) {
           throw new Error("Courses data is not an array");
         }
@@ -87,7 +115,7 @@ const AllCourses = () => {
     };
 
     fetchCourses();
-  }, [currentPage, API_URL]);
+  }, [currentPage, searchQuery, selectedCategory, API_URL]);
 
   const handleViewDetails = (courseId: string) => {
     navigate(`/courseDetails/${courseId}`);
@@ -97,202 +125,160 @@ const AllCourses = () => {
     setCurrentPage(page);
   };
 
-  return (
-    <div className="bg-gradient-to-br from-violet-100 to-violet-200 min-h-screen">
-      {userDetails ? <UserNavbar key={navbarKey} /> : <BasicNavbar />}
-      <div className="flex">
-        <div className="flex-1 p-6 lg:p-8">
-          <div className="flex justify-between items-center mb-8">
-            <h1 className="text-3xl font-bold text-gray-800">All Courses</h1>
-          </div>
+  const handleSearchChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setSearchQuery(e.target.value);
+    setCurrentPage(1);
+  };
 
-          {loading ? (
-            <p className="text-center text-gray-500">Loading courses...</p>
-          ) : (
-            <>
-              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
-                {courses.map((course) => (
-                  <div
-                    key={course._id}
-                    className="bg-white shadow-lg rounded-xl overflow-hidden transform transition-all duration-300 hover:shadow-xl hover:scale-105"
-                  >
+  const handleCategoryChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
+    setSelectedCategory(e.target.value);
+    setCurrentPage(1);
+  };
+
+  return (
+    <div className="min-h-screen bg-gradient-to-br from-indigo-50 via-purple-50 to-pink-50">
+      {userDetails ? <UserNavbar key={navbarKey} /> : <BasicNavbar />}
+
+      <div className="container mx-auto px-4 py-12 mt-11">
+        {/* Header Section */}
+        <div className="mb-12 animate-fade-in-down">
+          <h1 className="text-4xl md:text-5xl font-extrabold text-transparent bg-clip-text bg-gradient-to-r from-purple-600 to-indigo-600 mb-6">
+            Explore Our Courses
+          </h1>
+
+          {/* Search and Filter Section */}
+          <div className="flex flex-col sm:flex-row gap-4 bg-white p-4 rounded-xl shadow-lg">
+            <div className="relative flex-1">
+              <input
+                type="text"
+                placeholder="Search courses..."
+                value={searchQuery}
+                onChange={handleSearchChange}
+                className="w-full p-3 pl-10 rounded-lg border border-gray-200 focus:outline-none focus:ring-2 focus:ring-purple-500 transition-all duration-300"
+              />
+              <svg
+                className="absolute left-3 top-1/2 transform -translate-y-1/2 h-5 w-5 text-gray-400"
+                fill="none"
+                stroke="currentColor"
+                viewBox="0 0 24 24"
+              >
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  strokeWidth="2"
+                  d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"
+                />
+              </svg>
+            </div>
+            <select
+              value={selectedCategory}
+              onChange={handleCategoryChange}
+              className="w-full sm:w-64 p-3 rounded-lg border border-gray-200 focus:outline-none focus:ring-2 focus:ring-purple-500 bg-white text-gray-700 transition-all duration-300"
+            >
+              <option value="">All Categories</option>
+              {categories.map((category) => (
+                <option key={category._id} value={category.name}>
+                  {category.name}
+                </option>
+              ))}
+            </select>
+          </div>
+        </div>
+
+        {/* Courses Section */}
+        {loading ? (
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
+            {Array(6)
+              .fill(0)
+              .map((_, index) => (
+                <div
+                  key={index}
+                  className="bg-white rounded-xl shadow-md overflow-hidden animate-pulse"
+                >
+                  <div className="h-56 bg-gray-200"></div>
+                  <div className="p-6">
+                    <div className="h-6 bg-gray-200 rounded w-3/4 mb-2"></div>
+                    <div className="h-4 bg-gray-200 rounded w-1/2 mb-4"></div>
+                    <div className="h-4 bg-gray-200 rounded w-1/3 mb-4"></div>
+                    <div className="h-10 bg-gray-200 rounded"></div>
+                  </div>
+                </div>
+              ))}
+          </div>
+        ) : (
+          <>
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
+              {courses.map((course, index) => (
+                <div
+                  key={course._id}
+                  className="bg-white rounded-xl shadow-md overflow-hidden transform transition-all duration-300 hover:shadow-xl hover:-translate-y-2 animate-fade-in-up"
+                  style={{ animationDelay: `${index * 100}ms` }}
+                >
+                  <div className="relative">
                     <img
                       src={course.thumbnailUrl || "/default-course.jpg"}
                       alt={course.courseTitle}
-                      className="w-full h-48 object-cover"
+                      className="w-full h-56 object-cover transition-transform duration-300 hover:scale-105"
                       onError={(e) => {
-                        (e.target as HTMLImageElement).src = "/default-course.jpg";
+                        (e.target as HTMLImageElement).src =
+                          "/default-course.jpg";
                       }}
                     />
-                    <div className="p-5">
-                      <h2 className="text-xl font-semibold text-gray-800 truncate">
-                        {course.courseTitle}
-                      </h2>
-                      <p className="text-sm text-gray-600 mt-1">
-                        Instructor: {course.instructor || "Unknown"}
-                      </p>
-                      <p className="text-sm font-bold text-yellow-500 mt-2">
-                        ⭐ {course.rating || 0} ({course.reviews || 0} Reviews)
-                      </p>
-                      <button
-                        onClick={() => handleViewDetails(course._id)}
-                        className="mt-4 block text-center w-full bg-gradient-to-r from-blue-500 to-blue-600 text-white py-2 rounded-lg shadow-md hover:from-blue-600 hover:to-blue-700 transition-all duration-200"
-                      >
-                        View Course
-                      </button>
+                    <div className="absolute top-2 right-2 bg-purple-600 text-white px-2 py-1 rounded-full text-xs font-semibold">
+                      {course.pricingOption || "N/A"}
                     </div>
                   </div>
-                ))}
-              </div>
+                  <div className="p-6">
+                    <h2 className="text-xl font-bold text-gray-800 mb-2 line-clamp-1">
+                      {course.courseTitle}
+                    </h2>
+                    <p className="text-sm text-gray-600 mb-2">
+                      Instructor:{" "}
+                      {course.instructor || course.user?.name || "Unknown"}
+                    </p>
+                    <p className="text-sm text-gray-600 mb-2">
+                      Category: {course.categoryName || "Uncategorized"}
+                    </p>
+                    <div className="flex items-center mb-4">
+                      <span className="text-yellow-400 mr-1">★</span>
+                      <span className="text-sm font-medium text-gray-700">
+                        {course.rating || 0} ({course.reviews || 0} Reviews)
+                      </span>
+                    </div>
+                    <button
+                      onClick={() => handleViewDetails(course._id)}
+                      className="w-full bg-gradient-to-r from-purple-500 to-indigo-500 text-white py-2 px-4 rounded-lg font-medium hover:from-purple-600 hover:to-indigo-600 transition-all duration-300 transform hover:scale-105"
+                    >
+                      Explore Course
+                    </button>
+                  </div>
+                </div>
+              ))}
+            </div>
 
-              {courses.length === 0 && (
-                <p className="text-center text-gray-500 mt-10">
-                  No courses found.
+            {courses.length === 0 && (
+              <div className="text-center mt-12 animate-fade-in">
+                <p className="text-xl text-gray-600 font-medium">
+                  No courses found matching your criteria
                 </p>
-              )}
+                <p className="text-gray-500 mt-2">
+                  Try adjusting your search or category filter
+                </p>
+              </div>
+            )}
 
+            <div className="mt-12">
               <Pagination
                 currentPage={currentPage}
                 totalPages={totalPages}
                 onPageChange={handlePageChange}
               />
-            </>
-          )}
-        </div>
+            </div>
+          </>
+        )}
       </div>
     </div>
   );
 };
 
 export default AllCourses;
-
-// import React, { useEffect, useState } from "react";
-// import { useNavigate } from "react-router-dom";
-// import InstructorSidebar from "../../components/layout/InstructorSidebar";
-// import axios from "axios";
-// import { config } from "../../configaration/Config";
-// import UserNavbar from "../../components/layout/UserNavbar";
-// import BasicNavbar from "../../components/layout/BasicNavbar";
-// import { useSelector } from "react-redux";
-// import { RootState } from "../../redux/store";
-
-// // Define Course Interface
-// interface ICourse {
-//   _id: string;
-//   courseTitle: string;
-//   courseDescription?: string;
-//   categoryName?: string;
-//   aboutInstructor?: string;
-//   content?: {
-//     moduleTitle: string;
-//     lessons: {
-//       lessonTitle: string;
-//       lessonDescription?: string;
-//       video?: string;
-//     }[];
-//   }[];
-//   pricingOption?: "Premium" | "Free";
-//   price?: number;
-//   accountNumber?: number;
-//   additionalEmail?: string;
-//   additionalContactNumber?: string;
-//   user?: {
-//     _id: string;
-//     name: string;
-//   };
-//   thumbnailUrl?: string;
-//   rating?: number;
-//   reviews?: number;
-// }
-
-// const AllCourses = () => {
-//   const navigate = useNavigate();
-//   const { userDetails } = useSelector((state: RootState) => state.user);
-//     const [navbarKey, setNavbarKey] = useState(0)
-//   const [courses, setCourses] = useState<ICourse[]>([]);
-//   const API_URL = import.meta.env.VITE_REACT_APP_API_URL;
-//     useEffect(() => {
-//       if (userDetails) {
-//         setNavbarKey(prevKey => prevKey + 1)
-//       }
-//     }, [userDetails])
-
-//   useEffect(() => {
-//     const fetchCourses = async () => {
-//       try {
-//         console.log("Fetching courses...");
-//         const response = await axios.get(
-//           `${API_URL}/auth/courses`,
-//           config
-//         );
-//         console.log("Courses fetched:", response.data.data);
-//         setCourses(response.data.data);
-//       } catch (error) {
-//         console.error("Error fetching courses:", error);
-//       }
-//     };
-
-//     fetchCourses();
-//   }, []);
-
-//   const handleViewDetails=(courseId:string)=>{
-//     navigate(`/courseDetails/${courseId}`)
-//   }
-
-//   return (
-//     <div className="bg-violet-100">
-//       {userDetails ? <UserNavbar /> : <BasicNavbar />}
-
-//     <div className="flex min-h-screen">
-//       {/* Sidebar */}
-//       {/* <InstructorSidebar /> */}
-
-//       {/* Main Content */}
-//       <div className="flex-1 p-8">
-//         <div className="flex justify-between items-center mb-6">
-//           <h1 className="text-2xl font-bold">All Courses</h1>
-//         </div>
-
-//         {/* Courses Grid */}
-//         <div className="grid grid-cols-3 gap-6 ">
-//           {courses.map((course) => (
-//             <div
-//               key={course._id}
-//               className="bg-white shadow-md rounded-lg overflow-hidden bg-slate-300"
-//             >
-//               <img
-//                 src={course.thumbnailUrl || "/default-course.jpg"}
-//                 alt={course.courseTitle}
-//                 className="w-full h-40 object-cover"
-//               />{" "}
-//               {/* ✅ Uses thumbnailUrl */}
-//               <div className="p-4">
-//                 <h2 className="text-lg font-semibold">{course.courseTitle}</h2>
-//                 <p className="text-sm text-gray-600">
-//                   Instructor: {course.user?.name || "Unknown"}
-//                 </p>
-//                 <p className="text-sm font-bold mt-2">
-//                   ⭐ {course.rating || 0} ({course.reviews || 0} Reviews)
-//                 </p>
-//                 <button
-//                   onClick={() =>handleViewDetails(course._id) }
-//                   className="mt-3 block text-center w-full bg-blue-500 text-white py-2 rounded-md hover:bg-blue-600 transition"
-//                 >
-//                   View Course
-//                 </button>
-//               </div>
-//             </div>
-//           ))}
-//         </div>
-
-//         {/* No Courses Found */}
-//         {courses.length === 0 && (
-//           <p className="text-center text-gray-500 mt-10">No courses found.</p>
-//         )}
-//       </div>
-//     </div>
-//     </div>
-//   );
-// };
-
-// export default AllCourses;

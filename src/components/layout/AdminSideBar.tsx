@@ -2,6 +2,7 @@ import axios from "axios";
 import React, { useState } from "react";
 import { NavLink, useNavigate } from "react-router-dom";
 import { useModal } from "../context/ModalContext";
+import { ROUTES } from "../../utils/paths";
 
 const AdminSideBar = () => {
   const navigate = useNavigate();
@@ -19,7 +20,7 @@ const AdminSideBar = () => {
       if (response.status === 200 || response.status === 204) {
         localStorage.removeItem("jwtToken");
         localStorage.removeItem("access_token");
-        window.location.href = "/login";
+        window.location.href = ROUTES.LOGIN;
       } else {
         alert("Logout failed. Please try again.");
       }
@@ -31,15 +32,15 @@ const AdminSideBar = () => {
 
   const links = [
     { name: "Overview", path: "/admin/overview" },
-    { name: "Courses", path: "/admin/courses" },
-    { name: "Students", path: "/admin/AdminStudentsListPage" },
-    { name: "Instructors", path: "/admin/AdminInstructorListPage" },
+    // { name: "Courses", path: "/admin/courses" },
+    { name: "Students", path: `${ROUTES.ADMIN}${ROUTES.ADMIN_STUDENT_LIST}`},
+    { name: "Instructors", path: `${ROUTES.ADMIN}${ROUTES.ADMIN_INSTRUCTOR_LIST}` },
     { name: "Assessments", path: "/admin/assessments" },
-    { name: "Categories", path: "/admin/categoryListPage" },
+    { name: "Categories", path: `${ROUTES.ADMIN}${ROUTES.CATEGORY_LIST}` },
     { name: "Transactions", path: "/admin/transactions" },
     { name: "Banners", path: "/admin/banners" },
     { name: "Complaints", path: "/admin/complaints" },
-    { name: "Settings", path: "/admin/settings" },
+    // { name: "Settings", path: "/admin/settings" },
   ];
 
   return (

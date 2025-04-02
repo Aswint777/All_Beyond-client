@@ -6,6 +6,7 @@ import TableComponent, {
 } from "../../components/reusableComponents/TableComponent";
 import { useNavigate } from "react-router-dom";
 import { useModal } from "../../components/context/ModalContext";
+import { ROUTES } from "../../utils/paths";
 
 // interface TableColumn<T> {
 // label: string;
@@ -61,7 +62,9 @@ const AdminInstructorListPage = () => {
   }, []);
 
   const handleViewDetails = (instructor: Instructor) => {
-    navigate(`/admin/user_details/${instructor.userId}`);
+    navigate(`${ROUTES.ADMIN}${ROUTES.ADMIN_USER_DETAILS}${instructor.userId}`);
+    console.log(`${ROUTES.ADMIN}${ROUTES.ADMIN_USER_DETAILS}${instructor.userId}`);
+    
   };
 
   const handleBlockUnblock = async (

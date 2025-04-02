@@ -2,6 +2,7 @@ import axios from "axios";
 import React, { useEffect, useState } from "react";
 import AdminSideBar from "../../components/layout/AdminSideBar";
 import { useNavigate } from "react-router-dom";
+import { ROUTES } from "../../utils/paths";
 
 interface Student {
   _id: string;
@@ -69,7 +70,7 @@ const AdminInstructorApplicationList = () => {
   };
 
   const handleViewDetails = (userId: string) => {
-    navigate(`/admin/user_details/${userId}`);
+    navigate(`${ROUTES.ADMIN}${ROUTES.ADMIN_USER_DETAILS}${userId}`);
   };
 
   const handleBlockUnblock = async (_id: string, status: boolean, userid: string) => {
