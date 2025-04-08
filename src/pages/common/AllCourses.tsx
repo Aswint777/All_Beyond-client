@@ -1,12 +1,11 @@
 import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
-import axios from "axios";
-import { config } from "../../configaration/Config";
-import UserNavbar from "../../components/layout/UserNavbar";
-import BasicNavbar from "../../components/layout/BasicNavbar";
 import { useSelector } from "react-redux";
 import { RootState } from "../../redux/store";
+import UserNavbar from "../../components/layout/UserNavbar";
+import BasicNavbar from "../../components/layout/BasicNavbar";
 import Pagination from "../../components/reusableComponents/Pagination";
+import { fetchCourses, fetchCategories } from "../../services/courseService"; // Adjust path
 
 interface ICourse {
   _id: string;
@@ -58,9 +57,8 @@ const AllCourses: React.FC = () => {
   const [searchQuery, setSearchQuery] = useState("");
   const [selectedCategory, setSelectedCategory] = useState("");
   const [categories, setCategories] = useState<ICategory[]>([]);
+  const [error, setError] = useState<string | null>(null);
   const limit = 6;
-
-  const API_URL = import.meta.env.VITE_REACT_APP_API_URL;
 
   useEffect(() => {
     if (userDetails) {
@@ -69,53 +67,40 @@ const AllCourses: React.FC = () => {
   }, [userDetails]);
 
   useEffect(() => {
-    const fetchCategories = async () => {
+    const loadCategories = async () => {
       try {
-        const response = await axios.get(`${API_URL}/auth/allCategory`, config);
-        console.log("Categories Response:", response.data);
-        setCategories(response.data.data || []);
+        const categoryData = await fetchCategories();
+        setCategories(categoryData);
       } catch (error) {
-        console.error("Error fetching categories:", error);
+        setError("Failed to load categories.");
       }
     };
-    fetchCategories();
-  }, [API_URL]);
+    loadCategories();
+  }, []);
 
   useEffect(() => {
-    const fetchCourses = async () => {
+    const loadCourses = async () => {
       setLoading(true);
       try {
-        const response = await axios.get(`${API_URL}/auth/courses`, {
-          ...config,
-          params: {
-            page: currentPage,
-            limit,
-            search: searchQuery,
-            category: selectedCategory,
-          },
-        });
-
-        console.log("Courses API Response:", response.data);
-
-        const { courses, totalPages: pages } = response.data.data;
-
-        if (!Array.isArray(courses)) {
-          throw new Error("Courses data is not an array");
-        }
-
+        const { courses, totalPages } = await fetchCourses(
+          currentPage,
+          limit,
+          searchQuery,
+          selectedCategory
+        );
         setCourses(courses);
-        setTotalPages(pages);
+        setTotalPages(totalPages);
+        setError(null);
       } catch (error) {
-        console.error("Error fetching courses:", error);
         setCourses([]);
         setTotalPages(1);
+        setError("Failed to load courses. Please try again.");
       } finally {
         setLoading(false);
       }
     };
-
-    fetchCourses();
-  }, [currentPage, searchQuery, selectedCategory, API_URL]);
+    loadCourses();
+  }, [currentPage, searchQuery, selectedCategory]);
 
   const handleViewDetails = (courseId: string) => {
     navigate(`/courseDetails/${courseId}`);
@@ -185,6 +170,13 @@ const AllCourses: React.FC = () => {
           </div>
         </div>
 
+        {/* Error Message */}
+        {error && (
+          <div className="text-center text-red-500 mb-8 animate-fade-in">
+            {error}
+          </div>
+        )}
+
         {/* Courses Section */}
         {loading ? (
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
@@ -220,8 +212,7 @@ const AllCourses: React.FC = () => {
                       alt={course.courseTitle}
                       className="w-full h-56 object-cover transition-transform duration-300 hover:scale-105"
                       onError={(e) => {
-                        (e.target as HTMLImageElement).src =
-                          "/default-course.jpg";
+                        (e.target as HTMLImageElement).src = "/default-course.jpg";
                       }}
                     />
                     <div className="absolute top-2 right-2 bg-purple-600 text-white px-2 py-1 rounded-full text-xs font-semibold">
@@ -233,12 +224,9 @@ const AllCourses: React.FC = () => {
                       {course.courseTitle}
                     </h2>
                     <p className="text-sm text-gray-600 mb-2">
-                      Instructor:{" "}
-                      {course.instructor || course.user?.name || "Unknown"}
+                      Instructor: {course.instructor || course.user?.name || "Unknown"}
                     </p>
-                    <p className="text-sm text-gray-600 mb-2">
-                      Category: {course.categoryName || "Uncategorized"}
-                    </p>
+
                     <div className="flex items-center mb-4">
                       <span className="text-yellow-400 mr-1">★</span>
                       <span className="text-sm font-medium text-gray-700">
@@ -282,3 +270,8 @@ const AllCourses: React.FC = () => {
 };
 
 export default AllCourses;
+
+
+
+
+

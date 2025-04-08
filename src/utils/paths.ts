@@ -32,9 +32,9 @@ export const ROUTES = {
   // INSTRUCTOR
   INSTRUCTOR:'/instructor',
   INSTRUCTOR_COURSE:"/courses",
-  ADD_COURSE_DETAILS:"/add-course-details",
-  ADD_COURSE_CONTENT:"/add-course-content" ,
-  ADD_COURSE_PRICING:"/add-course-pricing",
+  ADD_COURSE_DETAILS:"/AddCourse_Details",
+  ADD_COURSE_CONTENT:"/AddCourse_Content" ,
+  ADD_COURSE_PRICING:"/AddCourse_Pricing",
   EDIT_COURSE :"/edit-course/",
 
   // STUDENT ROUTES

@@ -10,6 +10,7 @@ import AdminStudentsListPage from '../pages/Admin/AdminStudentsListPage';
 import AdminInstructorListPage from '../pages/Admin/AdminInstructorLIst';
 import AdminUserDetails from '../pages/Admin/AdminUserDetails';
 import { ROUTES } from '../utils/paths';
+import NotFound from '../pages/common/404';
 
 const AdminRoutes = () => {
     return (
@@ -24,6 +25,8 @@ const AdminRoutes = () => {
           <Route path={ROUTES.ADMIN_INSTRUCTOR_LIST} element={<AdminInstructorListPage />} />
           <Route path={`${ROUTES.ADMIN_USER_DETAILS}:userId`} element={<AdminUserDetails />} />
         </Route>
+        <Route path="*" element={<NotFound />} />
+
         </Routes>
       );
 }

@@ -9,6 +9,7 @@ import SignUpPage from '../pages/common/SignUpPage';
 import LoginPage from '../pages/common/LoginPage';
 import OtpVerifyPage from '../pages/common/OtpVerifyPage';
 import { ROUTES } from '../utils/paths';
+import NotFound from '../pages/common/404';
 
 const CommonRoutes = () => {
     return (
@@ -27,6 +28,8 @@ const CommonRoutes = () => {
             <Route path={ROUTES.LOGIN} element={<LoginPage />} />
             <Route path={ROUTES.OTP_VERIFY} element={<OtpVerifyPage />} />
           </Route>
+          <Route path="*" element={<NotFound />} />
+
           </Routes>
         </>
       );
