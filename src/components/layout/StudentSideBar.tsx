@@ -1,10 +1,11 @@
 import React, { useState } from 'react';
 import { NavLink } from 'react-router-dom';
+import { ROUTES } from '../../utils/paths';
 
 const StudentSideBar = () => {
   const links = [
     { name: "Overview", path: "/overview" },
-    { name: "My Courses", path: "/coursesmm" },
+    { name: "My Courses", path: `${ROUTES.STUDENT}${ROUTES.STUDENT_COURSES}` },
     { name: "Assessments", path: "/assessments" },
     { name: "Complaints", path: "/complaints" },
     { name: "Settings", path: "/settings" },

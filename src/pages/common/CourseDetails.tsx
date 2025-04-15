@@ -8,6 +8,7 @@ import { fetchCourseDetails, fetchSimilarCourses } from "../../services/courseSe
 import CourseActionModal from "../../components/reusableComponents/CourseActionModal";
 import axios from "axios";
 import { config } from "../../configaration/Config";
+import { ROUTES } from "../../utils/paths";
 
 interface ICourse {
   _id: string;
@@ -97,7 +98,7 @@ const CourseDetails: React.FC = () => {
   const handlePaymentSuccess = async (paymentIntentId: string) => {
     try {
       setIsModalOpen(false);
-      navigate("/student/my-courses");
+      navigate(`${ROUTES.STUDENT}${ROUTES.STUDENT_COURSES}`);
     } catch (error) {
       console.error("Error enrolling after payment:", error);
       setError("Payment succeeded, but enrollment failed. Please contact support.");

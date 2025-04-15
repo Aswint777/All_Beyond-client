@@ -279,3 +279,52 @@ export const updateCourse = async (
     throw error;
   }
 };
+
+// Fetch Student Courses
+interface CoursesResponse {
+  courses: ICourse[];
+  totalPages: number;
+}
+
+export const fetchStudentCourses = async (
+  search: string = "",
+  page: number,
+  limit: number
+): Promise<CoursesResponse> => {
+  try {
+    const response = await axios.get(`${API_URL}/student/courses`, {
+      ...config,
+      params: { search, page, limit },
+    });
+    const { courses, totalPages } = response.data.data;
+    if (!Array.isArray(courses)) {
+      throw new Error("Courses data is not an array");
+    }
+    return { courses, totalPages };
+  } catch (error) {
+    console.error("Error fetching student courses:", error);
+    throw error;
+  }
+};
+
+
+// export const fetchStudentCourses = async (
+//   search: string = "",
+//   page: number,
+//   limit: number
+// ): Promise<CoursesResponse> => {
+//   try {
+//     const response = await axios.get(`${API_URL}/student/courses`, {
+//       ...config,
+//       params: { search, page, limit },
+//     });
+//     const { courses, totalPages } = response.data.data;
+//     if (!Array.isArray(courses)) {
+//       throw new Error("Courses data is not an array");  
+//     }
+//     return { courses, totalPages };
+//   } catch (error) {
+//     console.error("Error fetching instructor courses:", error);
+//     throw error;
+//   }
+// };

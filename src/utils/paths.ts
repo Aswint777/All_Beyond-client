@@ -38,5 +38,6 @@ export const ROUTES = {
   EDIT_COURSE :"/edit-course/",
 
   // STUDENT ROUTES
-
+  STUDENT:"/student",
+  STUDENT_COURSES:'/my-courses',
 };
