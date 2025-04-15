@@ -11,12 +11,13 @@ import AdminInstructorListPage from '../pages/Admin/AdminInstructorLIst';
 import AdminUserDetails from '../pages/Admin/AdminUserDetails';
 import { ROUTES } from '../utils/paths';
 import NotFound from '../pages/common/404';
+import TransactionHistory from '../pages/Admin/TransactionHistory';
 
 const AdminRoutes = () => {
     return (
         <Routes>
         <Route element={<AdminGuards />}>
-          <Route path="/admin/AdminDashboard" element={<AdminDashboard />} />
+          <Route path="/overview" element={<AdminDashboard />} />
           <Route path={ROUTES.ADMIN_INSTRUCTOR_APPLICATION_LIST} element={<AdminInstructorApplicationList />} />
           <Route  path={ROUTES.CATEGORY_LIST} element={<CategoryListPage />} />
           <Route path={ROUTES.ADD_CATEGORY} element={<AddCategoryPage />} />
@@ -24,6 +25,7 @@ const AdminRoutes = () => {
           <Route path={ROUTES.ADMIN_STUDENT_LIST} element={<AdminStudentsListPage />} />
           <Route path={ROUTES.ADMIN_INSTRUCTOR_LIST} element={<AdminInstructorListPage />} />
           <Route path={`${ROUTES.ADMIN_USER_DETAILS}:userId`} element={<AdminUserDetails />} />
+          <Route path="/transactions"  element={<TransactionHistory/>} />
         </Route>
         <Route path="*" element={<NotFound />} />
 

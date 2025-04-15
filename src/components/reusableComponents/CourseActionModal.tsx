@@ -4,8 +4,6 @@ import { Elements, CardElement, useStripe, useElements } from "@stripe/react-str
 import { coursePayment, enrollCourse } from "../../services/paymentService";
 
 const publishableKey = import.meta.env.VITE_STRIPE_PUBLISHABLE_KEY;
-console.log(publishableKey, "00000000000000000000");
-
 const stripePromise = loadStripe(publishableKey);
 
 interface CourseActionModalProps {
