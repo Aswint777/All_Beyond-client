@@ -29,6 +29,7 @@ export const ROUTES = {
   ADMIN_USER_DETAILS:"/user_details/",
 
 
+
   // INSTRUCTOR
   INSTRUCTOR:'/instructor',
   INSTRUCTOR_COURSE:"/courses",
@@ -36,8 +37,11 @@ export const ROUTES = {
   ADD_COURSE_CONTENT:"/AddCourse_Content" ,
   ADD_COURSE_PRICING:"/AddCourse_Pricing",
   EDIT_COURSE :"/edit-course/",
+  INSTRUCTOR_DASHBOARD:'/overview',
 
   // STUDENT ROUTES
   STUDENT:"/student",
   STUDENT_COURSES:'/my-courses',
+  WATCH_COURSES:'/WatchCourses',
+  PAYMENT_SUCCESS:"/PaymentSuccess"
 };

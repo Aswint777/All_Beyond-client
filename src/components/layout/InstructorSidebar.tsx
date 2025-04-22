@@ -4,7 +4,7 @@ import { ROUTES } from '../../utils/paths';
 
 const InstructorSidebar = () => {
   const links = [
-    { name: "Overview", path: "/overview" },
+    { name: "Overview", path:`${ROUTES.INSTRUCTOR}${ROUTES.INSTRUCTOR_DASHBOARD}` },
     { name: "Profile", path:`${ROUTES.USER}${ROUTES.PROFILE}`},
     { name: "My Courses", path:`${ROUTES.INSTRUCTOR}${ROUTES.INSTRUCTOR_COURSE}` },
     { name: "Assessments", path: "/assessments" },

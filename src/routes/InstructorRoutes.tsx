@@ -8,6 +8,7 @@ import AddCourse_Pricing from '../pages/Instructor/AddCourse_Pricing';
 import EditCourse from '../pages/Instructor/EditCourse';
 import { ROUTES } from '../utils/paths';
 import NotFound from '../pages/common/404';
+import InstructorDashboard from '../pages/Instructor/InstructorDashboard';
 
 const InstructorRoutes = () => {
     return (
@@ -18,6 +19,7 @@ const InstructorRoutes = () => {
           <Route path={`${ROUTES.ADD_COURSE_CONTENT}`} element={<AddCourse_Content />} />
           <Route path={`${ROUTES.ADD_COURSE_PRICING}`} element={<AddCourse_Pricing />} />
           <Route path={`${ROUTES.EDIT_COURSE}/:courseId`} element={<EditCourse />} />
+          <Route path={`${ROUTES.INSTRUCTOR_DASHBOARD}`} element={<InstructorDashboard/>} />
         </Route>
         {/* <Route path="*" element={<NotFound />} /> */}
 

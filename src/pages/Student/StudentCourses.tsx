@@ -82,7 +82,7 @@ const StudentCourses = () => {
   };
 
   const handleCourseClick = (courseId: string) => {
-    navigate(`/student/course/${courseId}`); // Adjust route as needed
+    navigate(`/student/WatchCourses/${courseId}`); // Adjust route as needed
   };
 
   return (

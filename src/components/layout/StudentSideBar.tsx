@@ -5,6 +5,7 @@ import { ROUTES } from '../../utils/paths';
 const StudentSideBar = () => {
   const links = [
     { name: "Overview", path: "/overview" },
+        { name: "Profile", path:`${ROUTES.USER}${ROUTES.PROFILE}`},
     { name: "My Courses", path: `${ROUTES.STUDENT}${ROUTES.STUDENT_COURSES}` },
     { name: "Assessments", path: "/assessments" },
     { name: "Complaints", path: "/complaints" },

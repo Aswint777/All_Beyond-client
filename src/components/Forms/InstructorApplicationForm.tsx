@@ -391,7 +391,7 @@ const InstructorApplicationForm: React.FC = () => {
       setShowSuccess(true);
       setTimeout(() => {
         setShowSuccess(false);
-        navigate("/InstructorApplyPage");
+        navigate("/InstructorApplyPage"); 
       }, 2000);
     } catch (error) {
       setLoading(false);
