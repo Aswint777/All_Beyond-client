@@ -6,14 +6,18 @@ import Hls from "hls.js";
 import { config } from "../../configaration/Config";
 import StudentSideBar from "../../components/layout/StudentSideBar";
 import UserNavbar from "../../components/layout/UserNavbar";
+import {HlsVideoPlayer} from "./Hls"
 
 const API_URL = import.meta.env.VITE_REACT_APP_API_URL || "http://localhost:5000";
 
 interface Lesson {
+  _id: string;
   lessonTitle: string;
   lessonDescription?: string;
   videoUrl?: string;
+  video?: string;
   thumbnailUrl?: string;
+  isLocked: boolean;
 }
 
 interface Module {
@@ -34,10 +38,17 @@ interface Course {
   isEnrolled: boolean;
 }
 
-const fetchWithAuth = async (endpoint: string, method = "GET") => {
+interface Progress {
+  percentage: number;
+  completedLessons: string[];
+  unlockedLessons: string[];
+}
+
+const fetchWithAuth = async (endpoint: string, method = "GET", data?: any) => {
   return axios({
     url: `${API_URL}/${endpoint}`,
     method,
+    data,
     ...config,
   });
 };
@@ -45,27 +56,54 @@ const fetchWithAuth = async (endpoint: string, method = "GET") => {
 const WatchCourses: React.FC = () => {
   const { courseId } = useParams<{ courseId: string }>();
   const [course, setCourse] = useState<Course | null>(null);
+  const [progress, setProgress] = useState<Progress | null>(null);
   const [loading, setLoading] = useState<boolean>(true);
+  const [progressLoading, setProgressLoading] = useState<boolean>(false);
   const [error, setError] = useState<string | null>(null);
   const [expandedModules, setExpandedModules] = useState<Set<number>>(new Set());
 
+  const fetchCourseAndProgress = async () => {
+    setLoading(true);
+    try {
+      if (!courseId) throw new Error("Course ID is missing");
+
+      console.log("Fetching course for ID:", courseId);
+      const courseResponse = await fetchWithAuth(`student/WatchCourses/${courseId}`);
+      const courseData: Course = courseResponse.data.data;
+      console.log("Course API Response:", courseData);
+
+      console.log("Fetching progress for course ID:", courseId);
+      const progressResponse = await fetchWithAuth(`student/progress/${courseId}`);
+      const progressData: Progress = progressResponse.data.data;
+      console.log("Progress API Response:", progressData);
+
+      const updatedCourse = {
+        ...courseData,
+        content: courseData.content.map((module) => ({
+          ...module,
+          lessons: module.lessons.map((lesson) => ({
+            ...lesson,
+            isLocked: !progressData.unlockedLessons.includes(lesson._id.toString()),
+            videoUrl: lesson.video || lesson.videoUrl, // Prioritize video, fallback to videoUrl
+          })),
+        })),
+      };
+
+      setCourse(updatedCourse);
+      console.log(updatedCourse, "javed")
+      setProgress(progressData);
+    } catch (err: any) {
+      console.error("Fetch error:", err);
+      setError(err.response?.data?.message || "An error occurred while fetching course or progress details.");
+    } finally {
+      setLoading(false);
+    }
+  };
+
   useEffect(() => {
-    const fetchCourse = async () => {
-      setLoading(true);
-      try {
-        console.log("Fetching course for ID:", courseId);
-        const response = await fetchWithAuth(`student/WatchCourses/${courseId}`);
-        const result: Course = response.data.data;
-        console.log("API Response:", result);
-        setCourse(result);
-      } catch (err: any) {
-        console.error("Fetch error:", err);
-        setError(err.response?.data?.message || "An error occurred while fetching course details.");
-      } finally {
-        setLoading(false);
-      }
-    };
-    fetchCourse();
+    if (courseId) {
+      fetchCourseAndProgress();
+    }
   }, [courseId]);
 
   const toggleModule = (index: number) => {
@@ -78,6 +116,109 @@ const WatchCourses: React.FC = () => {
     setExpandedModules(newExpanded);
   };
 
+  const handleVideoEnded = async (lessonId: string) => {
+    if (!courseId) {
+      console.error("Course ID is missing");
+      return;
+    }
+    setProgressLoading(true);
+    try {
+      console.log(`Calling updateProgress API for lesson: ${lessonId}`);
+      const response = await fetchWithAuth(`student/updateProgress/${courseId}`, "POST", { lessonId });
+      const updatedProgress: Progress = response.data.data;
+      console.log("Update Progress API Response:", updatedProgress);
+      fetchCourseAndProgress()
+
+      // Normalize unlockedLessons to strings
+      const normalizedUnlockedLessons = updatedProgress.unlockedLessons.map((id: any) => id.toString());
+      console.log("Normalized Unlocked Lessons:", normalizedUnlockedLessons);
+
+      // Update progress state
+      setProgress({
+        percentage: updatedProgress.percentage,
+        completedLessons: updatedProgress.completedLessons.map((id: any) => id.toString()),
+        unlockedLessons: normalizedUnlockedLessons,
+      });
+      
+      console.log(course, "javed before");
+
+      // Update course state to unlock the next lesson
+      setCourse((prev) => {
+        if (!prev) {
+          console.warn("Course state is null");
+          return prev;
+        }
+      
+        // First, clone the course to avoid direct mutation
+        const newCourse = JSON.parse(JSON.stringify(prev));
+        
+        // Get the current lesson ID that was just completed
+        const completedLessonId = lessonId.toString();
+        
+        // Find which module and lesson was just completed
+        let nextModuleIndex = -1;
+        let nextLessonIndex = -1;
+        let found = false;
+        
+        // Find the next lesson that should be unlocked
+        for (let moduleIndex = 0; moduleIndex < newCourse.content.length; moduleIndex++) {
+          const module = newCourse.content[moduleIndex];
+          
+          for (let lessonIndex = 0; lessonIndex < module.lessons.length; lessonIndex++) {
+            const lesson = module.lessons[lessonIndex];
+            
+            // If we found the completed lesson in the previous iteration
+            if (found) {
+              nextModuleIndex = moduleIndex;
+              nextLessonIndex = lessonIndex;
+              break;
+            }
+            
+            // Check if this is the lesson that was just completed
+            if (lesson._id.toString() === completedLessonId) {
+              // If this is the last lesson in the module
+              if (lessonIndex === module.lessons.length - 1) {
+                // Look for the first lesson in the next module
+                if (moduleIndex < newCourse.content.length - 1) {
+                  nextModuleIndex = moduleIndex + 1;
+                  nextLessonIndex = 0;
+                }
+              } else {
+                // Next lesson is in the same module
+                nextModuleIndex = moduleIndex;
+                nextLessonIndex = lessonIndex + 1;
+              }
+              found = true;
+              break;
+            }
+          }
+          
+          if (found) break;
+        }
+        
+        // If we found a next lesson to unlock
+        if (nextModuleIndex !== -1 && nextLessonIndex !== -1) {
+          // Get the next lesson
+          const nextLesson = newCourse.content[nextModuleIndex].lessons[nextLessonIndex];
+          console.log(`Unlocking next lesson: ${nextLesson.lessonTitle} in module ${nextModuleIndex}`);
+          
+          // Unlock it
+          nextLesson.isLocked = false;
+        }
+        
+        return newCourse;
+      });
+      
+      console.log(course, "javed after");
+
+    } catch (err: any) {
+      console.error("Error updating progress:", err);
+      setError(err.response?.data?.message || "Failed to update progress. Please try again.");
+    } finally {
+      setProgressLoading(false);
+    }
+  };
+
   if (loading) {
     return (
       <div className="min-h-screen bg-gradient-to-b from-gray-50 to-gray-100 flex items-center justify-center">
@@ -86,11 +227,11 @@ const WatchCourses: React.FC = () => {
     );
   }
 
-  if (error || !course) {
+  if (error || !course || !progress) {
     return (
       <div className="min-h-screen bg-gradient-to-b from-gray-50 to-gray-100 flex items-center justify-center">
         <div className="text-center">
-          <p className="text-red-500 font-medium">{error || "Course not found"}</p>
+          <p className="text-red-500 font-medium">{error || "Course or progress not found"}</p>
           <button
             onClick={() => window.location.reload()}
             className="mt-4 bg-blue-600 text-white px-6 py-2 rounded-full hover:bg-blue-700 transition-colors duration-200"
@@ -120,6 +261,18 @@ const WatchCourses: React.FC = () => {
               <div>
                 <h1 className="text-4xl font-extrabold text-gray-900">{course.courseTitle}</h1>
                 <p className="mt-2 text-gray-600 text-lg">{course.courseDescription}</p>
+                <div className="mt-4">
+                  <h3 className="text-lg font-semibold text-gray-800">Progress</h3>
+                  <div className="w-full bg-gray-200 rounded-full h-2.5 mt-2">
+                    <div
+                      className="bg-blue-600 h-2.5 rounded-full"
+                      style={{ width: `${progress.percentage}%` }}
+                    ></div>
+                  </div>
+                  <p className="text-sm text-gray-600 mt-1">
+                    {progressLoading ? "Updating..." : `${progress.percentage}% Complete`}
+                  </p>
+                </div>
               </div>
             </div>
           </header>
@@ -146,41 +299,59 @@ const WatchCourses: React.FC = () => {
                       </button>
                       {expandedModules.has(moduleIndex) && (
                         <div className="pl-6 pt-4 pb-6">
-                          {module.lessons.map((lesson, lessonIndex) => (
-                            <div
-                              key={lessonIndex}
-                              className="py-4 flex flex-col gap-4 border-l-4 border-blue-100 pl-4"
-                            >
-                              <div className="flex items-center justify-between">
-                                <div className="flex items-center gap-3">
-                                  <PlayCircle className="w-5 h-5 text-blue-500" />
-                                  <div>
-                                    <p className="font-medium text-gray-800 text-lg">{lesson.lessonTitle}</p>
-                                    {lesson.lessonDescription && (
-                                      <p className="text-sm text-gray-500">{lesson.lessonDescription}</p>
-                                    )}
+                          {module.lessons.map((lesson) => {
+                            const videoSource = lesson.videoUrl || lesson.video;
+                            console.log(
+                              `Rendering Lesson ${lesson._id} (${lesson.lessonTitle}): ` +
+                              `isLocked=${lesson.isLocked}, ` +
+                              `isEnrolled=${course.isEnrolled}, ` +
+                              `hasVideo=${!!videoSource}, ` +
+                              `videoUrl=${lesson.videoUrl}, ` +
+                              `video=${lesson.video}`
+                            );
+                            return (
+                              <div
+                                key={lesson._id}
+                                className="py-4 flex flex-col gap-4 border-l-4 border-blue-100 pl-4"
+                              >
+                                <div className="flex items-center justify-between">
+                                  <div className="flex items-center gap-3">
+                                    <PlayCircle className="w-5 h-5 text-blue-500" />
+                                    <div>
+                                      <p className="font-medium text-gray-800 text-lg">{lesson.lessonTitle}</p>
+                                      {lesson.lessonDescription && (
+                                        <p className="text-sm text-gray-500">{lesson.lessonDescription}</p>
+                                      )}
+                                    </div>
                                   </div>
+                                  {lesson.isLocked ? (
+                                    <span title="Locked">
+                                      <Lock className="w-5 h-5 text-gray-400" />
+                                    </span>
+                                  ) : progress.completedLessons.includes(lesson._id) ? (
+                                    <span title="Completed">
+                                      <CheckCircle className="w-5 h-5 text-green-500" />
+                                    </span>
+                                  ) : null}
                                 </div>
-                                {!course.isEnrolled && (
-                                  <span title="Locked">
-                                    <Lock className="w-5 h-5 text-gray-400" />
-                                  </span>
+                                {course.isEnrolled && videoSource && !lesson.isLocked ? (
+                                  <div className="flex flex-col gap-2">
+                                    <HlsVideoPlayer
+                                      videoUrl={videoSource}
+                                      poster={lesson.thumbnailUrl || course.thumbnailUrl || "/placeholder.png"}
+                                      lessonTitle={lesson.lessonTitle}
+                                      lessonId={lesson._id}
+                                      onVideoEnded={handleVideoEnded}
+                                    />
+                                  </div>
+                                ) : lesson.isLocked ? (
+                                  <p className="text-gray-500 italic">Complete the previous lesson to unlock.</p>
+                                ) : (
+                                  <p className="text-gray-500 italic">No video available for this lesson.</p>
                                 )}
                               </div>
-                              {course.isEnrolled && lesson.videoUrl && (
-                                <div className="flex flex-col gap-2">
-                                  <HlsVideoPlayer
-                                    videoUrl={lesson.videoUrl}
-                                    poster={lesson.thumbnailUrl || course.thumbnailUrl || "/placeholder.png"}
-                                    lessonTitle={lesson.lessonTitle}
-                                  />
-                                </div>
-                              )}
-                              {course.isEnrolled && !lesson.videoUrl && (
-                                <p className="text-gray-500 italic">No video available for this lesson.</p>
-                              )}
-                            </div>
-                          ))}
+                            );
+                          })}
                         </div>
                       )}
                     </div>
@@ -239,128 +410,10 @@ const WatchCourses: React.FC = () => {
   );
 };
 
-const HlsVideoPlayer: React.FC<{ videoUrl: string; poster: string; lessonTitle: string }> = ({
-  videoUrl,
-  poster,
-  lessonTitle,
-}) => {
-  const videoRef = useRef<HTMLVideoElement>(null);
-  const [error, setError] = useState<string | null>(null);
-  const [isLoading, setIsLoading] = useState<boolean>(true);
 
-  useEffect(() => {
-    if (!videoRef.current || !videoUrl) {
-      setIsLoading(false);
-      setError("No video URL provided");
-      return;
-    }
-
-    const video = videoRef.current;
-    console.log(`Attempting to load video: ${videoUrl} for ${lessonTitle}`);
-
-    // Check if the video is an HLS playlist (.m3u8)
-    const isHls = videoUrl.includes(".m3u8");
-
-    if (isHls && Hls.isSupported()) {
-      // HLS streaming
-      const hls = new Hls({
-        maxBufferLength: 30,
-        maxMaxBufferLength: 60,
-        lowLatencyMode: true,
-      });
-
-      hls.loadSource(videoUrl);
-      hls.attachMedia(video);
-
-      hls.on(Hls.Events.MANIFEST_PARSED, () => {
-        console.log(`HLS manifest parsed for ${lessonTitle}`);
-        setIsLoading(false);
-      });
-
-      hls.on(Hls.Events.ERROR, (event, data) => {
-        console.error(`HLS error for ${lessonTitle}:`, data);
-        setIsLoading(false);
-        if (data.fatal) {
-          setError(`Failed to load HLS video: ${data.details} (${data.type})`);
-        }
-      });
-
-      return () => {
-        hls.destroy();
-      };
-    } else if (isHls && video.canPlayType("application/vnd.apple.mpegurl")) {
-      // Native HLS support (e.g., Safari)
-      video.src = videoUrl;
-      video.addEventListener("loadedmetadata", () => {
-        console.log(`HLS metadata loaded for ${lessonTitle}`);
-        setIsLoading(false);
-      });
-    } else {
-      // MP4 or other non-HLS format (signed URL)
-      video.src = videoUrl;
-      video.addEventListener("loadedmetadata", () => {
-        console.log(`MP4 metadata loaded for ${lessonTitle}`);
-        setIsLoading(false);
-      });
-
-      // Log network errors
-      video.addEventListener("error", (e) => {
-        setIsLoading(false);
-        const errorMessage = `Failed to load video: ${lessonTitle}. Error: ${video.error?.message || "Unknown error"} (Code: ${video.error?.code || "N/A"})`;
-        console.error(errorMessage);
-        fetch(videoUrl, { method: "HEAD" })
-          .then((response) => {
-            console.log(`Video URL response: ${videoUrl}`, {
-              status: response.status,
-              statusText: response.statusText,
-              headers: Object.fromEntries(response.headers.entries()),
-            });
-            if (!response.ok) {
-              setError(`${errorMessage}. Server responded with ${response.status} ${response.statusText}`);
-            }
-          })
-          .catch((fetchError) => {
-            console.error(`Failed to fetch video URL: ${videoUrl}`, fetchError);
-            setError(`${errorMessage}. Network error: ${fetchError.message}`);
-          });
-        setError(errorMessage);
-      });
-    }
-
-    // Clean up event listeners
-    return () => {
-      video.removeEventListener("error", () => {});
-      video.removeEventListener("loadedmetadata", () => {});
-      video.src = "";
-    };
-  }, [videoUrl, lessonTitle]);
-
-  if (error) {
-    return (
-      <div className="w-full h-72 bg-gray-200 rounded-lg flex items-center justify-center">
-        <p className="text-red-500 font-medium">{error}</p>
-      </div>
-    );
-  }
-
-  return (
-    <div className="relative w-full h-72">
-      {isLoading && (
-        <div className="absolute inset-0 bg-gray-200 rounded-lg flex items-center justify-center">
-          <div className="animate-pulse text-gray-600">Loading video...</div>
-        </div>
-      )}
-      <video
-        ref={videoRef}
-        controls
-        className="w-full h-72 rounded-lg shadow-md"
-        poster={poster}
-        onContextMenu={(e) => e.preventDefault()}
-      >
-        Your browser does not support the video tag.
-      </video>
-    </div>
-  );
-};
 
 export default WatchCourses;
+
+
+
+

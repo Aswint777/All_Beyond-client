@@ -1,7 +1,7 @@
 import React from "react";
 import { loadStripe } from "@stripe/stripe-js";
 import { Elements, CardElement, useStripe, useElements } from "@stripe/react-stripe-js";
-import { coursePayment, enrollCourse } from "../../services/paymentService";
+import { coursePayment, enrollCourse, initializeProgress } from "../../services/paymentService";
 
 const publishableKey = import.meta.env.VITE_STRIPE_PUBLISHABLE_KEY;
 const stripePromise = loadStripe(publishableKey);
@@ -48,6 +48,7 @@ const CheckoutForm: React.FC<{
         setError(result.error.message || "Payment failed");
       } else {
         await enrollCourse(courseId);
+        await initializeProgress(courseId)
         onPaymentSuccess(result.paymentIntent.id);
         onClose();
       }
@@ -136,6 +137,8 @@ const CourseActionModal: React.FC<CourseActionModalProps> = ({
     try {
       console.log("Enroll button clicked for courseId:", courseId); // Debug log
       await enrollCourse(courseId);
+      await initializeProgress(courseId)
+
       console.log("Enrollment successful for courseId:", courseId); // Debug log
       onConfirm(); // Notify CourseDetails for navigation
       onClose();

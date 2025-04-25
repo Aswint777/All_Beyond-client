@@ -34,3 +34,18 @@ export const enrollCourse = async (courseId: string): Promise<void> => {
     throw error;
   }
 };
+
+export const initializeProgress = async (courseId: string): Promise<void> => {
+  try {
+    console.log("courseId in initializeProgress:", courseId);
+    const response = await axios.post(
+      `${API_URL}/student/initializeProgress`, // Assuming this is your free course enrollment endpoint
+      { courseId },
+      config
+    );
+    console.log("Enrollment response:", response.data);
+  } catch (error) {
+    console.log("Error in enrollFreeCourse:", error);
+    throw error;
+  }
+};
