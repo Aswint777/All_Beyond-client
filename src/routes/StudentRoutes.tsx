@@ -6,6 +6,7 @@ import StudentCourses from '../pages/Student/StudentCourses';
 import { ROUTES } from '../utils/paths';
 import WatchCourses from '../pages/Student/WatchCourses';
 import PaymentSuccess from '../pages/Student/PaymentSuccess';
+import StudentDashboard from '../pages/Student/StudentDashboard';
 
 const StudentRoutes = () => {
   return (
@@ -14,6 +15,7 @@ const StudentRoutes = () => {
       <Route path= {ROUTES.STUDENT_COURSES} element={<StudentCourses />} />
       <Route path={`${ROUTES.WATCH_COURSES}/:courseId`} element={<WatchCourses/>} />
       <Route path= {ROUTES.PAYMENT_SUCCESS} element={<PaymentSuccess />} />
+      <Route path={`${ROUTES.STUDENT_DASHBOARD}`} element={<StudentDashboard/>}/>
 
     </Route>
     <Route path="*" element={<NotFound />} />

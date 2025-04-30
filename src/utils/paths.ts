@@ -43,5 +43,6 @@ export const ROUTES = {
   STUDENT:"/student",
   STUDENT_COURSES:'/my-courses',
   WATCH_COURSES:'/WatchCourses',
-  PAYMENT_SUCCESS:"/PaymentSuccess"
+  PAYMENT_SUCCESS:"/PaymentSuccess",
+  STUDENT_DASHBOARD:"/overview",
 };
