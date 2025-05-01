@@ -278,7 +278,7 @@ const UserNavbar: React.FC = () => {
               </div>
             </div>
             <button
-              onClick={() => navigate("/profile")}
+              onClick={() => navigate(`${ROUTES.USER}${ROUTES.PROFILE}`)}
               className="w-full px-4 py-2 bg-gray-100 text-gray-800 rounded-md hover:bg-gray-200 transition duration-200"
             >
               Profile

@@ -39,7 +39,7 @@ interface Course {
   isEnrolled: boolean;
 }
 
-interface Progress {
+interface Progress { 
   percentage: number;
   completedLessons: string[];
   unlockedLessons: string[];

@@ -76,6 +76,16 @@ interface CourseFormData {
   instructor?: string;
 }
 
+interface AverageReview {
+  count: number;
+  average: number;
+}
+
+interface CourseResponse {
+  course: ICourse;
+  reviewStatus: AverageReview;
+}
+
 // Common
 
 // Fetch all courses with pagination, search, and category filter
@@ -124,7 +134,7 @@ export const fetchCategories = async (): Promise<ICategory[]> => {
 // Fetch course details by ID
 export const fetchCourseDetails = async (
   courseId: string
-): Promise<ICourse> => {
+): Promise<CourseResponse> => {
   try {
     const response = await axios.get(
       `${API_URL}/auth/courseDetails/${courseId}`,
