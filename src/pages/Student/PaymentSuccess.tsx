@@ -29,7 +29,7 @@ const PaymentSuccess: React.FC = () => {
               Payment Successful!
             </h1>
             <p className="text-lg text-gray-600 mb-8">
-              Congratulations! Your payment was processed successfully. You’re now enrolled in your course.
+              Congratulations! You’re now enrolled in your course.
             </p>
             <button
               onClick={handleViewCourse}

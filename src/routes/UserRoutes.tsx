@@ -21,7 +21,7 @@ const UserRoutes = () => {
           path={ROUTES.INSTRUCTOR_APPLICATION_FORM}
           element={<InstructorApplicationForm />}
         />
-        <Route path="/chat" element={<ChatPage />} />
+        <Route path={ROUTES.CHAT_PAGE} element={<ChatPage />} />
       </Route>
       <Route path="*" element={<NotFound />} />
     </Routes>

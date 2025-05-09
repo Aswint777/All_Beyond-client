@@ -13,10 +13,11 @@ export const ROUTES = {
   OTP_VERIFY: "/OtpVerify",
 
   // USER
-  USER:'/user/',
-  PROFILE: "profile",
-  INSTRUCTOR_APPLY_PAGE: "InstructorApplyPage",
-  INSTRUCTOR_APPLICATION_FORM: "InstructorApplicationForm",
+  USER:'/user',
+  PROFILE: "/profile",
+  INSTRUCTOR_APPLY_PAGE: "/InstructorApplyPage",
+  INSTRUCTOR_APPLICATION_FORM: "/InstructorApplicationForm",
+  CHAT_PAGE:"/chat",
 
   // ADMIN
   ADMIN:'/admin',

@@ -7,6 +7,7 @@ const InstructorSidebar = () => {
     { name: "Overview", path:`${ROUTES.INSTRUCTOR}${ROUTES.INSTRUCTOR_DASHBOARD}` },
     { name: "Profile", path:`${ROUTES.USER}${ROUTES.PROFILE}`},
     { name: "My Courses", path:`${ROUTES.INSTRUCTOR}${ROUTES.INSTRUCTOR_COURSE}` },
+    { name: "Chat", path: `${ROUTES.USER}${ROUTES.CHAT_PAGE}`  },
     { name: "Assessments", path: "/assessments" },
     { name: "Complaints", path: "/complaints" },
     { name: "Settings", path: "/settings" },

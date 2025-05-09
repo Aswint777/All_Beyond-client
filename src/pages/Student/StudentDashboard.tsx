@@ -174,9 +174,9 @@ const StudentDashboard = () => {
                 </div>
               </div>
 
-              <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+              <div className="grid grid-cols-1 lg:grid">
                 {/* Pie Chart: Enrolled Courses */}
-                <div
+                {/* <div
                   className="bg-white p-6 rounded-xl shadow-sm hover:shadow-md transition-shadow duration-300"
                   role="region"
                   aria-label="Enrolled Courses Pie Chart"
@@ -225,7 +225,7 @@ const StudentDashboard = () => {
                       No enrolled courses available.
                     </p>
                   )}
-                </div>
+                </div> */}
 
                 {/* Recent Enrollments Table */}
                 <div

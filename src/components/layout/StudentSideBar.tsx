@@ -1,12 +1,13 @@
-import React, { useState } from 'react';
-import { NavLink } from 'react-router-dom';
-import { ROUTES } from '../../utils/paths';
+import React, { useState } from "react";
+import { NavLink } from "react-router-dom";
+import { ROUTES } from "../../utils/paths";
 
 const StudentSideBar = () => {
   const links = [
-    { name: "Overview", path:`${ROUTES.STUDENT}${ROUTES.STUDENT_DASHBOARD}` },
-        { name: "Profile", path:`${ROUTES.USER}${ROUTES.PROFILE}`},
+    { name: "Overview", path: `${ROUTES.STUDENT}${ROUTES.STUDENT_DASHBOARD}` },
+    { name: "Profile", path: `${ROUTES.USER}${ROUTES.PROFILE}` },
     { name: "My Courses", path: `${ROUTES.STUDENT}${ROUTES.STUDENT_COURSES}` },
+    { name: "Chat", path: `${ROUTES.USER}${ROUTES.CHAT_PAGE}` },
     { name: "Assessments", path: "/assessments" },
     { name: "Complaints", path: "/complaints" },
     { name: "Settings", path: "/settings" },
@@ -44,7 +45,9 @@ const StudentSideBar = () => {
         } md:translate-x-0 md:w-64 w-3/4 md:relative md:shadow-lg`}
       >
         {/* Title */}
-        <h1 className="text-2xl font-bold mb-10 text-purple-200 tracking-tight mt-14">Student</h1>
+        <h1 className="text-2xl font-bold mb-10 text-purple-200 tracking-tight mt-14">
+          Student
+        </h1>
 
         {/* Navigation */}
         <nav className="space-y-2">
