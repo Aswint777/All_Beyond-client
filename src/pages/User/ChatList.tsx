@@ -49,13 +49,18 @@ const ChatList: React.FC<ChatListProps> = ({ onSelectChat, selectedChatId }) => 
       console.log("ChatList connected to Socket.IO server");
     });
 
+    newSocket.on("connect_error", (err) => {
+      console.error("ChatList Socket.IO connect error:", err.message);
+    });
+
     newSocket.on("message", (message: Message) => {
       console.log("ChatList received Socket.IO message:", message);
+      const chatId = message.chatGroupId;
       setLastMessages((prev) => ({
         ...prev,
-        [message.chatGroupId]: {
+        [chatId]: {
           ...message,
-          createdAt: new Date(message.createdAt).toISOString(), // Normalize date
+          createdAt: new Date(message.createdAt).toISOString(),
         },
       }));
     });
@@ -79,7 +84,6 @@ const ChatList: React.FC<ChatListProps> = ({ onSelectChat, selectedChatId }) => 
           throw new Error("Invalid response format");
         }
 
-        // Type guard for UserChatList[]
         const isUserChatListArray = (items: any[]): items is UserChatList[] =>
           items.every(
             (item) =>
@@ -98,27 +102,36 @@ const ChatList: React.FC<ChatListProps> = ({ onSelectChat, selectedChatId }) => 
         setChats(data);
         setFilteredChats(data);
 
+        // Join chat rooms
+        if (socket) {
+          data.forEach((chat) => {
+            const chatId = chat.chatGroupId || chat.id;
+            console.log("Joining chat room:", chatId);
+            socket.emit("joinChat", { userId: "chatList", chatGroupId: chatId });
+          });
+        }
+
         // Fetch last message for each chat
         const messagesPromises = data.map(async (chat) => {
+          const chatId = chat.chatGroupId || chat.id;
           try {
             const messagesResponse = await axios.get<{ success: boolean; data: Message[] }>(
-              `${API_URL}/student/messages/${chat.id}`,
+              `${API_URL}/student/messages/${chatId}`,
               { withCredentials: true }
             );
             if (messagesResponse.data.success && Array.isArray(messagesResponse.data.data)) {
               const messages = messagesResponse.data.data;
               if (messages.length > 0) {
-                // Sort by createdAt to get the latest message
                 const lastMessage = messages.sort(
                   (a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime()
                 )[0];
-                return { chatId: chat.id, message: lastMessage };
+                return { chatId, message: lastMessage };
               }
             }
-            return { chatId: chat.id, message: null };
+            return { chatId, message: null };
           } catch (error) {
-            console.error(`Error fetching messages for chat ${chat.id}:`, error);
-            return { chatId: chat.id, message: null };
+            console.error(`Error fetching messages for chat ${chatId}:`, error);
+            return { chatId, message: null };
           }
         });
 
@@ -149,7 +162,7 @@ const ChatList: React.FC<ChatListProps> = ({ onSelectChat, selectedChatId }) => 
     };
 
     fetchChats();
-  }, []);
+  }, [socket]);
 
   useEffect(() => {
     setFilteredChats(
@@ -200,7 +213,8 @@ const ChatList: React.FC<ChatListProps> = ({ onSelectChat, selectedChatId }) => 
           <p className="p-6 text-gray-500">No chats available</p>
         ) : (
           filteredChats.map((chat) => {
-            const lastMessage = lastMessages[chat.id];
+            const chatId = chat.chatGroupId || chat.id;
+            const lastMessage = lastMessages[chatId];
             const messagePreview = lastMessage
               ? lastMessage.content
                 ? lastMessage.content
@@ -254,6 +268,7 @@ export default ChatList;
 // import axios from "axios";
 // import { useEffect, useState } from "react";
 // import { SearchIcon } from "lucide-react";
+// import { io, Socket } from "socket.io-client";
 
 // const API_URL = import.meta.env.VITE_REACT_APP_API_URL || "http://localhost:5000";
 
@@ -265,6 +280,17 @@ export default ChatList;
 //   enrolledStudents: string[];
 // }
 
+// interface Message {
+//   id: string;
+//   chatGroupId: string;
+//   senderId: string;
+//   content: string;
+//   fileUrl?: string;
+//   createdAt: string;
+//   senderName?: string;
+//   username?: string;
+// }
+
 // interface ChatListProps {
 //   onSelectChat: (chat: UserChatList) => void;
 //   selectedChatId?: string;
@@ -273,9 +299,38 @@ export default ChatList;
 // const ChatList: React.FC<ChatListProps> = ({ onSelectChat, selectedChatId }) => {
 //   const [chats, setChats] = useState<UserChatList[]>([]);
 //   const [filteredChats, setFilteredChats] = useState<UserChatList[]>([]);
+//   const [lastMessages, setLastMessages] = useState<{ [chatId: string]: Message }>({});
 //   const [search, setSearch] = useState<string>("");
 //   const [loading, setLoading] = useState<boolean>(true);
 //   const [error, setError] = useState<string | null>(null);
+//   const [socket, setSocket] = useState<Socket | null>(null);
+
+//   useEffect(() => {
+//     const newSocket = io(API_URL, {
+//       withCredentials: true,
+//       path: "/socket.io",
+//     });
+//     setSocket(newSocket);
+
+//     newSocket.on("connect", () => {
+//       console.log("ChatList connected to Socket.IO server");
+//     });
+
+//     newSocket.on("message", (message: Message) => {
+//       console.log("ChatList received Socket.IO message:", message);
+//       setLastMessages((prev) => ({
+//         ...prev,
+//         [message.chatGroupId]: {
+//           ...message,
+//           createdAt: new Date(message.createdAt).toISOString(), // Normalize date
+//         },
+//       }));
+//     });
+
+//     return () => {
+//       newSocket.disconnect();
+//     };
+//   }, []);
 
 //   useEffect(() => {
 //     const fetchChats = async () => {
@@ -309,6 +364,40 @@ export default ChatList;
 
 //         setChats(data);
 //         setFilteredChats(data);
+
+//         // Fetch last message for each chat
+//         const messagesPromises = data.map(async (chat) => {
+//           try {
+//             const messagesResponse = await axios.get<{ success: boolean; data: Message[] }>(
+//               `${API_URL}/student/messages/${chat.id}`,
+//               { withCredentials: true }
+//             );
+//             if (messagesResponse.data.success && Array.isArray(messagesResponse.data.data)) {
+//               const messages = messagesResponse.data.data;
+//               if (messages.length > 0) {
+//                 // Sort by createdAt to get the latest message
+//                 const lastMessage = messages.sort(
+//                   (a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime()
+//                 )[0];
+//                 return { chatId: chat.id, message: lastMessage };
+//               }
+//             }
+//             return { chatId: chat.id, message: null };
+//           } catch (error) {
+//             console.error(`Error fetching messages for chat ${chat.id}:`, error);
+//             return { chatId: chat.id, message: null };
+//           }
+//         });
+
+//         const messagesResults = await Promise.all(messagesPromises);
+//         const newLastMessages = messagesResults.reduce((acc, { chatId, message }) => {
+//           if (message) {
+//             acc[chatId] = message;
+//           }
+//           return acc;
+//         }, {} as { [chatId: string]: Message });
+
+//         setLastMessages(newLastMessages);
 //       } catch (error: any) {
 //         console.error("Error fetching chats:", error);
 //         const status = error.response?.status;
@@ -377,28 +466,38 @@ export default ChatList;
 //         {filteredChats.length === 0 ? (
 //           <p className="p-6 text-gray-500">No chats available</p>
 //         ) : (
-//           filteredChats.map((chat) => (
-//             <button
-//               key={chat.id}
-//               onClick={() => onSelectChat(chat)}
-//               className={`w-full text-left px-6 py-4 flex items-center space-x-3 hover:bg-gray-100 transition-colors border-b border-gray-100 last:border-b-0 focus:outline-none ${
-//                 selectedChatId === chat.id ? "bg-blue-50" : ""
-//               }`}
-//               aria-label={`Select chat for ${chat.title}`}
-//             >
-//               <div className="flex-1">
-//                 <h3 className="text-sm font-medium text-gray-800 truncate">
-//                   {chat.title}
-//                 </h3>
-//                 <p className="text-xs text-gray-500 mt-1 truncate">
-//                   {chat.instructorId ? `Instructor: ${chat.instructorId}` : "No instructor"}
-//                 </p>
-//               </div>
-//               <span className="text-xs text-blue-500 font-medium hidden">
-//                 New
-//               </span>
-//             </button>
-//           ))
+//           filteredChats.map((chat) => {
+//             const lastMessage = lastMessages[chat.id];
+//             const messagePreview = lastMessage
+//               ? lastMessage.content
+//                 ? lastMessage.content
+//                 : lastMessage.fileUrl
+//                 ? "File sent"
+//                 : "No message content"
+//               : "No messages yet";
+//             return (
+//               <button
+//                 key={chat.id}
+//                 onClick={() => onSelectChat(chat)}
+//                 className={`w-full text-left px-6 py-4 flex items-center space-x-3 hover:bg-gray-100 transition-colors border-b border-gray-100 last:border-b-0 focus:outline-none ${
+//                   selectedChatId === chat.id ? "bg-blue-50" : ""
+//                 }`}
+//                 aria-label={`Select chat for ${chat.title}`}
+//               >
+//                 <div className="flex-1">
+//                   <h3 className="text-sm font-medium text-gray-800 truncate">
+//                     {chat.title}
+//                   </h3>
+//                   <p className="text-xs text-gray-500 mt-1 truncate">
+//                     {messagePreview}
+//                   </p>
+//                 </div>
+//                 <span className="text-xs text-blue-500 font-medium hidden">
+//                   New
+//                 </span>
+//               </button>
+//             );
+//           })
 //         )}
 //       </div>
 //     </div>
@@ -406,6 +505,12 @@ export default ChatList;
 // };
 
 // export default ChatList;
+
+
+
+
+
+
 
 
 

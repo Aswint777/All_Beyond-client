@@ -39,6 +39,11 @@ export const ROUTES = {
   ADD_COURSE_PRICING:"/AddCourse_Pricing",
   EDIT_COURSE :"/edit-course/",
   INSTRUCTOR_DASHBOARD:'/overview',
+  LIST_ASSESSMENT:"/ListAssessments",
+  CREATE_ASSESSMENT:"/CreateAssessment",
+  EDIT_ASSESSMENT:"/EditAssessment",
+  
+  
 
   // STUDENT ROUTES
   STUDENT:"/student",
