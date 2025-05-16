@@ -118,10 +118,8 @@ const StudentDashboard = () => {
     <div className="min-h-screen bg-gray-100 font-sans text-gray-900 antialiased">
       <UserNavbar />
       <div className="flex">
-        {/* Sidebar: Fixed width on desktop, hidden on mobile with toggle */}
-        {/* <aside className="w-64 bg-white shadow-lg hidden lg:block"> */}
+
           <StudentSideBar />
-        {/* </aside> */}
         <main className="flex-1 p-4 sm:p-8 lg:p-10 mt-16 max-w-7xl mx-auto">
           {/* Header */}
           <motion.div

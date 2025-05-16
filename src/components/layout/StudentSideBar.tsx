@@ -8,7 +8,7 @@ const StudentSideBar = () => {
     { name: "Profile", path: `${ROUTES.USER}${ROUTES.PROFILE}` },
     { name: "My Courses", path: `${ROUTES.STUDENT}${ROUTES.STUDENT_COURSES}` },
     { name: "Chat", path: `${ROUTES.USER}${ROUTES.CHAT_PAGE}` },
-    { name: "Assessments", path: "/assessments" },
+    { name: "Assessments", path: `${ROUTES.STUDENT}${ROUTES.STUDENT_ASSESSMENTS}` },
     { name: "Complaints", path: "/complaints" },
     { name: "Settings", path: "/settings" },
   ];

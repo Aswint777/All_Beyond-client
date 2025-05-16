@@ -38,7 +38,7 @@ const CreateAssessment: React.FC = () => {
       >(`${API_URL}/instructor/createAssessments`, payload, { withCredentials: true });
 
       if (response.data.success) {
-        navigate(`${ROUTES.INSTRUCTOR}/assessments`);
+        navigate(`${ROUTES.INSTRUCTOR}${ROUTES.LIST_ASSESSMENT}`);
       } else {
         throw new Error(response.data.message || "Failed to create assessment");
       }

@@ -45,8 +45,10 @@ const EditAssessment: React.FC = () => {
         }
 
         // Fetch assessment by id
+        console.log("Fetching assessment:", id);
+        
         const assessmentResponse = await axios.get<{ success: boolean; data: Assessment }>(
-          `${API_URL}/getAssessment/${id}`,
+          `${API_URL}/instructor/getAssessment/${id}`,
           { withCredentials: true }
         );
 
@@ -84,12 +86,25 @@ const EditAssessment: React.FC = () => {
 
   const handleSubmit = async (data: { questions: Question[] }) => {
     try {
+      // Clean questions to include only question, options, and correctOption
+      const cleanedQuestions = data.questions.map(({ question, options, correctOption }) => ({
+        question,
+        options,
+        correctOption,
+      }));
+
+      console.log("Sending cleaned questions:", cleanedQuestions);
+
       const response = await axios.put<
         { success: true; data: Assessment } | { success: false; message: string }
-      >(`${API_URL}/assessments/${id}`, { ...data, courseId }, { withCredentials: true });
+      >(
+        `${API_URL}/instructor/updateAssessment/${id}`,
+        { questions: cleanedQuestions },
+        { withCredentials: true }
+      );
 
       if (response.data.success) {
-        navigate(`${ROUTES.INSTRUCTOR}/assessments`);
+        navigate(`${ROUTES.INSTRUCTOR}${ROUTES.LIST_ASSESSMENT}`);
       } else {
         throw new Error(response.data.message || "Failed to update assessment");
       }

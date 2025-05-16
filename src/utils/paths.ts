@@ -51,4 +51,6 @@ export const ROUTES = {
   WATCH_COURSES:'/WatchCourses',
   PAYMENT_SUCCESS:"/PaymentSuccess",
   STUDENT_DASHBOARD:"/overview",
+  STUDENT_ASSESSMENTS:"/StudentAssessments",
+  TAKE_ASSESSMENT:"/takeAssessment",
 };
