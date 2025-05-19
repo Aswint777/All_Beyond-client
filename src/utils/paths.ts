@@ -53,4 +53,5 @@ export const ROUTES = {
   STUDENT_DASHBOARD:"/overview",
   STUDENT_ASSESSMENTS:"/StudentAssessments",
   TAKE_ASSESSMENT:"/takeAssessment",
+  CERTIFICATE:"/Download_Certificate",
 };

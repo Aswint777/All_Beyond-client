@@ -9,6 +9,7 @@ import PaymentSuccess from "../pages/Student/PaymentSuccess";
 import StudentDashboard from "../pages/Student/StudentDashboard";
 import StudentAssessments from "../pages/Student/StudentAssessments";
 import TakeAssessment from "../pages/Student/TakeAssessment";
+import CertificatePage from "../pages/Student/CertificatePage";
 
 const StudentRoutes = () => {
   return (
@@ -29,8 +30,12 @@ const StudentRoutes = () => {
           element={<StudentAssessments />}
         />
         <Route
-          path={`${ROUTES.TAKE_ASSESSMENT}/:id`}
+          path={`${ROUTES.TAKE_ASSESSMENT}/:assessmentId`}
           element={<TakeAssessment />}
+        />
+                <Route
+          path={`${ROUTES.CERTIFICATE}/:assessmentId`}
+          element={<CertificatePage />}
         />
       </Route>
       <Route path="*" element={<NotFound />} />

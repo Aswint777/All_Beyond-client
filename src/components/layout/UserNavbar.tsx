@@ -58,7 +58,7 @@ const UserNavbar: React.FC = () => {
     }
   };
 
-  const toggleMenu = () => setIsMenuOpen(!isMenuOpen);
+  const toggleMenu = () => setIsMenuOpen(!isMenuOpen); 
 
   return (
     <nav className="bg-white shadow-lg fixed w-full z-50 top-0">

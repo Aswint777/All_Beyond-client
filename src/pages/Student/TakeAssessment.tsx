@@ -10,7 +10,7 @@ const API_URL = import.meta.env.VITE_REACT_APP_API_URL || "http://localhost:5000
 interface Question {
   question: string;
   options: string[];
-  correctOption: number;
+  correctOption: number; // 1-based index (1, 2, 3, ...)
 }
 
 interface Assessment {
@@ -37,7 +37,7 @@ interface SubmitResponse {
 
 interface Answer {
   questionIndex: number;
-  selectedOption: number; // 0-based
+  selectedOption: number; // 0-based index in frontend, converted to 1-based for backend
 }
 
 const TakeAssessment: React.FC = () => {
@@ -73,10 +73,24 @@ const TakeAssessment: React.FC = () => {
         if (!response.data.success || !response.data.data) {
           throw new Error("Assessment not found");
         }
+        
+        const fetchedAssessment = response.data.data;
 
-        setAssessment(response.data.data);
+        // Validate questions
+        const invalidQuestion = fetchedAssessment.questions.find(
+          (q, i) =>
+            !q.question ||
+            !q.options?.length ||
+            q.correctOption < 1 ||
+            q.correctOption > q.options.length
+        );
+        if (invalidQuestion) {
+          throw new Error("Invalid question data in assessment");
+        }
+
+        setAssessment(fetchedAssessment);
         setAnswers(
-          response.data.data.questions.map((_, index) => ({
+          fetchedAssessment.questions.map((_, index) => ({
             questionIndex: index,
             selectedOption: -1, // No selection initially
           }))
@@ -118,9 +132,17 @@ const TakeAssessment: React.FC = () => {
 
     setIsSubmitting(true);
     try {
+      // Convert 0-based selectedOption to 1-based for backend
+      const submissionAnswers = answers.map((answer) => ({
+        questionIndex: answer.questionIndex,
+        selectedOption: answer.selectedOption + 1, // Convert to 1-based
+      }));
+
+      console.log("Submitting answers:", submissionAnswers);
+
       const response = await axios.post<SubmitResponse>(
         `${API_URL}/student/submit-assessment/${assessmentId}`,
-        { answers },
+        { answers: submissionAnswers },
         { withCredentials: true }
       );
 
@@ -180,9 +202,9 @@ const TakeAssessment: React.FC = () => {
         <h1 className="text-3xl font-bold text-gray-900 mb-6 text-center animate-fade-in">
           Take Assessment: {assessment.courseTitle}
         </h1>
-        <p className="text-gray-600 mb-4 text-center">
+        {/* <p className="text-gray-600 mb-4 text-center">
           <span className="font-medium">Instructor:</span> {assessment.instructorName}
-        </p>
+        </p> */}
 
         {submitError && (
           <p className="text-red-600 text-center mb-4" role="alert">
