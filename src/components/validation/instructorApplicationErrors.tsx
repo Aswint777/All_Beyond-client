@@ -1,5 +1,5 @@
 export interface InstructorApplicationErrors {
-  [key: string]: string; // ✅ Allows dynamic key access
+  [key: string]: string; 
 }
 
 export const validateInstructorApplication = (formData: any): InstructorApplicationErrors => {
@@ -14,16 +14,12 @@ export const validateInstructorApplication = (formData: any): InstructorApplicat
   if (!formData.country.trim()) errors.country = "Country is required.";
   if (!formData.pinNumber.trim()) errors.pinNumber = "Pin number is required.";
 
-  // validate name
   if (formData.firstName.length < 3){
     errors.firstName ="name is too short"
   }
   if (formData.firstName.length > 15){
     errors.firstName ="name is too long"
   }
-  // if (formData.address.length > 15){
-  //   errors.lastName ="name is too long"
-  // }
 
   if (formData.address.length > 30){
     errors.address ="Address is too long"
@@ -32,26 +28,22 @@ export const validateInstructorApplication = (formData: any): InstructorApplicat
     errors.city ="try a valid city"
   }
 
-  // Validate Email
   if (!formData.email) {
     errors.email = "Email is required.";
   } else if (!/\S+@\S+\.\S+/.test(formData.email)) {
     errors.email = "Invalid email format.";
   }
 
-  // Validate Contact Number
   if (!formData.contactNumber) {
     errors.contactNumber = "Contact number is required.";
   } else if (!/^\d{10}$/.test(formData.contactNumber)) {
     errors.contactNumber = "Invalid phone number.";
   }
 
-  // Validate Gender
   if (!formData.gender) {
     errors.gender = "Gender selection is required.";
   }
 
-  // Validate File Uploads
   if (!formData.profilePhoto) errors.profilePhoto = "Profile photo is required.";
   if (!formData.educationFile) errors.educationFile = "Education file is required.";
 

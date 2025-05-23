@@ -44,12 +44,10 @@ const AddCourse_Details: React.FC = () => {
   }, []);
 
   useEffect(() => {
-    // Sync thumbnail preview with formData.thumbnail on mount or change
     if (formData.thumbnail) {
       const url = URL.createObjectURL(formData.thumbnail);
       setThumbnailPreviewUrl(url);
       console.log("Initial thumbnail URL from context:", url);
-      // Cleanup URL on unmount or change
       return () => URL.revokeObjectURL(url);
     }
   }, [formData.thumbnail]);
@@ -90,7 +88,6 @@ const AddCourse_Details: React.FC = () => {
             <Form className="max-w-xl mx-auto p-6 bg-white rounded-lg shadow-md">
               <h1 className="text-2xl p-3">Course Details</h1>
 
-              {/* Thumbnail Upload */}
               <label
                 htmlFor="thumbnail-upload"
                 className="flex flex-col items-center justify-center border-2 border-dashed border-gray-300 rounded-lg h-40 mb-4 cursor-pointer"
@@ -134,7 +131,6 @@ const AddCourse_Details: React.FC = () => {
                 className="text-red-500"
               />
 
-              {/* Course Title */}
               <Field
                 type="text"
                 name="title"
@@ -151,7 +147,6 @@ const AddCourse_Details: React.FC = () => {
                 className="text-red-500"
               />
 
-              {/* Description */}
               <Field
                 as="textarea"
                 name="courseDescription"
@@ -168,7 +163,6 @@ const AddCourse_Details: React.FC = () => {
                 className="text-red-500"
               />
 
-              {/* Category */}
               <Field
                 as="select"
                 name="category"
@@ -199,7 +193,6 @@ const AddCourse_Details: React.FC = () => {
                 className="text-red-500"
               />
 
-              {/* Instructor Name */}
               <Field
                 type="text"
                 name="instructorName"
@@ -216,7 +209,6 @@ const AddCourse_Details: React.FC = () => {
                 className="text-red-500"
               />
 
-              {/* About Instructor */}
               <Field
                 as="textarea"
                 name="aboutInstructor"
@@ -233,7 +225,6 @@ const AddCourse_Details: React.FC = () => {
                 className="text-red-500"
               />
 
-              {/* Submit Button */}
               <button
                 type="submit"
                 className="w-full p-2 bg-violet-600 text-white rounded-lg hover:bg-violet-800"

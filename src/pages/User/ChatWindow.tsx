@@ -320,13 +320,7 @@ const ChatWindow: React.FC<ChatWindowProps> = ({ selectedChat, userId, username 
               className="hidden"
               id="file-upload"
             />
-            <label
-              htmlFor="file-upload"
-              className="p-3 bg-gray-100 rounded-lg cursor-pointer hover:bg-gray-200 transition-colors"
-              aria-label="Upload file"
-            >
-              <Paperclip className="h-5 w-5 text-gray-600" />
-            </label>
+
             <button
               type="submit"
               className="p-3 bg-blue-500 text-white rounded-lg hover:bg-blue-600 transition-colors flex items-center"
@@ -335,6 +329,7 @@ const ChatWindow: React.FC<ChatWindowProps> = ({ selectedChat, userId, username 
               <Send className="h-5 w-5" />
             </button>
           </div>
+        
           {file && <p className="text-sm text-gray-600 mt-2">Selected file: {file.name}</p>}
         </form>
       )}

@@ -8,8 +8,10 @@ const StudentSideBar = () => {
     { name: "Profile", path: `${ROUTES.USER}${ROUTES.PROFILE}` },
     { name: "My Courses", path: `${ROUTES.STUDENT}${ROUTES.STUDENT_COURSES}` },
     { name: "Chat", path: `${ROUTES.USER}${ROUTES.CHAT_PAGE}` },
-    { name: "Assessments", path: `${ROUTES.STUDENT}${ROUTES.STUDENT_ASSESSMENTS}` },
-    { name: "Complaints", path: "/complaints" },
+    {
+      name: "Assessments",
+      path: `${ROUTES.STUDENT}${ROUTES.STUDENT_ASSESSMENTS}`,
+    },
     { name: "Settings", path: "/settings" },
   ];
 
@@ -17,7 +19,6 @@ const StudentSideBar = () => {
 
   return (
     <>
-      {/* Mobile Toggle Button */}
       <button
         onClick={() => setIsOpen(!isOpen)}
         className="md:hidden fixed top-4 left-4 z-50 p-2 bg-purple-600 text-white rounded-full shadow-md focus:outline-none"
@@ -38,18 +39,15 @@ const StudentSideBar = () => {
         </svg>
       </button>
 
-      {/* Sidebar */}
       <aside
         className={`bg-purple-900 text-white min-h-screen p-6 fixed top-0 left-0 z-40 transform transition-transform duration-300 ${
           isOpen ? "translate-x-0" : "-translate-x-full"
         } md:translate-x-0 md:w-64 w-3/4 md:relative md:shadow-lg`}
       >
-        {/* Title */}
         <h1 className="text-2xl font-bold mb-10 text-purple-200 tracking-tight mt-14">
           Student
         </h1>
 
-        {/* Navigation */}
         <nav className="space-y-2">
           {links.map((link) => (
             <NavLink
@@ -62,7 +60,7 @@ const StudentSideBar = () => {
                     : "text-purple-100 hover:bg-purple-700 hover:text-white"
                 }`
               }
-              onClick={() => setIsOpen(false)} // Close sidebar on mobile after clicking
+              onClick={() => setIsOpen(false)}
             >
               {link.name}
             </NavLink>
@@ -70,7 +68,6 @@ const StudentSideBar = () => {
         </nav>
       </aside>
 
-      {/* Overlay for mobile when sidebar is open */}
       {isOpen && (
         <div
           onClick={() => setIsOpen(false)}

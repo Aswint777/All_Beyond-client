@@ -128,7 +128,6 @@ const CategoryListPage: React.FC = () => {
               ))}
             </div>
 
-            {/* Pagination Controls */}
             <div className="flex justify-center items-center mt-8 gap-4">
               <button
                 onClick={() => setCurrentPage((prev) => Math.max(prev - 1, 1))}

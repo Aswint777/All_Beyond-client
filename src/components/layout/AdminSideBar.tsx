@@ -31,21 +31,19 @@ const AdminSideBar = () => {
   };
 
   const links = [
-    { name: "Overview", path: "/admin/overview" },
-    // { name: "Courses", path: "/admin/courses" },
-    { name: "Students", path: `${ROUTES.ADMIN}${ROUTES.ADMIN_STUDENT_LIST}`},
-    { name: "Instructors", path: `${ROUTES.ADMIN}${ROUTES.ADMIN_INSTRUCTOR_LIST}` },
-    { name: "Assessments", path: "/admin/assessments" },
+    { name: "Overview", path: `${ROUTES.ADMIN}${ROUTES.ADMIN_DASHBOARD}` },
+    { name: "Students", path: `${ROUTES.ADMIN}${ROUTES.ADMIN_STUDENT_LIST}` },
+    {
+      name: "Instructors",
+      path: `${ROUTES.ADMIN}${ROUTES.ADMIN_INSTRUCTOR_LIST}`,
+    },
     { name: "Categories", path: `${ROUTES.ADMIN}${ROUTES.CATEGORY_LIST}` },
-    { name: "Transactions", path: "/admin/transactions" },
-    { name: "Banners", path: "/admin/banners" },
-    { name: "Complaints", path: "/admin/complaints" },
-    // { name: "Settings", path: "/admin/settings" },
+    { name: "Transactions", path: `${ROUTES.ADMIN}${ROUTES.TRANSACTION}` },
+    { name: "Settings", path: "/admin/settings" },
   ];
 
   return (
     <>
-      {/* Mobile Toggle Button */}
       <button
         onClick={() => setIsOpen(!isOpen)}
         className="md:hidden fixed top-4 left-4 z-50 p-2 bg-purple-600 text-white rounded-full shadow-md focus:outline-none"
@@ -66,16 +64,15 @@ const AdminSideBar = () => {
         </svg>
       </button>
 
-      {/* Sidebar */}
       <aside
         className={`bg-purple-900 text-white min-h-screen p-6 fixed top-0 left-0 z-40 transform transition-transform duration-300 ${
           isOpen ? "translate-x-0" : "-translate-x-full"
         } md:translate-x-0 md:w-64 w-3/4 md:relative md:shadow-lg`}
       >
-        {/* Title */}
-        <h1 className="text-2xl font-bold mb-10 text-purple-200 tracking-tight">Admin</h1>
+        <h1 className="text-2xl font-bold mb-10 text-purple-200 tracking-tight">
+          Admin
+        </h1>
 
-        {/* Navigation */}
         <nav className="space-y-2">
           {links.map((link) => (
             <NavLink
@@ -88,7 +85,7 @@ const AdminSideBar = () => {
                     : "text-purple-100 hover:bg-purple-700 hover:text-white"
                 }`
               }
-              onClick={() => setIsOpen(false)} // Close sidebar on mobile after clicking
+              onClick={() => setIsOpen(false)}
             >
               {link.name}
             </NavLink>
@@ -102,7 +99,6 @@ const AdminSideBar = () => {
         </nav>
       </aside>
 
-      {/* Overlay for mobile when sidebar is open */}
       {isOpen && (
         <div
           onClick={() => setIsOpen(false)}

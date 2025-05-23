@@ -7,10 +7,9 @@ export const GetUserDetailsAction = createAsyncThunk(
     async (_, { rejectWithValue }) => {
       try {
         const API_URL = import.meta.env.VITE_REACT_APP_API_URL!;  
-        // const API_URL = "http://localhost:5000"; 
 
     const response = await axios.get(`${API_URL}/auth/userDetails`, {
-      withCredentials: true, // Ensure cookies are sent if using JWT in cookies
+      withCredentials: true, 
     });
     console.log(response,"user data is here at GetUserDetailsAction");
     

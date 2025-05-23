@@ -20,8 +20,6 @@ const UserNavbar: React.FC = () => {
   const { userDetails } = useSelector((state: RootState) => state.user);
   const [userRole, setUserRole] = useState(userDetails?.role || "student");
 
-  console.log(userDetails, "Profile Photo URL");
-
   const handleLogout = async () => {
     await dispatch(UserLogOutAction()).unwrap();
     localStorage.removeItem("jwtToken");
@@ -42,28 +40,24 @@ const UserNavbar: React.FC = () => {
       );
 
       if (response.status === 200) {
-        console.log("✅ Role switched successfully:", response.data.data.role);
         const newRole =
           response.data.data.role ||
           (userRole === "instructor" ? "student" : "instructor");
         setUserRole(newRole);
         await dispatch(GetUserDetailsAction());
       } else {
-        console.error("❌ Failed to switch roles:", response.data);
       }
     } catch (error) {
-      console.error("❌ Error switching roles:", error);
     } finally {
       setIsSwitching(false);
     }
   };
 
-  const toggleMenu = () => setIsMenuOpen(!isMenuOpen); 
+  const toggleMenu = () => setIsMenuOpen(!isMenuOpen);
 
   return (
     <nav className="bg-white shadow-lg fixed w-full z-50 top-0">
       <div className="container mx-auto px-4 py-4 flex justify-between items-center">
-        {/* Logo */}
         <div className="flex items-center space-x-3">
           <img
             src="/src/assets/images/B (4).png"
@@ -75,7 +69,6 @@ const UserNavbar: React.FC = () => {
           </span>
         </div>
 
-        {/* Desktop Links */}
         <ul className="hidden md:flex items-center space-x-8 text-gray-700 font-medium">
           <li
             onClick={() => navigate(ROUTES.HOME)}
@@ -89,19 +82,19 @@ const UserNavbar: React.FC = () => {
           >
             Courses
           </li>
-          <li className="cursor-pointer hover:text-indigo-600 transition-colors duration-200">
-            Careers
-          </li>
-          <li className="cursor-pointer hover:text-indigo-600 transition-colors duration-200">
-            Blog
-          </li>
+
           <li
-            onClick={() => navigate(`${ROUTES.USER}${ROUTES.INSTRUCTOR_APPLY_PAGE}`)}
+            onClick={() =>
+              navigate(`${ROUTES.USER}${ROUTES.INSTRUCTOR_APPLY_PAGE}`)
+            }
             className="cursor-pointer hover:text-indigo-600 transition-colors duration-200"
           >
             Teach
           </li>
-          <li className="cursor-pointer hover:text-indigo-600 transition-colors duration-200">
+          <li
+            className="cursor-pointer hover:text-indigo-600 transition-colors duration-200"
+            onClick={() => navigate(`${ROUTES.ABOUT_US}`)}
+          >
             About Us
           </li>
           {userDetails?.status === "approved" && (
@@ -125,7 +118,6 @@ const UserNavbar: React.FC = () => {
           )}
         </ul>
 
-        {/* Desktop Profile Section */}
         <div className="hidden md:flex items-center space-x-4 relative">
           <img
             src={userDetails?.profilePhoto || "https://via.placeholder.com/40"}
@@ -170,7 +162,6 @@ const UserNavbar: React.FC = () => {
           )}
         </div>
 
-        {/* Hamburger Menu (Mobile) */}
         <div className="md:hidden flex items-center">
           <button
             onClick={toggleMenu}
@@ -198,7 +189,6 @@ const UserNavbar: React.FC = () => {
         </div>
       </div>
 
-      {/* Mobile Menu */}
       {isMenuOpen && (
         <div className="md:hidden bg-white shadow-lg">
           <ul className="flex flex-col space-y-4 px-4 py-4 text-gray-700 font-medium">

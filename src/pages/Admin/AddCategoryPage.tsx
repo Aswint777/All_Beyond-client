@@ -1,8 +1,11 @@
 import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
-import axios from "axios";
 import { config } from "../../configaration/Config";
-import { categoryErrors, validateCategory } from "../../components/validation/CategoryErrors";
+import {
+  categoryErrors,
+  validateCategory,
+} from "../../components/validation/CategoryErrors";
+import { addCategory } from "../../services/categoryService";
 
 const AddCategoryPage: React.FC = () => {
   const navigate = useNavigate();
@@ -27,7 +30,9 @@ const AddCategoryPage: React.FC = () => {
   }, [apiError]);
 
   const handleChange = (
-    e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>
+    e: React.ChangeEvent<
+      HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement
+    >
   ) => {
     const { name, value } = e.target;
     setFormData((prev) => ({ ...prev, [name]: value }));
@@ -52,7 +57,10 @@ const AddCategoryPage: React.FC = () => {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
 
-    const validationErrors = validateCategory(formData.name, formData.description);
+    const validationErrors = validateCategory(
+      formData.name,
+      formData.description
+    );
     setErrors(validationErrors);
 
     if (Object.values(validationErrors).some((error) => error)) {
@@ -60,26 +68,21 @@ const AddCategoryPage: React.FC = () => {
     }
 
     try {
-      const API_URL = import.meta.env.VITE_REACT_APP_API_URL!;
-      console.log(API_URL, "Backend URL");
+      await addCategory(formData);
+      setSuccessMessage("Category added successfully! 🎉");
+      setApiError(null);
 
-      const response = await axios.post(`${API_URL}/admin/addCategory`, formData, config);
-
-      if (response.status === 201) {
-        setSuccessMessage("Category added successfully! 🎉");
-        setApiError(null);
-
-        setTimeout(() => navigate("/admin/categoryListPage"), 2000);
-      }
+      setTimeout(() => navigate("/admin/categoryListPage"), 2000);
     } catch (error: any) {
       console.error("Error adding category:", error);
-      setApiError(error.response?.data?.error || "An unexpected error occurred.");
+      setApiError(
+        error.response?.data?.error || "An unexpected error occurred."
+      );
     }
   };
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-gray-50 to-gray-200 flex items-center justify-center p-4 sm:p-6 lg:p-8">
-      {/* Back Button */}
       <button
         type="button"
         onClick={() => navigate("/admin/categoryListPage")}
@@ -102,27 +105,24 @@ const AddCategoryPage: React.FC = () => {
         <span>Back</span>
       </button>
 
-      {/* Form Container */}
       <div className="bg-white shadow-xl rounded-2xl p-8 w-full max-w-lg transform transition-all duration-300 hover:shadow-2xl">
-        <h2 className="text-3xl font-bold text-gray-800 mb-6 text-center">Add Category</h2>
+        <h2 className="text-3xl font-bold text-gray-800 mb-6 text-center">
+          Add Category
+        </h2>
 
-        {/* Success Message */}
         {successMessage && (
           <div className="bg-green-100 border-l-4 border-green-500 text-green-700 p-4 rounded-lg mb-6 animate-fade-in">
             {successMessage}
           </div>
         )}
 
-        {/* API Error Message */}
         {apiError && (
           <div className="bg-red-100 border-l-4 border-red-500 text-red-700 p-4 rounded-lg mb-6 animate-fade-in">
             {apiError}
           </div>
         )}
 
-        {/* Form */}
         <form onSubmit={handleSubmit} className="space-y-6">
-          {/* Category Name */}
           <div>
             <label className="block text-sm font-semibold text-gray-700 mb-2">
               Category Name
@@ -137,11 +137,12 @@ const AddCategoryPage: React.FC = () => {
               required
             />
             {errors.name && (
-              <p className="text-red-500 text-xs mt-2 animate-fade-in">{errors.name}</p>
+              <p className="text-red-500 text-xs mt-2 animate-fade-in">
+                {errors.name}
+              </p>
             )}
           </div>
 
-          {/* Description */}
           <div>
             <label className="block text-sm font-semibold text-gray-700 mb-2">
               Description
@@ -155,11 +156,12 @@ const AddCategoryPage: React.FC = () => {
               required
             />
             {errors.description && (
-              <p className="text-red-500 text-xs mt-2 animate-fade-in">{errors.description}</p>
+              <p className="text-red-500 text-xs mt-2 animate-fade-in">
+                {errors.description}
+              </p>
             )}
           </div>
 
-          {/* Submit Button */}
           <button
             type="submit"
             className="w-full bg-gradient-to-r from-purple-500 to-purple-600 text-white px-6 py-3 rounded-lg shadow-md hover:from-purple-600 hover:to-purple-700 transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-purple-500 focus:ring-offset-2"

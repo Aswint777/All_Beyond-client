@@ -38,10 +38,13 @@ const AssessmentForm: React.FC<AssessmentFormProps> = ({
   const validateForm = () => {
     const newErrors: { [key: string]: string } = {};
     questions.forEach((q, qIndex) => {
-      if (!q.question.trim()) newErrors[`question-${qIndex}`] = "Question is required";
+      if (!q.question.trim())
+        newErrors[`question-${qIndex}`] = "Question is required";
       q.options.forEach((option, oIndex) => {
         if (!option.trim())
-          newErrors[`option-${qIndex}-${oIndex}`] = `Option ${oIndex + 1} is required`;
+          newErrors[`option-${qIndex}-${oIndex}`] = `Option ${
+            oIndex + 1
+          } is required`;
       });
       if (q.correctOption < 1 || q.correctOption > q.options.length)
         newErrors[`correctOption-${qIndex}`] = "Select a valid correct option";
@@ -55,7 +58,6 @@ const AssessmentForm: React.FC<AssessmentFormProps> = ({
     if (!validateForm()) return;
     setIsSubmitting(true);
     try {
-      // Ensure all questions have the correct courseId
       const updatedQuestions = questions.map((q) => ({ ...q, courseId }));
       await onSubmit({ questions: updatedQuestions });
       setErrors({});
@@ -77,7 +79,7 @@ const AssessmentForm: React.FC<AssessmentFormProps> = ({
         courseId,
         question: "",
         options: ["", "", "", ""],
-        correctOption: 1, // 1-based
+        correctOption: 1,
       },
     ]);
   };
@@ -87,7 +89,10 @@ const AssessmentForm: React.FC<AssessmentFormProps> = ({
     setQuestions(questions.filter((_, i) => i !== index));
     setErrors((prev) =>
       Object.keys(prev).reduce((acc, key) => {
-        if (!key.startsWith(`question-${index}-`) && !key.startsWith(`option-${index}-`)) {
+        if (
+          !key.startsWith(`question-${index}-`) &&
+          !key.startsWith(`option-${index}-`)
+        ) {
           acc[key] = prev[key];
         }
         return acc;
@@ -104,7 +109,7 @@ const AssessmentForm: React.FC<AssessmentFormProps> = ({
   ) => {
     const newQuestions = [...questions];
     newQuestions[index][field] = value;
-    newQuestions[index].courseId = courseId; // Ensure courseId is set
+    newQuestions[index].courseId = courseId;
     setQuestions(newQuestions);
   };
 
@@ -119,9 +124,7 @@ const AssessmentForm: React.FC<AssessmentFormProps> = ({
           {errors.form}
         </p>
       )}
-      <div className="text-sm font-medium text-gray-700">
-        {/* Course: <span className="font-semibold text-indigo-600">{courseTitle}</span> */}
-      </div>
+      <div className="text-sm font-medium text-gray-700"></div>
       {questions.map((q, qIndex) => (
         <div
           key={qIndex}
@@ -140,7 +143,6 @@ const AssessmentForm: React.FC<AssessmentFormProps> = ({
               <Trash2 className="h-5 w-5" />
             </button>
           )}
-          {/* Question */}
           <div>
             <label
               htmlFor={`question-${qIndex}`}
@@ -151,12 +153,18 @@ const AssessmentForm: React.FC<AssessmentFormProps> = ({
             <textarea
               id={`question-${qIndex}`}
               value={q.question}
-              onChange={(e) => updateQuestion(qIndex, "question", e.target.value)}
+              onChange={(e) =>
+                updateQuestion(qIndex, "question", e.target.value)
+              }
               rows={4}
               className="mt-1 block w-full rounded-lg border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 sm:text-sm resize-y transition-all duration-200"
               placeholder="Enter the question"
               aria-invalid={!!errors[`question-${qIndex}`]}
-              aria-describedby={errors[`question-${qIndex}`] ? `question-${qIndex}-error` : undefined}
+              aria-describedby={
+                errors[`question-${qIndex}`]
+                  ? `question-${qIndex}-error`
+                  : undefined
+              }
             />
             {errors[`question-${qIndex}`] && (
               <p
@@ -168,7 +176,6 @@ const AssessmentForm: React.FC<AssessmentFormProps> = ({
               </p>
             )}
           </div>
-          {/* Options */}
           {q.options.map((option, oIndex) => (
             <div key={oIndex}>
               <label
@@ -206,7 +213,6 @@ const AssessmentForm: React.FC<AssessmentFormProps> = ({
               )}
             </div>
           ))}
-          {/* Correct Option */}
           <div>
             <label
               htmlFor={`correctOption-${qIndex}`}
@@ -216,12 +222,16 @@ const AssessmentForm: React.FC<AssessmentFormProps> = ({
             </label>
             <select
               id={`correctOption-${qIndex}`}
-              value={q.correctOption} // 1-based
-              onChange={(e) => updateQuestion(qIndex, "correctOption", Number(e.target.value))} // 1-based
+              value={q.correctOption}
+              onChange={(e) =>
+                updateQuestion(qIndex, "correctOption", Number(e.target.value))
+              }
               className="mt-1 block w-full rounded-lg border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 sm:text-sm transition-all duration-200"
               aria-invalid={!!errors[`correctOption-${qIndex}`]}
               aria-describedby={
-                errors[`correctOption-${qIndex}`] ? `correctOption-${qIndex}-error` : undefined
+                errors[`correctOption-${qIndex}`]
+                  ? `correctOption-${qIndex}-error`
+                  : undefined
               }
             >
               {q.options.map((option, index) => (
@@ -244,7 +254,6 @@ const AssessmentForm: React.FC<AssessmentFormProps> = ({
           </div>
         </div>
       ))}
-      {/* Add Question Button */}
       <div className="flex justify-start">
         <button
           type="button"
@@ -256,7 +265,6 @@ const AssessmentForm: React.FC<AssessmentFormProps> = ({
           Add Question
         </button>
       </div>
-      {/* Submit Button */}
       <div className="flex justify-end">
         <button
           type="submit"

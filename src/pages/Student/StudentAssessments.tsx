@@ -148,7 +148,6 @@ const StudentAssessments: React.FC = () => {
               My Assessments
             </h1>
 
-            {/* Search Bar */}
             <div className="mb-6 flex justify-center sm:justify-start">
               <div className="relative w-full max-w-xs sm:max-w-sm">
                 <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-gray-400" />
@@ -175,7 +174,6 @@ const StudentAssessments: React.FC = () => {
               </div>
             )}
 
-            {/* Assessments Grid */}
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6">
               {assessments.map((assessment) => {
                 const status = getStatus(assessment);
@@ -187,7 +185,6 @@ const StudentAssessments: React.FC = () => {
                     role="region"
                     aria-labelledby={`assessment-${assessment._id}`}
                   >
-                    {/* Status Badge */}
                     <div
                       className={`absolute top-0 right-0 px-2 py-1 text-xs font-medium text-white rounded-bl-md rounded-tr-md ${
                         status === "Passed"
@@ -213,10 +210,8 @@ const StudentAssessments: React.FC = () => {
                       Created: {new Date(assessment.createdAt).toLocaleDateString()}
                     </p>
 
-                    {/* Spacer to push button to bottom */}
                     <div className="flex-grow"></div>
 
-                    {/* CTA Button */}
                     <button
                       onClick={() =>
                         navigate(
@@ -235,7 +230,6 @@ const StudentAssessments: React.FC = () => {
               })}
             </div>
 
-            {/* Pagination */}
             {totalPages > 1 && (
               <div className="mt-8 flex justify-center">
                 <Pagination

@@ -4,17 +4,16 @@ import "./index.css";
 import App from "./App.tsx";
 import { Provider } from "react-redux";
 import Store from "./redux/store.tsx";
-import { GoogleOAuthProvider } from "@react-oauth/google";  // ✅ Import GoogleOAuthProvider
+import { GoogleOAuthProvider } from "@react-oauth/google";  
 import { CourseFormProvider } from "./components/context/CourseFormContext.tsx";
 
 const GOOGLE_CLIENT_ID =import.meta.env.VITE_GOOGLE_CLIENT_ID
-// const GOOGLE_CLIENT_ID ='956821900591-i31njk0p3huehn01pcl8a7mqcl1n94h2.apps.googleusercontent.com'
 
 
 createRoot(document.getElementById("root")!).render(
   <StrictMode>
     <CourseFormProvider>
-    <GoogleOAuthProvider clientId={GOOGLE_CLIENT_ID}>  {/* ✅ Wrap your app */}
+    <GoogleOAuthProvider clientId={GOOGLE_CLIENT_ID}>  
       <Provider store={Store}>
         <App />
       </Provider>

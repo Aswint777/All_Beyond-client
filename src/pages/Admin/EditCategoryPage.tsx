@@ -87,20 +87,16 @@ const EditCategoryPage = () => {
         <span>Back</span>
       </button>
 
-      {/* Form Container */}
       <div className="bg-white shadow-xl rounded-2xl p-8 w-full max-w-lg transform transition-all duration-300 hover:shadow-2xl">
         <h2 className="text-3xl font-bold text-gray-800 mb-6 text-center">Edit Category</h2>
 
-        {/* Error Message */}
         {errorMessage && (
           <div className="bg-red-100 border-l-4 border-red-500 text-red-700 p-4 rounded-lg mb-6 animate-fade-in">
             {errorMessage}
           </div>
         )}
 
-        {/* Form */}
         <form onSubmit={handleSubmit} className="space-y-6">
-          {/* Category Name */}
           <div>
             <label className="block text-sm font-semibold text-gray-700 mb-2">
               Category Name
@@ -120,7 +116,6 @@ const EditCategoryPage = () => {
             )}
           </div>
 
-          {/* Description */}
           <div>
             <label className="block text-sm font-semibold text-gray-700 mb-2">
               Description
@@ -139,7 +134,6 @@ const EditCategoryPage = () => {
             )}
           </div>
 
-          {/* Submit Button */}
           <button
             type="submit"
             className="w-full bg-gradient-to-r from-purple-500 to-purple-600 text-white px-6 py-3 rounded-lg shadow-md hover:from-purple-600 hover:to-purple-700 transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-purple-500 focus:ring-offset-2"

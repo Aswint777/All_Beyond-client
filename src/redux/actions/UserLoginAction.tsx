@@ -11,12 +11,6 @@ export const UserLoginAction = createAsyncThunk(
       const response = await axios.post(`${API_URL}/auth/login`, loginData, {
         withCredentials: true,
       });
-
-      console.log("User login successful :", response.data);
-
-      // ✅ Fetch user details immediately after login
-      // dispatch(GetUserDetailsAction());
-
       return response.data;
     } catch (error: any) {
       console.log("Login error:", error);
@@ -39,7 +33,6 @@ export const UserLogOutAction = createAsyncThunk(
         console.log('zzzzzzzzzzzz');
   
         console.log("User LogOut successful:", response.data);  
-        // await dispatch(GetUserDetailsAction())
         dispatch(logoutUser())
         return response.data;
       } catch (error: any) {

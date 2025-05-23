@@ -15,7 +15,6 @@ const CourseProgress: React.FC = () => {
 
   return (
     <div>
-      {/* Progress Map */}
       <div className="mb-6">
         <div className="flex justify-between mb-4">
           <div className="flex-1 flex items-center">
@@ -26,7 +25,7 @@ const CourseProgress: React.FC = () => {
             >
               <button
                 onClick={() => navigate("/instructor/AddCourse_Details")}
-                disabled={activeStage === 1} // Disable when on stage 1 (optional, if you don't want clicking it again)
+                disabled={activeStage === 1}
                 className="w-full h-full focus:outline-none disabled:opacity-50"
               >
                 1
@@ -47,7 +46,7 @@ const CourseProgress: React.FC = () => {
             >
               <button
                 onClick={() => navigate("/instructor/AddCourse_Content")}
-                disabled={activeStage < 2} // Disable if stage is less than 2
+                disabled={activeStage < 2}
                 className="w-full h-full focus:outline-none disabled:opacity-50"
               >
                 2
@@ -68,7 +67,7 @@ const CourseProgress: React.FC = () => {
             >
               <button
                 onClick={() => navigate("/instructor/AddCourse_Pricing")}
-                disabled={activeStage < 3} // Disable if stage is less than 3
+                disabled={activeStage < 3}
                 className="w-full h-full focus:outline-none disabled:opacity-50"
               >
                 3
@@ -99,6 +98,3 @@ const CourseProgress: React.FC = () => {
 };
 
 export default CourseProgress;
-
-
-

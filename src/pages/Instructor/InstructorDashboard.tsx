@@ -109,18 +109,14 @@ const InstructorDashboard: React.FC = () => {
 
   return (
     <div className="min-h-screen bg-gray-50 text-gray-900">
-      {/* Navbar */}
       <UserNavbar />
 
       <div className="flex">
-        {/* Sidebar */}
         <div className="flex w-64 bg-white shadow-lg">
           <InstructorSidebar />
         </div>
 
-        {/* Main Content */}
         <div className="flex-1 p-8 mt-14">
-          {/* Header */}
           <div className="mb-8">
             <h1 className="text-3xl font-bold text-gray-800">
               Welcome Back, <span className="text-indigo-600">{userDetails?.username}</span>!
@@ -144,7 +140,6 @@ const InstructorDashboard: React.FC = () => {
             </div>
           ) : data ? (
             <>
-              {/* Stats Cards */}
               <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 mb-8">
                 <div className="bg-white p-6 rounded-xl shadow-sm hover:shadow-md transition-shadow duration-300 animate-fade-in">
                   <h2 className="text-sm font-medium text-gray-600">Total Users</h2>
@@ -160,9 +155,7 @@ const InstructorDashboard: React.FC = () => {
                 </div>
               </div>
 
-              {/* Charts */}
               <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-                {/* Bar Chart: Monthly Enrollments */}
                 <div
                   className="bg-white p-6 rounded-xl shadow-sm hover:shadow-md transition-shadow duration-300 animate-fade-in"
                   role="region"
@@ -217,7 +210,6 @@ const InstructorDashboard: React.FC = () => {
                   )}
                 </div>
 
-                {/* Pie Chart: Course Enrollments */}
                 <div
                   className="bg-white p-6 rounded-xl shadow-sm hover:shadow-md transition-shadow duration-300 animate-fade-in"
                   role="region"

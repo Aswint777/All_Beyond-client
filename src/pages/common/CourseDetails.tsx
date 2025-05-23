@@ -113,7 +113,6 @@ const CourseDetails: React.FC = () => {
           setIsEnrolled(enrolled);
         }
 
-        // Fetch reviews separately
         try {
           setReviewLoading(true);
           const response = await fetchWithAuth(`student/reviews/${courseId}`);
@@ -290,7 +289,6 @@ const CourseDetails: React.FC = () => {
           )}
         </div>
 
-        {/* Reviews Section */}
         <div className="mt-8 bg-white p-6 rounded-lg shadow-md">
           <h2 className="text-2xl font-semibold border-b pb-2">Reviews</h2>
           {reviewLoading ? (

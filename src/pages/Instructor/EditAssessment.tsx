@@ -33,7 +33,6 @@ const EditAssessment: React.FC = () => {
           throw new Error("Assessment ID not provided");
         }
 
-        // Get courseId and courseTitle from location.state
         const { courseId: stateCourseId, courseTitle: stateCourseTitle } =
           (location.state as { courseId: string; courseTitle: string }) || {
             courseId: "",
@@ -44,7 +43,6 @@ const EditAssessment: React.FC = () => {
           throw new Error("Course data not provided");
         }
 
-        // Fetch assessment by id
         console.log("Fetching assessment:", id);
         
         const assessmentResponse = await axios.get<{ success: boolean; data: Assessment }>(
@@ -58,7 +56,6 @@ const EditAssessment: React.FC = () => {
 
         const fetchedAssessment = assessmentResponse.data.data;
 
-        // Validate courseId from state
         if (stateCourseId !== fetchedAssessment.courseId) {
           console.warn("Course ID mismatch:", {
             stateCourseId,
@@ -67,7 +64,6 @@ const EditAssessment: React.FC = () => {
           throw new Error("Invalid course data for this assessment");
         }
 
-        // Set data
         setAssessment(fetchedAssessment);
         setCourseId(stateCourseId);
         setCourseTitle(stateCourseTitle);
@@ -86,7 +82,6 @@ const EditAssessment: React.FC = () => {
 
   const handleSubmit = async (data: { questions: Question[] }) => {
     try {
-      // Clean questions to include only question, options, and correctOption
       const cleanedQuestions = data.questions.map(({ question, options, correctOption }) => ({
         question,
         options,

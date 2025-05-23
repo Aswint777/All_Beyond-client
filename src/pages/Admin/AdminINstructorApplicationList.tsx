@@ -1,8 +1,8 @@
-import axios from "axios";
 import React, { useEffect, useState } from "react";
 import AdminSideBar from "../../components/layout/AdminSideBar";
 import { useNavigate } from "react-router-dom";
 import { ROUTES } from "../../utils/paths";
+import { blockUnblockUser, fetchInstructorApplications, updateInstructorStatus } from "../../services/userService";
 
 interface Student {
   _id: string;
@@ -28,13 +28,8 @@ const AdminInstructorApplicationList = () => {
   useEffect(() => {
     const fetchStudents = async () => {
       try {
-        const API_URL = import.meta.env.VITE_REACT_APP_API_URL!;
-        const response = await axios.get(
-          `${API_URL}/admin/AdminInstructorApplicationList`,
-          { withCredentials: true }
-        );
-        setStudents(response.data.data);
-        console.log(response.data.data, ".......................................");
+        const data = await fetchInstructorApplications();
+        setStudents(data);
       } catch (err: any) {
         setError(err.message || "An error occurred while fetching students.");
       } finally {
@@ -49,20 +44,13 @@ const AdminInstructorApplicationList = () => {
     newStatus: "pending" | "approved" | "rejected"
   ) => {
     try {
-      const API_URL = import.meta.env.VITE_REACT_APP_API_URL!;
-      const response = await axios.put(
-        `${API_URL}/admin/updateInstructorStatus`,
-        { Id: id, status: newStatus },
-        { withCredentials: true }
-      );
+      await updateInstructorStatus(id, newStatus);
 
-      if (response.status === 200) {
         setStudents((prevStudents) =>
           prevStudents.map((student) =>
             student._id === id ? { ...student, status: newStatus } : student
           )
         );
-      }
     } catch (error) {
       console.error("Error updating status:", error);
       alert("Failed to update status. Please try again.");
@@ -73,23 +61,19 @@ const AdminInstructorApplicationList = () => {
     navigate(`${ROUTES.ADMIN}${ROUTES.ADMIN_USER_DETAILS}${userId}`);
   };
 
-  const handleBlockUnblock = async (_id: string, status: boolean, userid: string) => {
+  const handleBlockUnblock = async (
+    _id: string,
+    status: boolean,
+    userid: string
+  ) => {
     try {
-      const API_URL = import.meta.env.VITE_REACT_APP_API_URL!;
-      const response = await axios.put(
-        `${API_URL}/admin/block_UnBlock`,
-        { userId: userid, isBlocked: status },
-        { withCredentials: true }
-      );
-      console.log(response, "response");
+      await blockUnblockUser(userid, status);
 
-      if (response.status === 200) {
         setStudents((prevStudents) =>
           prevStudents.map((student) =>
             student._id === _id ? { ...student, isBlocked: status } : student
           )
         );
-      }
     } catch (error) {}
   };
 
@@ -105,7 +89,9 @@ const AdminInstructorApplicationList = () => {
       <AdminSideBar />
 
       <main className="flex-1 p-6 lg:p-8 overflow-x-auto">
-        <h2 className="text-3xl font-bold text-gray-800 mb-8">Instructor Applications</h2>
+        <h2 className="text-3xl font-bold text-gray-800 mb-8">
+          Instructor Applications
+        </h2>
 
         {/* Table */}
         <div className="bg-white shadow-xl rounded-xl overflow-hidden">
@@ -123,19 +109,28 @@ const AdminInstructorApplicationList = () => {
             <tbody className="divide-y divide-gray-200">
               {loading ? (
                 <tr>
-                  <td colSpan={6} className="px-6 py-4 text-center text-gray-500">
+                  <td
+                    colSpan={6}
+                    className="px-6 py-4 text-center text-gray-500"
+                  >
                     Loading...
                   </td>
                 </tr>
               ) : error ? (
                 <tr>
-                  <td colSpan={6} className="px-6 py-4 text-center text-red-500">
+                  <td
+                    colSpan={6}
+                    className="px-6 py-4 text-center text-red-500"
+                  >
                     {error}
                   </td>
                 </tr>
               ) : currentStudents.length === 0 ? (
                 <tr>
-                  <td colSpan={6} className="px-6 py-4 text-center text-gray-500">
+                  <td
+                    colSpan={6}
+                    className="px-6 py-4 text-center text-gray-500"
+                  >
                     No instructor applications found.
                   </td>
                 </tr>
@@ -145,8 +140,12 @@ const AdminInstructorApplicationList = () => {
                     key={student._id}
                     className="hover:bg-gray-50 transition-all duration-200"
                   >
-                    <td className="px-6 py-4 text-gray-700">{student.userId}</td>
-                    <td className="px-6 py-4 text-gray-700">{student.username}</td>
+                    <td className="px-6 py-4 text-gray-700">
+                      {student.userId}
+                    </td>
+                    <td className="px-6 py-4 text-gray-700">
+                      {student.username}
+                    </td>
                     <td className="px-6 py-4 text-gray-700">{student.email}</td>
                     <td className="px-6 py-4">
                       <select
@@ -154,7 +153,10 @@ const AdminInstructorApplicationList = () => {
                         onChange={(e) =>
                           handleStatusChange(
                             student._id,
-                            e.target.value as "pending" | "approved" | "rejected"
+                            e.target.value as
+                              | "pending"
+                              | "approved"
+                              | "rejected"
                           )
                         }
                         className="w-full px-3 py-2 border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-transparent transition-all duration-200"
@@ -167,7 +169,11 @@ const AdminInstructorApplicationList = () => {
                     <td className="px-6 py-4">
                       <button
                         onClick={() =>
-                          handleBlockUnblock(student._id, !student.isBlocked, student.userId)
+                          handleBlockUnblock(
+                            student._id,
+                            !student.isBlocked,
+                            student.userId
+                          )
                         }
                         className={`px-4 py-2 rounded-lg shadow-md text-white transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-offset-2 ${
                           student.isBlocked
@@ -216,7 +222,9 @@ const AdminInstructorApplicationList = () => {
             </button>
           ))}
           <button
-            onClick={() => setCurrentPage((prev) => Math.min(prev + 1, totalPages))}
+            onClick={() =>
+              setCurrentPage((prev) => Math.min(prev + 1, totalPages))
+            }
             disabled={currentPage === totalPages}
             className="px-4 py-2 bg-gray-200 text-gray-700 rounded-lg hover:bg-gray-300 transition-all duration-200 disabled:bg-gray-100 disabled:text-gray-400 disabled:cursor-not-allowed"
           >

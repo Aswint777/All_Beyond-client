@@ -15,7 +15,7 @@ const CreateAssessment: React.FC = () => {
   const location = useLocation();
   const { courseId, courseTitle } = location.state || { courseId: "", courseTitle: "" };
   const [error, setError] = useState<string | null>(null);
-  const [isLoading, setIsLoading] = useState(false); // No fetching, so default to false
+  const [isLoading, setIsLoading] = useState(false); 
 
   const handleSubmit = async (data: { questions: Question[] }) => {
     try {

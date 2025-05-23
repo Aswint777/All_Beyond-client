@@ -1,15 +1,14 @@
-// CourseFormContext.tsx
 import React, { createContext, useContext, useState, ReactNode } from "react";
 
 type Lesson = {
-  id: string; // Add id if not already present
+  id: string;
   title: string;
   lessonDescription: string;
   video: File | null;
 };
 
 type Module = {
-  id: string; // Add id if not already present
+  id: string;
   title: string;
   lessons: Lesson[];
 };
@@ -22,8 +21,8 @@ type CourseFormData = {
   aboutInstructor: string;
   thumbnail: File | null;
   modules: Module[];
-  isPaid: "Free" | "Premium" | ""; // Updated to match AddCourse_Pricing
-  price?: string; // Optional pricing fields
+  isPaid: "Free" | "Premium" | "";
+  price?: string;
   accountNumber?: string;
   email?: string;
   phone?: string;
@@ -50,13 +49,15 @@ const defaultFormData: CourseFormData = {
   phone: "",
 };
 
-const CourseFormContext = createContext<CourseFormContextType | undefined>(undefined);
+const CourseFormContext = createContext<CourseFormContextType | undefined>(
+  undefined
+);
 
 export const useCourseForm = () => {
   const context = useContext(CourseFormContext);
   if (!context) {
     throw new Error("useCourseForm must be used within a CourseFormProvider");
-  }  
+  }
   return context;
 };
 
@@ -70,12 +71,10 @@ export const CourseFormProvider = ({ children }: { children: ReactNode }) => {
   const resetFormData = () => setFormData(defaultFormData);
 
   return (
-    <CourseFormContext.Provider value={{ formData, updateFormData, resetFormData }}>
+    <CourseFormContext.Provider
+      value={{ formData, updateFormData, resetFormData }}
+    >
       {children}
     </CourseFormContext.Provider>
   );
 };
-
-
-
-

@@ -1,7 +1,16 @@
 import React from "react";
 import { loadStripe } from "@stripe/stripe-js";
-import { Elements, CardElement, useStripe, useElements } from "@stripe/react-stripe-js";
-import { coursePayment, enrollCourse, initializeProgress } from "../../services/paymentService";
+import {
+  Elements,
+  CardElement,
+  useStripe,
+  useElements,
+} from "@stripe/react-stripe-js";
+import {
+  coursePayment,
+  enrollCourse,
+  initializeProgress,
+} from "../../services/paymentService";
 
 const publishableKey = import.meta.env.VITE_STRIPE_PUBLISHABLE_KEY;
 const stripePromise = loadStripe(publishableKey);
@@ -36,9 +45,7 @@ const CheckoutForm: React.FC<{
     const cardElement = elements.getElement(CardElement);
 
     try {
-      console.log("courseId modal", courseId);
       const clientSecret = await coursePayment(courseId, price);
-      console.log("ClientSecret received:", clientSecret);
 
       const result = await stripe.confirmCardPayment(clientSecret, {
         payment_method: { card: cardElement! },
@@ -48,13 +55,12 @@ const CheckoutForm: React.FC<{
         setError(result.error.message || "Payment failed");
       } else {
         await enrollCourse(courseId);
-        await initializeProgress(courseId)
+        await initializeProgress(courseId);
         onPaymentSuccess(result.paymentIntent.id);
         onClose();
       }
     } catch (err) {
       setError("An error occurred during payment");
-      console.log("Payment error:", err);
     } finally {
       setProcessing(false);
     }
@@ -79,8 +85,18 @@ const CheckoutForm: React.FC<{
 
       {error && (
         <div className="flex items-center text-red-600 bg-red-50 p-3 rounded-lg text-sm">
-          <svg className="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+          <svg
+            className="w-5 h-5 mr-2"
+            fill="none"
+            stroke="currentColor"
+            viewBox="0 0 24 24"
+          >
+            <path
+              strokeLinecap="round"
+              strokeLinejoin="round"
+              strokeWidth="2"
+              d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"
+            />
           </svg>
           {error}
         </div>
@@ -94,9 +110,24 @@ const CheckoutForm: React.FC<{
         >
           {processing ? (
             <>
-              <svg className="animate-spin h-5 w-5 mr-2 text-white" fill="none" viewBox="0 0 24 24">
-                <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" />
-                <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8v8h8a8 8 0 01-16 0z" />
+              <svg
+                className="animate-spin h-5 w-5 mr-2 text-white"
+                fill="none"
+                viewBox="0 0 24 24"
+              >
+                <circle
+                  className="opacity-25"
+                  cx="12"
+                  cy="12"
+                  r="10"
+                  stroke="currentColor"
+                  strokeWidth="4"
+                />
+                <path
+                  className="opacity-75"
+                  fill="currentColor"
+                  d="M4 12a8 8 0 018-8v8h8a8 8 0 01-16 0z"
+                />
               </svg>
               Processing...
             </>
@@ -135,16 +166,13 @@ const CourseActionModal: React.FC<CourseActionModalProps> = ({
     setEnrollProcessing(true);
     setEnrollError(null);
     try {
-      console.log("Enroll button clicked for courseId:", courseId); // Debug log
       await enrollCourse(courseId);
-      await initializeProgress(courseId)
+      await initializeProgress(courseId);
 
-      console.log("Enrollment successful for courseId:", courseId); // Debug log
-      onConfirm(); // Notify CourseDetails for navigation
+      onConfirm();
       onClose();
     } catch (err) {
       setEnrollError("Failed to enroll in the course. Please try again.");
-      console.log("Enrollment error:", err);
     } finally {
       setEnrollProcessing(false);
     }
@@ -156,24 +184,47 @@ const CourseActionModal: React.FC<CourseActionModalProps> = ({
         {isPremium ? (
           <>
             <div className="flex items-center justify-between mb-6">
-              <h3 className="text-2xl font-bold text-gray-800">Purchase "{courseTitle}"</h3>
+              <h3 className="text-2xl font-bold text-gray-800">
+                Purchase "{courseTitle}"
+              </h3>
               <button
                 onClick={onClose}
                 className="text-gray-500 hover:text-gray-700 transition-colors duration-200"
                 aria-label="Close"
               >
-                <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M6 18L18 6M6 6l12 12" />
+                <svg
+                  className="w-6 h-6"
+                  fill="none"
+                  stroke="currentColor"
+                  viewBox="0 0 24 24"
+                >
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    strokeWidth="2"
+                    d="M6 18L18 6M6 6l12 12"
+                  />
                 </svg>
               </button>
             </div>
             <div className="bg-gradient-to-r from-purple-50 to-indigo-50 p-4 rounded-lg mb-6 shadow-inner">
               <p className="text-gray-700 text-lg font-medium">
-                Amount: <span className="text-purple-700 font-semibold">₹{price}</span>
+                Amount:{" "}
+                <span className="text-purple-700 font-semibold">₹{price}</span>
               </p>
               <p className="text-gray-500 text-sm mt-1 flex items-center">
-                <svg className="w-4 h-4 mr-1 text-purple-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M12 11c0-1.1.9-2 2-2m-2 6c-1.1 0-2-.9-2-2m2-6a9 9 0 110 18 9 9 0 010-18zm0 0v6m0 0h6" />
+                <svg
+                  className="w-4 h-4 mr-1 text-purple-500"
+                  fill="none"
+                  stroke="currentColor"
+                  viewBox="0 0 24 24"
+                >
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    strokeWidth="2"
+                    d="M12 11c0-1.1.9-2 2-2m-2 6c-1.1 0-2-.9-2-2m2-6a9 9 0 110 18 9 9 0 010-18zm0 0v6m0 0h6"
+                  />
                 </svg>
                 Secured by Stripe
               </p>
@@ -190,22 +241,46 @@ const CourseActionModal: React.FC<CourseActionModalProps> = ({
         ) : (
           <>
             <div className="flex items-center justify-between mb-6">
-              <h3 className="text-2xl font-bold text-gray-800">Enroll in "{courseTitle}"</h3>
+              <h3 className="text-2xl font-bold text-gray-800">
+                Enroll in "{courseTitle}"
+              </h3>
               <button
                 onClick={onClose}
                 className="text-gray-500 hover:text-gray-700 transition-colors duration-200"
                 aria-label="Close"
               >
-                <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M6 18L18 6M6 6l12 12" />
+                <svg
+                  className="w-6 h-6"
+                  fill="none"
+                  stroke="currentColor"
+                  viewBox="0 0 24 24"
+                >
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    strokeWidth="2"
+                    d="M6 18L18 6M6 6l12 12"
+                  />
                 </svg>
               </button>
             </div>
-            <p className="text-gray-600 mb-8 text-lg">Are you sure you want to enroll in this free course?</p>
+            <p className="text-gray-600 mb-8 text-lg">
+              Are you sure you want to enroll in this free course?
+            </p>
             {enrollError && (
               <div className="flex items-center text-red-600 bg-red-50 p-3 rounded-lg text-sm mb-4">
-                <svg className="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                <svg
+                  className="w-5 h-5 mr-2"
+                  fill="none"
+                  stroke="currentColor"
+                  viewBox="0 0 24 24"
+                >
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    strokeWidth="2"
+                    d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"
+                  />
                 </svg>
                 {enrollError}
               </div>
@@ -218,9 +293,24 @@ const CourseActionModal: React.FC<CourseActionModalProps> = ({
               >
                 {enrollProcessing ? (
                   <>
-                    <svg className="animate-spin h-5 w-5 mr-2 text-white" fill="none" viewBox="0 0 24 24">
-                      <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" />
-                      <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8v8h8a8 8 0 01-16 0z" />
+                    <svg
+                      className="animate-spin h-5 w-5 mr-2 text-white"
+                      fill="none"
+                      viewBox="0 0 24 24"
+                    >
+                      <circle
+                        className="opacity-25"
+                        cx="12"
+                        cy="12"
+                        r="10"
+                        stroke="currentColor"
+                        strokeWidth="4"
+                      />
+                      <path
+                        className="opacity-75"
+                        fill="currentColor"
+                        d="M4 12a8 8 0 018-8v8h8a8 8 0 01-16 0z"
+                      />
                     </svg>
                     Enrolling...
                   </>
@@ -244,5 +334,3 @@ const CourseActionModal: React.FC<CourseActionModalProps> = ({
 };
 
 export default CourseActionModal;
-
-

@@ -64,7 +64,7 @@ const AdminStudentsListPage: React.FC = () => {
       await fetchWithAuth("block_UnBlock", "PUT", { userId, isBlocked: status });
     } catch (error) {
       console.error("Error blocking/unblocking student:", error);
-      setStudents(prevStudents); // Revert state on failure
+      setStudents(prevStudents); 
     }
   };
 

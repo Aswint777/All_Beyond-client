@@ -8,11 +8,7 @@ import { useNavigate } from "react-router-dom";
 import { useModal } from "../../components/context/ModalContext";
 import { ROUTES } from "../../utils/paths";
 
-// interface TableColumn<T> {
-// label: string;
-// key?: keyof T;
-// render?: (item: T) => React.ReactNode; // Custom rendering support
-// }
+
 
 interface Instructor {
   _id: string;

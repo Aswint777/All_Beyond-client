@@ -209,11 +209,9 @@ const Profile: React.FC = () => {
       <div className="min-h-screen bg-gradient-to-br from-gray-50 to-gray-200 flex">
         {userDetails?.role === "student" ? <StudentSideBar /> : <InstructorSidebar />}
 
-        {/* Main Content */}
         <main className="flex-1 p-6 lg:p-8">
           <h1 className="text-3xl font-bold text-gray-800 mb-8">Edit Your Profile</h1>
 
-          {/* Success Notification */}
           {success && (
             <div className="fixed top-20 right-4 z-50 flex items-center gap-2 bg-gradient-to-r from-green-500 to-green-600 text-white px-6 py-3 rounded-lg shadow-lg animate-slide-in">
               <svg
@@ -235,12 +233,10 @@ const Profile: React.FC = () => {
           )}
 
           <div className="flex flex-col lg:flex-row gap-8">
-            {/* Form */}
             <form
               className="flex-1 bg-white shadow-xl rounded-2xl p-6 space-y-6"
               onSubmit={handleSubmit}
             >
-              {/* Personal Details */}
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
                 {["firstName", "lastName", "contactNumber"].map((field) => (
                   <div key={field}>
@@ -264,7 +260,6 @@ const Profile: React.FC = () => {
                 ))}
               </div>
 
-              {/* Password Changes */}
               <div>
                 <h2 className="text-xl font-semibold text-gray-800 mb-4">Password Changes</h2>
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
@@ -295,7 +290,6 @@ const Profile: React.FC = () => {
                 </div>
               </div>
 
-              {/* Social Profiles */}
               <div>
                 <h2 className="text-xl font-semibold text-gray-800 mb-4">Social Profiles</h2>
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
@@ -322,7 +316,6 @@ const Profile: React.FC = () => {
                 </div>
               </div>
 
-              {/* Buttons */}
               <div className="flex justify-end gap-4">
                 <button
                   type="reset"
@@ -349,7 +342,6 @@ const Profile: React.FC = () => {
               </div>
             </form>
 
-            {/* Profile Photo Section */}
             <aside className="lg:w-1/4 bg-white shadow-xl rounded-2xl p-6 flex flex-col items-center">
               <label htmlFor="profileImageInput" className="cursor-pointer">
                 <img

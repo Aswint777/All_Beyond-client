@@ -17,7 +17,7 @@ const AdminRoutes = () => {
     return (
         <Routes>
         <Route element={<AdminGuards />}>
-          <Route path="/overview" element={<AdminDashboard />} />
+          <Route path={ROUTES.ADMIN_DASHBOARD} element={<AdminDashboard />} />
           <Route path={ROUTES.ADMIN_INSTRUCTOR_APPLICATION_LIST} element={<AdminInstructorApplicationList />} />
           <Route  path={ROUTES.CATEGORY_LIST} element={<CategoryListPage />} />
           <Route path={ROUTES.ADD_CATEGORY} element={<AddCategoryPage />} />
@@ -25,7 +25,7 @@ const AdminRoutes = () => {
           <Route path={ROUTES.ADMIN_STUDENT_LIST} element={<AdminStudentsListPage />} />
           <Route path={ROUTES.ADMIN_INSTRUCTOR_LIST} element={<AdminInstructorListPage />} />
           <Route path={`${ROUTES.ADMIN_USER_DETAILS}:userId`} element={<AdminUserDetails />} />
-          <Route path="/transactions"  element={<TransactionHistory/>} />
+          <Route path={ROUTES.TRANSACTION} element={<TransactionHistory/>} />
         </Route>
         <Route path="*" element={<NotFound />} />
 

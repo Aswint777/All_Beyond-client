@@ -10,6 +10,7 @@ import LoginPage from "../pages/common/LoginPage";
 import OtpVerifyPage from "../pages/common/OtpVerifyPage";
 import { ROUTES } from "../utils/paths";
 import NotFound from "../pages/common/404";
+import AboutUs from "../pages/common/AboutUs";
 
 const CommonRoutes = () => {
   return (
@@ -20,6 +21,8 @@ const CommonRoutes = () => {
           <Route path={ROUTES.HOME} element={<HomePage />} />
           <Route path={ROUTES.COURSES} element={<AllCourses />} />
           <Route path={ROUTES.COURSE_DETAILS} element={<CourseDetails />} />
+         <Route path={ROUTES.ABOUT_US} element={<AboutUs />} />
+
         </Route>
 
         {/* Authentication routes */}

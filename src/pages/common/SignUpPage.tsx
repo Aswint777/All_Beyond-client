@@ -5,7 +5,6 @@ import { sendSignUpData, updateField } from "../../redux/reducer/UserSlice";
 import { useNavigate } from "react-router-dom";
 import BasicNavbar from "../../components/layout/BasicNavbar";
 import { SignUpErrors, validateSignUp } from "../../components/validation/SignUpErrors";
-// import { validateSignUp, SignUpErrors } from "../../utils/validateSignUp"; // Import validation
 
 const SignUpPage: React.FC = () => {
   const navigate = useNavigate();
@@ -21,7 +20,6 @@ const SignUpPage: React.FC = () => {
     const { name, value } = e.target;
     await dispatch(updateField({ field: name, value }));
 
-    // Validate field in real-time
     const validationErrors = validateSignUp(
       name === "name" ? value : formValues.name,
       name === "email" ? value : formValues.email,

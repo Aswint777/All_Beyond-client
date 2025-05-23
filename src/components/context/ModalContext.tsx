@@ -10,10 +10,14 @@ interface ModalContextType {
 
 const ModalContext = createContext<ModalContextType | undefined>(undefined);
 
-export const ModalProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
+export const ModalProvider: React.FC<{ children: React.ReactNode }> = ({
+  children,
+}) => {
   const [isOpen, setIsOpen] = useState(false);
   const [message, setMessage] = useState<string | undefined>();
-  const [confirmAction, setConfirmAction] = useState<() => void>(() => () => {});
+  const [confirmAction, setConfirmAction] = useState<() => void>(
+    () => () => {}
+  );
 
   const openModal = (onConfirm: () => void, msg?: string) => {
     setConfirmAction(() => onConfirm);
@@ -24,25 +28,25 @@ export const ModalProvider: React.FC<{ children: React.ReactNode }> = ({ childre
   const closeModal = () => setIsOpen(false);
 
   return (
-    <ModalContext.Provider value={{ isOpen, openModal, closeModal, confirmAction }}>
+    <ModalContext.Provider
+      value={{ isOpen, openModal, closeModal, confirmAction }}
+    >
       {children}
 
-      {/* Global Logout Modal */}
       {isOpen && (
         <div className="fixed inset-0 flex items-center justify-center bg-gray-900 bg-opacity-60 z-50 p-4">
           <div className="bg-white rounded-xl shadow-2xl w-full max-w-md transform transition-all duration-300 scale-100 hover:scale-105">
-            {/* Header */}
             <div className="flex justify-center pt-6">
               <span className="text-4xl text-yellow-500">⚠️</span>
             </div>
-            {/* Body */}
             <div className="p-6 text-center">
-              <h2 className="text-xl font-bold text-gray-800 mb-4">Confirm Action</h2>
+              <h2 className="text-xl font-bold text-gray-800 mb-4">
+                Confirm Action
+              </h2>
               <p className="text-gray-600 text-sm leading-relaxed">
                 {message || "Are you sure?"}
               </p>
             </div>
-            {/* Footer */}
             <div className="flex justify-center space-x-4 p-6 border-t border-gray-200">
               <button
                 onClick={() => {

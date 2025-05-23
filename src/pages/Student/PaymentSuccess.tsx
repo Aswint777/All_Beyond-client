@@ -4,8 +4,6 @@ import { CheckCircle, BookOpen } from "lucide-react";
 import UserNavbar from "../../components/layout/UserNavbar";
 import StudentSideBar from "../../components/layout/StudentSideBar";
 import { ROUTES } from "../../utils/paths";
-// import StudentSideBar from "../components/layout/StudentSideBar";
-// import UserNavbar from "../components/layout/UserNavbar";
 
 const PaymentSuccess: React.FC = () => {
   const [searchParams] = useSearchParams();
@@ -13,7 +11,7 @@ const PaymentSuccess: React.FC = () => {
   const courseId = searchParams.get("courseId");
 
   const handleViewCourse = () => {
-        navigate(`${ROUTES.STUDENT}${ROUTES.STUDENT_COURSES}`); // Redirect after enrollment
+        navigate(`${ROUTES.STUDENT}${ROUTES.STUDENT_COURSES}`); 
    
   };
 
@@ -26,7 +24,6 @@ const PaymentSuccess: React.FC = () => {
           <div className="max-w-2xl mx-auto bg-white rounded-2xl shadow-xl p-8 sm:p-12 text-center">
             <CheckCircle className="w-16 h-16 text-green-500 mx-auto mb-4 animate-bounce" />
             <h1 className="text-3xl sm:text-4xl font-extrabold text-gray-900 mb-4">
-              Payment Successful!
             </h1>
             <p className="text-lg text-gray-600 mb-8">
               Congratulations! You’re now enrolled in your course.

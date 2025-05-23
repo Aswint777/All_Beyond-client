@@ -58,7 +58,6 @@ const OtpVerifyPage: React.FC = () => {
     dispatch(VerifyOtpAction({ email: formValues.email, otp: otpString }));
   };
 
-  // Timer logic
   useEffect(() => {
     let interval: number;
     if (timer > 0) {
@@ -66,7 +65,7 @@ const OtpVerifyPage: React.FC = () => {
         setTimer((prev) => prev - 1);
       }, 1000);
     } else {
-      setResendEnabled(true); // Enable the resend button when timer hits 0
+      setResendEnabled(true); 
     }
     return () => clearInterval(interval);
   }, [timer]);
@@ -75,7 +74,6 @@ const OtpVerifyPage: React.FC = () => {
     try {
       console.log(formValues.email, "email");
 
-      // Clear the OTP inputs, reset the timer, and hide the resend button
       setOtp(Array(OTP_LENGTH).fill(""));
       setTimer(TIMER_DURATION);
       setResendEnabled(false);
@@ -134,7 +132,6 @@ const OtpVerifyPage: React.FC = () => {
           {error && <p className="text-red-500 text-sm">{error}</p>}
           {reduxError && <p className="text-red-500 text-sm">{reduxError}</p>}
 
-          {/* ✅ Hide "Verify OTP" when "Resend OTP" is visible */}
           {!resendEnabled && !loading && (
             <button
               type="submit"
@@ -151,7 +148,6 @@ const OtpVerifyPage: React.FC = () => {
           )}
         </form>
 
-        {/* Timer and Resend OTP Button */}
         <div className="mt-4 text-center">
           {resendEnabled ? (
             <button

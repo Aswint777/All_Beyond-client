@@ -25,7 +25,6 @@ type FormValues = {
   newModuleTitle: string;
 };
 
-// Define custom error types for nested structure
 interface LessonErrors {
   title?: string;
   lessonDescription?: string;

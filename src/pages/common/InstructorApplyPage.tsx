@@ -8,16 +8,13 @@ import { ROUTES } from "../../utils/paths";
 const InstructorApplyPage: React.FC = () => {
   const navigate = useNavigate();
   const { userDetails } = useSelector((state: RootState) => state.user);
-  console.log(userDetails, 'hjfjfj');
 
-  // Check if the user has already applied
   const isAppliedInstructor = userDetails?.isAppliedInstructor;
 
   return (
     <>
       <UserNavbar />
       <div className="flex flex-col items-center space-y-10 p-10">
-        {/* Apply As Instructor Section */}
         <div className="flex flex-col md:flex-row items-center bg-white shadow-lg rounded-2xl p-6 max-w-4xl">
           <img
             src="\src\assets\images\6-ways-to-improve-online-teaching.webp"
@@ -35,9 +32,7 @@ const InstructorApplyPage: React.FC = () => {
               <a href="#" className="underline mr-4">
                 Instructor Requirements
               </a>
-              {/* <a href="#" className="underline">
-                Instructor Rates
-              </a> */}
+
             </div>
             <ul className="mt-2 text-sm text-gray-600 list-disc list-inside">
               <li>An undergraduate degree</li>

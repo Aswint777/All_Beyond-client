@@ -1,7 +1,3 @@
-
-
-
-
 import axios from "axios";
 import { useSelector } from "react-redux";
 import { RootState } from "../../redux/store";
@@ -67,7 +63,6 @@ const StudentDashboard = () => {
     fetchDashboardData();
   }, []);
 
-  // Format enrollment date (locale-aware)
   const formatDate = (dateString: string) => {
     return new Intl.DateTimeFormat(navigator.language, {
       year: "numeric",
@@ -76,7 +71,6 @@ const StudentDashboard = () => {
     }).format(new Date(dateString));
   };
 
-  // Skeleton Loader Component
   const SkeletonLoader = () => (
     <div className="space-y-6">
       <div className="bg-gray-200 animate-pulse h-10 w-1/3 rounded-lg"></div>
@@ -146,37 +140,31 @@ const StudentDashboard = () => {
               animate={{ opacity: 1 }}
               transition={{ duration: 0.5 }}
             >
-              {/* Summary Cards */}
               <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 mb-6">
-                {/* Total Courses Enrolled */}
                 <div className="bg-white p-6 rounded-xl shadow-sm hover:shadow-md transition-shadow duration-300">
                   <h2 className="text-lg font-semibold text-gray-800">Total Courses Enrolled</h2>
                   <p className="text-3xl font-bold text-blue-600 mt-2">
                     {data.totalCoursesEnrolled}
                   </p>
                 </div>
-                {/* Total Paid Courses */}
                 <div className="bg-white p-6 rounded-xl shadow-sm hover:shadow-md transition-shadow duration-300">
                   <h2 className="text-lg font-semibold text-gray-800">Total Paid Courses</h2>
                   <p className="text-3xl font-bold text-green-600 mt-2">
                     {data.totalPaidCourses}
                   </p>
                 </div>
-                {/* Total Free Courses */}
                 <div className="bg-white p-6 rounded-xl shadow-sm hover:shadow-md transition-shadow duration-300">
                   <h2 className="text-lg font-semibold text-gray-800">Total Free Courses</h2>
                   <p className="text-3xl font-bold text-purple-600 mt-2">
                     {data.totalFreeCourses}
                   </p>
                 </div>
-                {/* Completed Assessments */}
                 <div className="bg-white p-6 rounded-xl shadow-sm hover:shadow-md transition-shadow duration-300">
                   <h2 className="text-lg font-semibold text-gray-800">Completed Assessments</h2>
                   <p className="text-3xl font-bold text-teal-600 mt-2">
                     {data.completedAssessments}
                   </p>
                 </div>
-                {/* Pending Assessments */}
                 <div className="bg-white p-6 rounded-xl shadow-sm hover:shadow-md transition-shadow duration-300">
                   <h2 className="text-lg font-semibold text-gray-800">Pending Assessments</h2>
                   <p className="text-3xl font-bold text-red-600 mt-2">
@@ -185,7 +173,6 @@ const StudentDashboard = () => {
                 </div>
               </div>
 
-              {/* Recent Enrollments Table */}
               <div
                 className="bg-white p-6 rounded-xl shadow-sm hover:shadow-md transition-shadow duration-300"
                 role="region"

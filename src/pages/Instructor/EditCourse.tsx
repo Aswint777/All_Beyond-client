@@ -6,13 +6,13 @@ import UserNavbar from "../../components/layout/UserNavbar";
 import { useNavigate, useParams } from "react-router-dom";
 import { v4 as uuidv4 } from "uuid";
 import { fetchCourseById, fetchCourseCategories, updateCourse } from "../../services/courseService";
-// import { fetchCourseById, fetchCourseCategories, updateCourse } from "../../services/instructorService"; // Adjust path
 
 interface Lesson {
   id: string;
   title: string;
   description: string;
   video: File | null | string;
+  replaceVideo?: boolean; 
 }
 
 interface Module {
@@ -135,7 +135,15 @@ const EditCourse = () => {
       if (!courseId) return;
       try {
         const courseData = await fetchCourseById(courseId);
-        setInitialFormData(courseData);
+        const formattedModules = courseData.modules.map((module: Module) => ({
+          ...module,
+          lessons: module.lessons.map((lesson: Lesson) => ({
+            ...lesson,
+            video: lesson.video || null,
+            replaceVideo: false, // Initialize replaceVideo flag
+          })),
+        }));
+        setInitialFormData({ ...courseData, modules: formattedModules });
         if (courseData.thumbnail) setThumbnailPreviewUrl(courseData.thumbnail as string);
       } catch (error) {
         setError("Failed to load course data.");
@@ -176,15 +184,17 @@ const EditCourse = () => {
       module.lessons.forEach((lesson, lessonIndex) => {
         data.append(`modules[${moduleIndex}][lessons][${lessonIndex}][title]`, lesson.title);
         data.append(`modules[${moduleIndex}][lessons][${lessonIndex}][lessonDescription]`, lesson.description);
+        data.append(`modules[${moduleIndex}][lessons][${lessonIndex}][replaceVideo]`, String(lesson.replaceVideo || false));
         if (lesson.video instanceof File) {
           data.append(`video_${moduleIndex}_${lessonIndex}`, lesson.video);
-        } else if (typeof lesson.video === "string") {
+        } else if (typeof lesson.video === "string" && lesson.video) {
           data.append(`modules[${moduleIndex}][lessons][${lessonIndex}][video]`, lesson.video);
         }
       });
     });
 
     try {
+      console.log("FormData entries:");
       for (const [key, value] of data.entries()) {
         console.log(`${key}:`, value);
       }
@@ -391,8 +401,8 @@ const EditCourse = () => {
                                             accept="video/*"
                                             onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
                                               const file = e.target.files?.[0] || null;
-                                              if (file)
-                                                setFieldValue(`modules[${moduleIndex}].lessons[${lessonIndex}].video`, file);
+                                              setFieldValue(`modules[${moduleIndex}].lessons[${lessonIndex}].video`, file);
+                                              setFieldValue(`modules[${moduleIndex}].lessons[${lessonIndex}].replaceVideo`, !!file);
                                             }}
                                             className="w-full p-2 border border-gray-300 rounded-lg file:mr-4 file:py-2 file:px-4 file:rounded-lg file:border-0 file:text-sm file:font-semibold file:bg-indigo-50 file:text-indigo-700 hover:file:bg-indigo-100 transition-all duration-200"
                                           />
@@ -400,13 +410,13 @@ const EditCourse = () => {
                                         {lesson.video &&
                                           (typeof lesson.video === "string" ? (
                                             <video src={lesson.video} controls className="mt-4 w-full rounded-lg shadow-sm" />
-                                          ) : (
+                                          ) : lesson.video instanceof File ? (
                                             <video
                                               src={URL.createObjectURL(lesson.video)}
                                               controls
                                               className="mt-4 w-full rounded-lg shadow-sm"
                                             />
-                                          ))}
+                                          ) : null)}
                                         <ErrorMessage
                                           name={`modules[${moduleIndex}].lessons[${lessonIndex}].video`}
                                           component="div"
@@ -422,6 +432,7 @@ const EditCourse = () => {
                                           title: "",
                                           description: "",
                                           video: null,
+                                          replaceVideo: false,
                                         })
                                       }
                                       className="mt-4 px-4 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700 transition-colors duration-200"
@@ -556,5 +567,3 @@ const EditCourse = () => {
 };
 
 export default EditCourse;
-
-

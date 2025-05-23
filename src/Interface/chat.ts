@@ -12,5 +12,5 @@ export interface Message {
     courseId: string;
     adminId: string;
     members: string[];
-    courseTitle?: string; // For display
+    courseTitle?: string; 
   }

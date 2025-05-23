@@ -1,15 +1,23 @@
-import React, { useState } from 'react';
-import { NavLink } from 'react-router-dom';
-import { ROUTES } from '../../utils/paths';
+import React, { useState } from "react";
+import { NavLink } from "react-router-dom";
+import { ROUTES } from "../../utils/paths";
 
 const InstructorSidebar = () => {
   const links = [
-    { name: "Overview", path:`${ROUTES.INSTRUCTOR}${ROUTES.INSTRUCTOR_DASHBOARD}` },
-    { name: "Profile", path:`${ROUTES.USER}${ROUTES.PROFILE}`},
-    { name: "My Courses", path:`${ROUTES.INSTRUCTOR}${ROUTES.INSTRUCTOR_COURSE}` },
-    { name: "Chat", path: `${ROUTES.USER}${ROUTES.CHAT_PAGE}`  },
-    { name: "Assessments", path: `${ROUTES.INSTRUCTOR}${ROUTES.LIST_ASSESSMENT}`  },
-    { name: "Complaints", path: "/complaints" },
+    {
+      name: "Overview",
+      path: `${ROUTES.INSTRUCTOR}${ROUTES.INSTRUCTOR_DASHBOARD}`,
+    },
+    { name: "Profile", path: `${ROUTES.USER}${ROUTES.PROFILE}` },
+    {
+      name: "My Courses",
+      path: `${ROUTES.INSTRUCTOR}${ROUTES.INSTRUCTOR_COURSE}`,
+    },
+    { name: "Chat", path: `${ROUTES.USER}${ROUTES.CHAT_PAGE}` },
+    {
+      name: "Assessments",
+      path: `${ROUTES.INSTRUCTOR}${ROUTES.LIST_ASSESSMENT}`,
+    },
     { name: "Settings", path: "/settings" },
   ];
 
@@ -17,8 +25,6 @@ const InstructorSidebar = () => {
 
   return (
     <>
-    
-      {/* Mobile Toggle Button */}
       <button
         onClick={() => setIsOpen(!isOpen)}
         className="md:hidden fixed top-4 left-4 z-50 p-2 bg-indigo-600 text-white rounded-full shadow-md focus:outline-none"
@@ -39,16 +45,15 @@ const InstructorSidebar = () => {
         </svg>
       </button>
 
-      {/* Sidebar */}
       <aside
         className={`bg-indigo-900 text-white min-h-screen p-6 fixed top-0 left-0 z-40 transform transition-transform duration-300 ${
           isOpen ? "translate-x-0" : "-translate-x-full"
         } md:translate-x-0 md:w-64 w-3/4 md:relative md:shadow-lg`}
       >
-        {/* Title */}
-        <h1 className="text-2xl font-bold mb-10 text-indigo-200 tracking-tight mt-14">Instructor</h1>
+        <h1 className="text-2xl font-bold mb-10 text-indigo-200 tracking-tight mt-14">
+          Instructor
+        </h1>
 
-        {/* Navigation */}
         <nav className="space-y-2">
           {links.map((link) => (
             <NavLink
@@ -61,7 +66,7 @@ const InstructorSidebar = () => {
                     : "text-indigo-100 hover:bg-indigo-700 hover:text-white"
                 }`
               }
-              onClick={() => setIsOpen(false)} // Close sidebar on mobile after clicking
+              onClick={() => setIsOpen(false)}
             >
               {link.name}
             </NavLink>
@@ -69,7 +74,6 @@ const InstructorSidebar = () => {
         </nav>
       </aside>
 
-      {/* Overlay for mobile when sidebar is open */}
       {isOpen && (
         <div
           onClick={() => setIsOpen(false)}

@@ -88,6 +88,8 @@ const AllCourses: React.FC = () => {
           searchQuery,
           selectedCategory
         );
+        console.log(courses,'!!!!!!!!');
+        
         setCourses(courses);
         setTotalPages(totalPages);
         setError(null);
@@ -125,13 +127,11 @@ const AllCourses: React.FC = () => {
       {userDetails ? <UserNavbar key={navbarKey} /> : <BasicNavbar />}
 
       <div className="container mx-auto px-4 py-12 mt-11">
-        {/* Header Section */}
         <div className="mb-12 animate-fade-in-down">
           <h1 className="text-4xl md:text-5xl font-extrabold text-transparent bg-clip-text bg-gradient-to-r from-purple-600 to-indigo-600 mb-6">
             Explore Our Courses
           </h1>
 
-          {/* Search and Filter Section */}
           <div className="flex flex-col sm:flex-row gap-4 bg-white p-4 rounded-xl shadow-lg">
             <div className="relative flex-1">
               <input
@@ -170,14 +170,12 @@ const AllCourses: React.FC = () => {
           </div>
         </div>
 
-        {/* Error Message */}
         {error && (
           <div className="text-center text-red-500 mb-8 animate-fade-in">
             {error}
           </div>
         )}
 
-        {/* Courses Section */}
         {loading ? (
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
             {Array(6)
@@ -224,14 +222,11 @@ const AllCourses: React.FC = () => {
                       {course.courseTitle}
                     </h2>
                     <p className="text-sm text-gray-600 mb-2">
-                      Instructor: {course.instructor || course.user?.name || "Unknown"}
+                      Instructor: {course.instructor || course.user?.name || "Jane Smith"}
                     </p>
 
                     <div className="flex items-center mb-4">
-                      <span className="text-yellow-400 mr-1">★</span>
-                      <span className="text-sm font-medium text-gray-700">
-                        {course.rating || 0} ({course.reviews || 0} Reviews)
-                      </span>
+
                     </div>
                     <button
                       onClick={() => handleViewDetails(course._id)}

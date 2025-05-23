@@ -4,13 +4,12 @@ import { RootState, AppDispatch } from "../../redux/store";
 import UserNavbar from "../../components/layout/UserNavbar";
 import BasicNavbar from "../../components/layout/BasicNavbar";
 import axios from "axios";
-// import { setUserDetails } from "../../redux/slices/userSlice"; // Import Redux action
 
 interface Course {
   _id: string;
   courseTitle: string;
   thumbnailUrl?: string;
-  user?: { name: string };
+  instructor: string 
   rating?: number;
   reviews?: number;
   createdAt: string;
@@ -40,12 +39,10 @@ const HomePage: React.FC = () => {
   const fetchUserDetails = async () => {
     try {
       const response = await axios.get(`${API_URL}/auth/userDetails`, {
-        withCredentials: true, // Ensure cookies are sent
+        withCredentials: true, 
       });
 
-      // if (response.status === 200) {
-      //   dispatch(setUserDetails(response.data.user)); // Store user in Redux
-      // }
+
     } catch (error) {
       console.error("Error fetching user details:", error);
     }
@@ -72,7 +69,6 @@ const HomePage: React.FC = () => {
     }
   };
 
-  // Fetch user details and courses on page load
   useEffect(() => {
     fetchUserDetails();
     fetchLatestCourses();
@@ -80,10 +76,8 @@ const HomePage: React.FC = () => {
 
   return (
     <div>
-      {/* Check userDetails and render appropriate Navbar */}
       {userDetails ? <UserNavbar /> : <BasicNavbar />}
 
-      {/* Hero Section */}
       <div className="relative w-full h-screen">
         <img
           src="\src\assets\images\shutterstock_1029674362-860x574.png"
@@ -102,7 +96,6 @@ const HomePage: React.FC = () => {
         </div>
       </div>
 
-      {/* Latest Courses Section */}
       <section className="py-16 bg-gray-50">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <h2 className="text-3xl font-bold text-gray-900 mb-8 text-center">
@@ -133,11 +126,9 @@ const HomePage: React.FC = () => {
                       {course.courseTitle}
                     </h2>
                     <p className="text-sm text-gray-600">
-                      Instructor: {course.user?.name || "Unknown"}
+                      Instructor: {course.instructor || "Jane Smith"}
                     </p>
-                    <p className="text-sm font-bold mt-2">
-                      ⭐ {course.rating || 0} ({course.reviews || 0} Reviews)
-                    </p>
+
                   </div>
                 </div>
               ))}
@@ -146,7 +137,6 @@ const HomePage: React.FC = () => {
         </div>
       </section>
 
-      {/* Platform Stats Section */}
       <section className="py-16 bg-white">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <h2 className="text-3xl font-bold text-gray-900 mb-12 text-center">
@@ -169,7 +159,6 @@ const HomePage: React.FC = () => {
         </div>
       </section>
 
-      {/* Call to Action Section */}
       <section className="py-16 bg-gray-100">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
           <h2 className="text-3xl font-bold text-gray-900 mb-4">

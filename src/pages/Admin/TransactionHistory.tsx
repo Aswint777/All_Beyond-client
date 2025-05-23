@@ -12,8 +12,8 @@ interface Transaction {
   instructorName: string;
   courseName: string;
   transactionDate: string;
-  instructorShare?: number | null; // Allow null/undefined
-  adminShare?: number | null; // Allow null/undefined
+  instructorShare?: number | null; 
+  adminShare?: number | null; 
   amount?:number|null
 }
 
@@ -40,7 +40,7 @@ const TransactionHistory = () => {
   const [loading, setLoading] = useState<boolean>(true);
   const [error, setError] = useState<string | null>(null);
 
-  const itemsPerPage = 5;
+  const itemsPerPage = 2;
 
   useEffect(() => {
     const fetchTransactions = async () => {
@@ -51,7 +51,6 @@ const TransactionHistory = () => {
           limit: itemsPerPage,
         });
         const { transactions, totalPages, totalTransactions }: TransactionResponse = response.data.data;
-        console.log("API Response:", response.data.data); // Debug log
         if (!Array.isArray(transactions)) {
           throw new Error("Invalid transaction data");
         }

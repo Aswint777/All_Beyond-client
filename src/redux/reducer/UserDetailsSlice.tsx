@@ -26,25 +26,12 @@ interface UserState {
   error: string | null;
   isAuthenticated: boolean;
 }
-////////////////////////////////////////////////////////////////////////
-// interface loginFormValues {
-//   email: string;
-//   passWord: string;
-// }
-// interface loginState {
-//   formValues: loginFormValues;
-//   error: string | null;
-//   loading: boolean;
-//   isAuthenticated: boolean;
-//   userDetails: { email: string; role: string } | null;
-// }
-///////////////////////////////////////////////////////////////////
+
 const initialState: UserState = {
   loading: false,
   userDetails: null,
   error: null,
   isAuthenticated: false,
-  // isAuthenticated: localStorage.getItem("isAuthenticated") === "true",
 };
 
 const userDetailsSlice = createSlice({
@@ -52,8 +39,8 @@ const userDetailsSlice = createSlice({
   initialState,
   reducers: {
     logoutUser: (state) => {
-      state.userDetails = null; // Clear user details on
-      state.isAuthenticated = false; // <-- Add this line
+      state.userDetails = null;
+      state.isAuthenticated = false; 
     },
     updateProfilePhoto: (state, action: PayloadAction<string>) => {
       if (state.userDetails) {
@@ -76,27 +63,14 @@ const userDetailsSlice = createSlice({
         state.error = action.payload as string;
       })
 
-      //login
       .addCase(UserLoginAction.pending, (state) => {
         state.loading = true;
         state.error = null;
       })
-      // .addCase(UserLoginAction.fulfilled, (state, { payload }) => {
-      //   console.log(payload, "payload");
-      //   state.loading = false;
-      //   state.error = null;
-      //   state.isAuthenticated = true;
-      //   state.userDetails =payload.user?? payload.data;
-      //   console.log(state.userDetails, "???????");
-      // })
       .addCase(UserLoginAction.fulfilled, (state, { payload }) => {
         state.loading = false;
         state.error = null;
         state.isAuthenticated = true;
-        console.log(
-          payload.data,
-          "payload . user hereeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee"
-        );
 
         state.userDetails = payload.data;
       })
@@ -108,17 +82,13 @@ const userDetailsSlice = createSlice({
             ? action.payload
             : "Login failed, try again";
 
-        // state.error = (action.payload as string) || "Login failed";
 
         if (typeof action.payload === "string") {
-          // Single error message
           state.error = action.payload;
         } else {
-          // Handle unexpected cases
           console.log(action.payload, "qqqqqqqqqq");
 
           state.error = "Login failed, try again";
-          // state.error= e
         }
       })
 
@@ -152,16 +122,12 @@ const userDetailsSlice = createSlice({
       })
       .addCase(googleAuthAction.rejected, (state, action) => {
         state.loading = false;
-        // state.error = (action.payload as string) || "Login failed";
         if (typeof action.payload === "string") {
-          // Single error message
           state.error = action.payload;
         } else {
-          // Handle unexpected cases
           console.log(action.payload, "qqqqqqqqqq");
 
           state.error = "Login failed, try again";
-          // state.error= e
         }
       });
   },

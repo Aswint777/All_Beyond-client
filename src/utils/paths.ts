@@ -6,6 +6,7 @@ export const ROUTES = {
   HOME: "/",
   COURSES:'/courses',
   COURSE_DETAILS:"/courseDetails/:courseId",
+  ABOUT_US:"/AboutUs",
 
   // AuThentication routes
   SIGNUP: "/SignUP",
@@ -19,6 +20,7 @@ export const ROUTES = {
   INSTRUCTOR_APPLICATION_FORM: "/InstructorApplicationForm",
   CHAT_PAGE:"/chat",
 
+
   // ADMIN
   ADMIN:'/admin',
   ADMIN_INSTRUCTOR_APPLICATION_LIST: "/AdminInstructorApplicationList",
@@ -28,8 +30,8 @@ export const ROUTES = {
   ADMIN_STUDENT_LIST: "/AdminStudentsListPage",
   ADMIN_INSTRUCTOR_LIST: "/AdminInstructorListPage",
   ADMIN_USER_DETAILS:"/user_details/",
-
-
+  ADMIN_DASHBOARD:"/overview",
+  TRANSACTION:"/transactions" ,
 
   // INSTRUCTOR
   INSTRUCTOR:'/instructor',

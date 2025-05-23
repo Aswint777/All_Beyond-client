@@ -16,15 +16,10 @@ const LoginPage: React.FC = () => {
   const navigate = useNavigate();
   const dispatch = useDispatch<AppDispatch>();
 
-  // const { loading, error, isAuthenticated, userDetails } = useSelector(
-  //   (state: RootState) => state.user
-  // );
-
   const { error, loading, isAuthenticated } = useSelector(
     (state: RootState) => state.user
   );
   const { userDetails } = useSelector((state: RootState) => state.user);
-  console.log(typeof error, "errrr");
 
   const [loginValues, setLoginValues] = useState({
     email: "",
@@ -57,18 +52,14 @@ const LoginPage: React.FC = () => {
       return;
     }
 
-    // await dispatch(UserLoginAction(loginValues));
     const response = await dispatch(UserLoginAction(loginValues));
-    //  alert(response.payload.data.role)
-    console.log(response, ";;;;;;;;;;;;;;;");
+
 
     if (response.payload?.message) {
-      console.log("[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[");
 
-      setLocalError(response.payload.message); // Set local error
-      toast.error(response.payload.message); // Display error as a toast notification
+      setLocalError(response.payload.message); 
+      toast.error(response.payload.message); 
 
-      // Hide the error after 2 seconds
       setTimeout(() => setLocalError(null), 2000);
       return;
     }
@@ -76,18 +67,16 @@ const LoginPage: React.FC = () => {
     if (response.payload.data.role === "admin") {
       navigate("/admin/AdminStudentsListPage");
     } else {
-      //  alert('here')
       navigate("/");
     }
   };
 
-  // ✅ Google Login Handler
   const handleGoogleLoginSuccess = async (
     credentialResponse: CredentialResponse
   ) => {
     try {
       const response = await dispatch(
-        googleAuthAction({ credentials: credentialResponse, userType: "user" }) // ✅ Pass `userType`
+        googleAuthAction({ credentials: credentialResponse, userType: "user" }) 
       );
       if (response.payload.success) {
         console.log(response.payload.user);
@@ -102,7 +91,6 @@ const LoginPage: React.FC = () => {
     }
   };
 
-  // ✅ Google Login Failure Handler
   const handleGoogleLoginFailure = () => {
     toast.error("Google login failed");
     console.error("Google login error");
@@ -132,7 +120,6 @@ const LoginPage: React.FC = () => {
         >
           <h2 className="text-2xl font-bold text-center mb-4">Login</h2>
 
-          {/* {error && <div className="text-red-500 text-sm mb-4 text-center">{error}</div>} */}
           {localError && (
             <div className="text-red-500 text-sm mb-4 text-center transition-opacity duration-500">
               {localError}
