@@ -5,6 +5,8 @@ import { VerifyOtpAction } from "../../redux/actions/VerifyOtpAction";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
 import { config } from "../../configaration/Config";
+import { resetVerifyOtp } from "../../redux/actions/resetVerifyOtp";
+import { resetSignUp } from "../../redux/actions/resetSignUpAction";
 
 const OtpVerifyPage: React.FC = () => {
   const OTP_LENGTH = 6;
@@ -24,6 +26,7 @@ const OtpVerifyPage: React.FC = () => {
     loading,
     error: reduxError,
     isOtpVerified,
+    
   } = useSelector((state: RootState) => state.verifyOtp);
 
   const handleChange = (value: string, index: number) => {
@@ -43,7 +46,7 @@ const OtpVerifyPage: React.FC = () => {
     }
   };
 
-  const handleSubmit = (event: React.FormEvent) => {
+  const handleSubmit = async(event: React.FormEvent) => {
     event.preventDefault();
     setError("");
 
@@ -55,7 +58,16 @@ const OtpVerifyPage: React.FC = () => {
       return;
     }
 
-    dispatch(VerifyOtpAction({ email: formValues.email, otp: otpString }));
+      const result = await dispatch(
+      VerifyOtpAction({ email: formValues.email, otp: otpString })
+    ).unwrap(); 
+
+    console.log(result, "OTP Verified Result");
+
+    dispatch(resetVerifyOtp());
+    dispatch(resetSignUp());
+    navigate("/login");
+    
   };
 
   useEffect(() => {
@@ -90,12 +102,6 @@ const OtpVerifyPage: React.FC = () => {
       console.error("Failed to resend OTP:", error);
     }
   };
-
-  useEffect(() => {
-    if (isOtpVerified) {
-      navigate("/login");
-    }
-  }, [isOtpVerified, navigate]);
 
   return (
     <div className="flex items-center justify-center min-h-screen bg-white">

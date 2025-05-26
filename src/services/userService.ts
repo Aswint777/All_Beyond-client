@@ -30,14 +30,26 @@ export const submitInstructorApplication = async (
 };
 
 
-export const fetchInstructorApplications = async (): Promise<any> => {
+export const fetchInstructorApplications = async ({
+  page,
+  limit,
+  status,
+}: {
+  page: number;
+  limit: number;
+  status?: string;
+}): Promise<any> => {
   try {
-    const response = await api.get("/admin/AdminInstructorApplicationList");
-    return response.data.data;
+    const response = await api.get("/admin/AdminInstructorApplicationList", {
+      params: { page, limit, status },
+      withCredentials: true,
+    });
+    return response.data;
   } catch (error: any) {
     throw new Error(error.message || "An error occurred while fetching instructor applications.");
   }
 };
+
 
 
 export const updateInstructorStatus = async (

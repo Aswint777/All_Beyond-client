@@ -1,6 +1,7 @@
 import { createAsyncThunk, createSlice, PayloadAction } from "@reduxjs/toolkit";
 import axios from "axios";
 import { config } from "../../configaration/Config";
+import { resetSignUp } from "../actions/resetSignUpAction";
 
 
 interface SignUpFormValues {
@@ -93,6 +94,14 @@ const SignUpSlice = createSlice({
         state.requiresOTP = payload.requiresOTP || false; 
 
         state.formValues = { ...state.formValues, ...payload.user };
+
+                // Reset formValues to initial state (clear all form data)
+        // state.formValues = {
+        //   name: "",
+        //   email: "",
+        //   password: "",
+        //   confirmPassword: "",
+        // };
       })
 
 
@@ -104,9 +113,12 @@ const SignUpSlice = createSlice({
         if (typeof action.payload === "string") {
           state.error = action.payload;
         } else {
-          state.error = "An unexpected error occurred hahahha";
+          state.error = "An unexpected error occurred";
         }
-      });
+      })
+
+            .addCase(resetSignUp, () => initialState); // Reset only signUp slice
+
   },
 });
 

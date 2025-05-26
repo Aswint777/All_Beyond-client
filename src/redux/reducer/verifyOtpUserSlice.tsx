@@ -1,5 +1,6 @@
 import { createSlice } from "@reduxjs/toolkit";
 import { VerifyOtpAction } from "../actions/VerifyOtpAction";
+import { resetVerifyOtp } from "../actions/resetVerifyOtp";
 
 interface verifyOtpFormValues {
   name: string;
@@ -38,11 +39,20 @@ const verifyOtpSlice = createSlice({
         state.isOtpVerified = true;
         state.error = null;
         console.log(payload, "OTP verification success");
+
+        // Optionally reset formValues here, but we'll rely on resetStore
+  //  return initialState;
+        // state.formValues = {
+        //   name: "",
+        //   email: "",
+        // };
       })
       .addCase(VerifyOtpAction.rejected, (state, action) => {
         state.loading = false;
         state.error = (action.payload as string) || "OTP verification failed";
-      });
+      })
+            .addCase(resetVerifyOtp, () => initialState); // Reset to initial state
+
   },
 });
 

@@ -8,6 +8,7 @@ import axios from "axios";
 import { config } from "../../configaration/Config";
 import { GetUserDetailsAction } from "../../redux/actions/GetUserDetailsAction";
 import { ROUTES } from "../../utils/paths";
+import dummyImage from "../../assets/images/blank-profile-picture-973460_640.webp"
 
 const UserNavbar: React.FC = () => {
   const dispatch = useDispatch<AppDispatch>();
@@ -120,7 +121,7 @@ const UserNavbar: React.FC = () => {
 
         <div className="hidden md:flex items-center space-x-4 relative">
           <img
-            src={userDetails?.profilePhoto || "https://via.placeholder.com/40"}
+            src={userDetails?.profilePhoto || dummyImage}
             alt="Profile"
             className="w-10 h-10 rounded-full border border-gray-300 object-cover"
           />

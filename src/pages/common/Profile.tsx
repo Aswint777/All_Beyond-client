@@ -49,7 +49,7 @@ interface UpdateProfilePayload {
 
 const Profile: React.FC = () => {
   const dispatch = useDispatch();
-  const { userDetails } = useSelector((state: RootState) => state.user);
+  const { userDetails } = useSelector((state: RootState) => state.user); 
 
   const [profileImage, setProfileImage] = useState<string>(
     userDetails?.profilePhoto || dummyImage

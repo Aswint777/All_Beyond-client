@@ -1,10 +1,25 @@
+
+
+
+
+
+
+
+
+
+
+
 import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import AdminSideBar from "../../components/layout/AdminSideBar";
 import axios from "axios";
 import { useModal } from "../../components/context/ModalContext";
-import TableComponent, { TableColumn } from "../../components/reusableComponents/TableComponent";
+import TableComponent, {
+  TableColumn,
+} from "../../components/reusableComponents/TableComponent";
+// import Pagination from "../../components/Pagination";
 import { ROUTES } from "../../utils/paths";
+import Pagination from "../../components/reusableComponents/Pagination";
 
 interface Student {
   _id: string;
@@ -15,15 +30,33 @@ interface Student {
   contactNumber: number;
   isVerified: boolean;
   role: string;
+  createdAt: string;
+}
+
+interface PaginatedResponse {
+  success: boolean;
+  data: {
+    data: Student[];
+    total: number;
+    currentPage: number;
+    totalPages: number;
+  };
+  message: string;
 }
 
 const API_URL = import.meta.env.VITE_REACT_APP_API_URL!;
 
-const fetchWithAuth = async (endpoint: string, method = "GET", data?: any) => {
+const fetchWithAuth = async (
+  endpoint: string,
+  method = "GET",
+  data?: any,
+  params?: { page?: number; limit?: number }
+) => {
   return axios({
     url: `${API_URL}/admin/${endpoint}`,
     method,
     data,
+    params,
     withCredentials: true,
   });
 };
@@ -34,58 +67,103 @@ const AdminStudentsListPage: React.FC = () => {
   const [students, setStudents] = useState<Student[]>([]);
   const [loading, setLoading] = useState<boolean>(true);
   const [error, setError] = useState<string | null>(null);
+  const [currentPage, setCurrentPage] = useState<number>(1);
+  const [totalPages, setTotalPages] = useState<number>(1);
+  const limit = 8;
+
+  const fetchStudents = async (page: number) => {
+    try {
+      setLoading(true);
+      const response = await fetchWithAuth("AdminStudentsListPage", "GET", undefined, {
+        page,
+        limit,
+      });
+      console.log(response.data);
+
+      const result = response.data as PaginatedResponse;
+      if (!result.success) {
+        setError(result.message || "Failed to fetch students");
+        return;
+      }
+      setStudents(result.data.data || []);
+      setCurrentPage(result.data.currentPage);
+      setTotalPages(result.data.totalPages);
+    } catch (err: any) {
+      setError(err.message || "An error occurred while fetching students.");
+    } finally {
+      setLoading(false);
+    }
+  };
 
   useEffect(() => {
-    const fetchStudents = async () => {
-      try {
-        const response = await fetchWithAuth("AdminStudentsListPage");
-        setStudents(response.data.data);
-      } catch (err: any) {
-        setError(err.message || "An error occurred while fetching students.");
-      } finally {
-        setLoading(false);
-      }
-    };
-    fetchStudents();
-  }, []);
+    fetchStudents(currentPage);
+  }, [currentPage]);
 
   const handleViewDetails = (student: Student) => {
     navigate(`${ROUTES.ADMIN}${ROUTES.ADMIN_USER_DETAILS}${student.userId}`);
   };
 
-  const handleBlockUnblock = async (id: string, status: boolean, userId: string) => {
-    const prevStudents = [...students]; // Store previous state
+  const handleBlockUnblock = async (
+    id: string,
+    status: boolean,
+    userId: string
+  ) => {
+    const prevStudents = [...students];
 
     setStudents((prev) =>
       prev.map((s) => (s._id === id ? { ...s, isBlocked: status } : s))
     );
 
     try {
-      await fetchWithAuth("block_UnBlock", "PUT", { userId, isBlocked: status });
+      await fetchWithAuth("block_UnBlock", "PUT", {
+        userId,
+        isBlocked: status,
+      });
     } catch (error) {
       console.error("Error blocking/unblocking student:", error);
-      setStudents(prevStudents); 
+      setStudents(prevStudents);
     }
   };
 
+  const handlePageChange = (page: number) => {
+    setCurrentPage(page);
+  };
+
   const columns: TableColumn<Student>[] = [
-    { label: "ID", key: "userId" },
     { label: "Name", key: "username" },
     { label: "Email", key: "email" },
-    { label: "Contacts", key: "contactNumber" },
+    {
+      label: "Created At",
+      render: (student: Student) =>
+        new Date(student.createdAt).toLocaleDateString("en-GB", {
+          day: "2-digit",
+          month: "short",
+          year: "numeric",
+        }),
+    },
     {
       label: "Actions",
       render: (student: Student) =>
         student.isBlocked ? (
           <button
-            onClick={() => openModal(() => handleBlockUnblock(student._id, false, student.userId), "Unblock this student?")}
+            onClick={() =>
+              openModal(
+                () => handleBlockUnblock(student._id, false, student.userId),
+                "Unblock this student?"
+              )
+            }
             className="px-4 py-1 bg-orange-500 text-white rounded-md"
           >
             Unblock
           </button>
         ) : (
           <button
-            onClick={() => openModal(() => handleBlockUnblock(student._id, true, student.userId), "Block this student?")}
+            onClick={() =>
+              openModal(
+                () => handleBlockUnblock(student._id, true, student.userId),
+                "Block this student?"
+              )
+            }
             className="px-4 py-1 bg-blue-500 text-white rounded-md"
           >
             Block
@@ -95,7 +173,10 @@ const AdminStudentsListPage: React.FC = () => {
     {
       label: "About",
       render: (student: Student) => (
-        <button onClick={() => handleViewDetails(student)} className="px-4 py-1 bg-green-500 text-white rounded-md">
+        <button
+          onClick={() => handleViewDetails(student)}
+          className="px-4 py-1 bg-green-500 text-white rounded-md"
+        >
           View
         </button>
       ),
@@ -113,14 +194,24 @@ const AdminStudentsListPage: React.FC = () => {
           <div className="text-red-500">
             <p>{error}</p>
             <button
-              onClick={() => window.location.reload()}
+              onClick={() => fetchStudents(currentPage)}
               className="bg-blue-500 text-white px-4 py-1 rounded"
             >
               Retry
             </button>
           </div>
         ) : (
-          <TableComponent columns={columns} data={students.filter((s) => s.role === "student")} />
+          <>
+            <TableComponent
+              columns={columns}
+              data={students} // Removed redundant filter
+            />
+            <Pagination
+              currentPage={currentPage}
+              totalPages={totalPages}
+              onPageChange={handlePageChange}
+            />
+          </>
         )}
       </main>
     </div>

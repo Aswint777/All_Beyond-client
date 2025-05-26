@@ -20,6 +20,7 @@ const LoginPage: React.FC = () => {
     (state: RootState) => state.user
   );
   const { userDetails } = useSelector((state: RootState) => state.user);
+    console.log(userDetails,'!!!!!!!!!!!!!!!!!!!!!');
 
   const [loginValues, setLoginValues] = useState({
     email: "",
@@ -96,6 +97,8 @@ const LoginPage: React.FC = () => {
     console.error("Google login error");
   };
   useEffect(() => {
+    console.log(userDetails,'!!!!!!!!!!!!!!!!!!!!!');
+    
     if (isAuthenticated) {
       if (userDetails?.role === "admin") {
         navigate("/admin/AdminStudentsListPage");

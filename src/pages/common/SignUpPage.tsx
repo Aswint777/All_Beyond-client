@@ -1,10 +1,12 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { AppDispatch, RootState } from "../../redux/store";
 import { sendSignUpData, updateField } from "../../redux/reducer/UserSlice";
 import { useNavigate } from "react-router-dom";
 import BasicNavbar from "../../components/layout/BasicNavbar";
 import { SignUpErrors, validateSignUp } from "../../components/validation/SignUpErrors";
+import { resetSignUp } from "../../redux/actions/resetSignUpAction";
+import { resetVerifyOtp } from "../../redux/actions/resetVerifyOtp";
 
 const SignUpPage: React.FC = () => {
   const navigate = useNavigate();
@@ -13,6 +15,15 @@ const SignUpPage: React.FC = () => {
   const { formValues, loading, error, requiresOTP } = useSelector(
     (state: RootState) => state.signUp
   );
+
+  useEffect(() => {
+    console.log("Component mounted or updated");
+
+    // Optional: clean-up function
+    return () => {
+      console.log("Component will unmount");
+    };
+  }, []);
 
   const [errors, setErrors] = useState<SignUpErrors>({});
 
@@ -48,6 +59,8 @@ const SignUpPage: React.FC = () => {
 
   React.useEffect(() => {
     if (requiresOTP) {
+      console.log(requiresOTP,"kkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkk");
+
       navigate("/OtpVerify");
     }
   }, [requiresOTP, navigate]);

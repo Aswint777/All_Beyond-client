@@ -5,7 +5,7 @@ import { Navigate, Outlet } from 'react-router-dom';
 
 const UserGuards = () => {
     const { userDetails } = useSelector((state: RootState) => state.user);
-   
+  
     // Redirect unauthenticated users to the login page
     if (!userDetails) {
       return <Navigate to="/login" replace />;

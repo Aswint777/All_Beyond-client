@@ -1,7 +1,9 @@
 import React, { useEffect, useState } from "react";
 import AdminSideBar from "../../components/layout/AdminSideBar";
 import axios from "axios";
-import TableComponent, { TableColumn } from "../../components/reusableComponents/TableComponent";
+import TableComponent, {
+  TableColumn,
+} from "../../components/reusableComponents/TableComponent";
 import { config } from "../../configaration/Config";
 
 const API_URL = import.meta.env.VITE_REACT_APP_API_URL!;
@@ -12,9 +14,9 @@ interface Transaction {
   instructorName: string;
   courseName: string;
   transactionDate: string;
-  instructorShare?: number | null; 
-  adminShare?: number | null; 
-  amount?:number|null
+  instructorShare?: number | null;
+  adminShare?: number | null;
+  amount?: number | null;
 }
 
 interface TransactionResponse {
@@ -24,7 +26,11 @@ interface TransactionResponse {
   totalTransactions: number;
 }
 
-const fetchWithAuth = async (endpoint: string, method = "GET", params?: any) => {
+const fetchWithAuth = async (
+  endpoint: string,
+  method = "GET",
+  params?: any
+) => {
   return axios({
     url: `${API_URL}/admin/${endpoint}`,
     method,
@@ -50,14 +56,20 @@ const TransactionHistory = () => {
           page: currentPage,
           limit: itemsPerPage,
         });
-        const { transactions, totalPages, totalTransactions }: TransactionResponse = response.data.data;
+        const {
+          transactions,
+          totalPages,
+          totalTransactions,
+        }: TransactionResponse = response.data.data;
         if (!Array.isArray(transactions)) {
           throw new Error("Invalid transaction data");
         }
         setTransactions(transactions);
         setTotalPages(totalPages);
       } catch (err: any) {
-        setError(err.message || "An error occurred while fetching transactions.");
+        setError(
+          err.message || "An error occurred while fetching transactions."
+        );
         console.error("Fetch error:", err);
       } finally {
         setLoading(false);
@@ -84,18 +96,24 @@ const TransactionHistory = () => {
     {
       label: "Instructor Share",
       render: (transaction: Transaction) =>
-        transaction.instructorShare != null ? `₹${transaction.instructorShare.toFixed(2)}` : "₹0.00",
+        transaction.instructorShare != null
+          ? `₹${transaction.instructorShare.toFixed(2)}`
+          : "₹0.00",
     },
     {
       label: "Admin Share",
       render: (transaction: Transaction) =>
-        transaction.adminShare != null ? `₹${transaction.adminShare.toFixed(2)}` : "₹0.00",
+        transaction.adminShare != null
+          ? `₹${transaction.adminShare.toFixed(2)}`
+          : "₹0.00",
     },
     {
-        label: "Total",
-        render: (transaction: Transaction) =>
-          transaction.amount != null ? `₹${transaction.amount.toFixed(2)}` : "₹0.00",
-      },
+      label: "Total",
+      render: (transaction: Transaction) =>
+        transaction.amount != null
+          ? `₹${transaction.amount.toFixed(2)}`
+          : "₹0.00",
+    },
   ];
 
   const handlePageChange = (page: number) => {
