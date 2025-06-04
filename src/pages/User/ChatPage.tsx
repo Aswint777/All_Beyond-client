@@ -82,6 +82,8 @@ const ChatPage: React.FC = () => {
           <ChatList
             onSelectChat={setSelectedChat}
             selectedChatId={selectedChat?.id}
+              userId={userId}
+
           />
         </div>
         <div
@@ -95,6 +97,8 @@ const ChatPage: React.FC = () => {
               setIsSidebarOpen(false); 
             }}
             selectedChatId={selectedChat?.id}
+              userId={userId}
+
           />
         </div>
         <div className="flex-1 ml-0 md:ml-[550px] lg:ml-[550px] overflow-auto p-4 sm:p-6">

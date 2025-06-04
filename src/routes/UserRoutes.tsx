@@ -7,8 +7,12 @@ import InstructorApplicationForm from "../components/Forms/InstructorApplication
 import { ROUTES } from "../utils/paths";
 import NotFound from "../pages/common/404";
 import ChatPage from "../pages/User/ChatPage";
+import VideoPage from "../pages/User/VideoPage";
+import { useCallContext } from "../components/context/CallContext";
 
 const UserRoutes = () => {
+  const { socket } = useCallContext();
+  console.log('StudentRoutes: Socket from CallContext:', socket?.id); // Debug log
   return (
     <Routes>
       <Route element={<UserGuards />}>
@@ -22,6 +26,9 @@ const UserRoutes = () => {
           element={<InstructorApplicationForm />}
         />
         <Route path={ROUTES.CHAT_PAGE} element={<ChatPage />} />
+        
+        <Route path={ROUTES.VIDEO_CHAT_PAGE} element={<VideoPage socket={socket}/>} />
+
       </Route>
       <Route path="*" element={<NotFound />} />
     </Routes>

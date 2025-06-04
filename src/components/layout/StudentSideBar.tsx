@@ -8,6 +8,8 @@ const StudentSideBar = () => {
     { name: "Profile", path: `${ROUTES.USER}${ROUTES.PROFILE}` },
     { name: "My Courses", path: `${ROUTES.STUDENT}${ROUTES.STUDENT_COURSES}` },
     { name: "Chat", path: `${ROUTES.USER}${ROUTES.CHAT_PAGE}` },
+    { name: "Video Call", path: `${ROUTES.USER}${ROUTES.VIDEO_CHAT_PAGE}` },
+
     {
       name: "Assessments",
       path: `${ROUTES.STUDENT}${ROUTES.STUDENT_ASSESSMENTS}`,

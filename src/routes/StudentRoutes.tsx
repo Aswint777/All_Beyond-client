@@ -12,6 +12,7 @@ import TakeAssessment from "../pages/Student/TakeAssessment";
 import CertificatePage from "../pages/Student/CertificatePage";
 
 const StudentRoutes = () => {
+  
   return (
     <Routes>
       <Route element={<StudentGuards />}>
