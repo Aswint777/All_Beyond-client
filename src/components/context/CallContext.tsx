@@ -1,84 +1,3 @@
-// import React, { createContext, useContext, useEffect, useState } from 'react';
-// import { Socket } from 'socket.io-client';
-// import { useNavigate } from 'react-router-dom';
-
-// interface IncomingCall {
-//   from: string;
-//   fromUsername: string;
-// }
-
-// interface CallContextType {
-//   incomingCall: IncomingCall | null;
-//   setIncomingCall: React.Dispatch<React.SetStateAction<IncomingCall | null>>;
-//   acceptCall: () => void;
-//   rejectCall: () => void;
-// }
-
-// const CallContext = createContext<CallContextType | undefined>(undefined);
-
-// export const CallProvider: React.FC<{ socket: Socket; children: React.ReactNode }> = ({ socket, children }) => {
-//   const [incomingCall, setIncomingCall] = useState<IncomingCall | null>(null);
-//   const navigate = useNavigate();
-
-//   useEffect(() => {
-//     socket.on('call-invitation', (data: { from: string; fromUsername: string; to: string }) => {
-//       console.log('Global: Received call invitation:', data);
-//       setIncomingCall({ from: data.from, fromUsername: data.fromUsername });
-//     });
-
-//     return () => {
-//       socket.off('call-invitation');
-//     };
-//   }, [socket]);
-
-//   const acceptCall = () => {
-//     if (incomingCall) {
-//       socket.emit('call-invitation-response', { to: incomingCall.from, accepted: true });
-//       console.log('Global: Call accepted:', { to: incomingCall.from });
-//       setTimeout(() => setIncomingCall(null), 0);
-//       navigate('/video-call', { state: { incomingCall } });
-//     }
-//   };
-
-//   const rejectCall = () => {
-//     if (incomingCall) {
-//       socket.emit('call-invitation-response', { to: incomingCall.from, accepted: false });
-//       console.log('Global: Call rejected:', { to: incomingCall.from });
-//       setTimeout(() => setIncomingCall(null), 0);
-//     }
-//   };
-
-//   return (
-//     <CallContext.Provider value={{ incomingCall, setIncomingCall, acceptCall, rejectCall }}>
-//       {children}
-//     </CallContext.Provider>
-//   );
-// };
-
-// export const useCallContext = () => {
-//   const context = useContext(CallContext);
-//   if (!context) {
-//     throw new Error('useCallContext must be used within a CallProvider');
-//   }
-//   return context;
-// };
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 import React, { createContext, useContext, useEffect, useState } from 'react';
 import { Socket } from 'socket.io-client';
 import { useNavigate } from 'react-router-dom';
@@ -150,6 +69,7 @@ export const CallProvider: React.FC<{ socket: Socket; children: React.ReactNode 
       socket.emit('call-invitation-response', { to: incomingCall.from, accepted: false });
       console.log('Global: Call rejected:', { to: incomingCall.from });
       setIncomingCall(null);
+      window.location.reload()
     } else {
       console.warn('rejectCall: No incoming call or socket disconnected');
       setIncomingCall(null);

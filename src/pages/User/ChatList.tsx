@@ -49,7 +49,11 @@ const ChatList: React.FC<ChatListProps> = ({ onSelectChat, selectedChatId, userI
 
     setSocket(newSocket);
 
-    newSocket.on("connect", () => console.log("ChatList connected"));
+    newSocket.on("connect", () =>{ 
+      console.log("ChatList connected")
+      newSocket.emit("register", userId); // 🔥 Important!
+
+  });
     newSocket.on("connect_error", (err) => console.error("ChatList connect error:", err.message));
 
     // Handle new messages
@@ -68,10 +72,9 @@ const ChatList: React.FC<ChatListProps> = ({ onSelectChat, selectedChatId, userI
       }));
     });
 
-    // Handle unread count updates
-    newSocket.on("unreadCountUpdate", ({ userId: targetUserId, chatGroupId, unreadCount }) => {
-      if (targetUserId !== userId) return; // Only update for this user
-      console.log("Received unreadCountUpdate:", { userId: targetUserId, chatGroupId, unreadCount });
+    console.log("unread message here :",);
+    newSocket.on("unreadCountUpdate", ({ userId, chatGroupId, unreadCount }) => {
+
       setLastMessages((prev) => ({
         ...prev,
         [chatGroupId]: {
@@ -80,13 +83,13 @@ const ChatList: React.FC<ChatListProps> = ({ onSelectChat, selectedChatId, userI
         },
       }));
     });
+    
 
     return () => {
       newSocket.disconnect();
     };
   }, [userId]);
 
-  // Fetch chats and join rooms
   useEffect(() => {
     const fetchChats = async () => {
       setLoading(true);
@@ -116,11 +119,15 @@ const ChatList: React.FC<ChatListProps> = ({ onSelectChat, selectedChatId, userI
         setFilteredChats(data);
 
         // Join chat rooms using the provided userId
+        console.log(socket,userId,'<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<');
+        
         if (socket && userId) {
           data.forEach((chat) => {
             const chatId = chat.chatGroupId || chat.id;
             socket.emit("joinChat", { userId, chatGroupId: chatId });
           });
+          console.log(socket,userId,'<<<<<<<<<<<<<<!!!!!!!!!!!!!!!!!!!<');
+
         }
 
         const results = await Promise.all(

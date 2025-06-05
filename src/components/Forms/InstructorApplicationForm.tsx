@@ -9,6 +9,8 @@ import {
   validateInstructorApplication,
 } from "../validation/instructorApplicationErrors";
 import { submitInstructorApplication } from "../../services/userService";
+import dummyImage from "../../assets/images/blank-profile-picture-973460_640.webp"
+
 
 const InstructorApplicationForm: React.FC = () => {
   const { userDetails } = useSelector((state: RootState) => state.user);
@@ -118,6 +120,7 @@ const InstructorApplicationForm: React.FC = () => {
       <div className="min-h-screen bg-gradient-to-br from-gray-50 to-gray-200 flex flex-col items-center p-6 lg:p-10">
         {showSuccess && (
           <div className="fixed top-20 right-4 z-50 flex items-center gap-2 bg-gradient-to-r from-green-500 to-green-600 text-white px-6 py-3 rounded-lg shadow-lg animate-slide-in">
+          
             <svg
               className="w-6 h-6"
               fill="none"
@@ -142,8 +145,8 @@ const InstructorApplicationForm: React.FC = () => {
           <label htmlFor="profilePhotoInput" className="cursor-pointer">
             <img
               src={
-                formData.profilePhotoPreview ||
-                "src/assets/images/blank-profile-picture-973460_640.webp"
+                formData.profilePhotoPreview ||dummyImage
+                // "src/assets/images/blank-profile-picture-973460_640.webp"
               }
               alt="Profile Preview"
               className="w-32 h-32 rounded-full border-4 border-purple-200 object-cover shadow-md hover:opacity-80 transition-all duration-200"

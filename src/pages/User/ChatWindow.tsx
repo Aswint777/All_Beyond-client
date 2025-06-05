@@ -104,7 +104,6 @@ const ChatWindow: React.FC<ChatWindowProps> = ({ selectedChat, userId, username 
           if (isAxiosError(error) && error.response) {
             if (error.response.status === 401) message = "Please log in to view messages";
             else if (error.response.status === 403) message = "Unauthorized to view this chat";
-            // else if (error.response.status === 500) message = "Server error, try again later";
           } else if (error instanceof Error) {
             message = `Network error: ${error.message}`;
           }
@@ -197,6 +196,7 @@ const ChatWindow: React.FC<ChatWindowProps> = ({ selectedChat, userId, username 
     }
 
     try {
+      socket?.emit("sendMessage", {chatId:selectedChat.id, senderId: userId, content: newMessage, username, fileUrl})
       const response = await axios.post<{ success: boolean; data: Message }>(
         `${API_URL}/student/messages/${selectedChat.id}`,
         { senderId: userId, content: newMessage, username, fileUrl },
