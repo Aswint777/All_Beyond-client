@@ -21,7 +21,7 @@ export const validateInstructorApplication = (formData: any): InstructorApplicat
     errors.firstName ="name is too long"
   }
 
-  if (formData.address.length > 30){
+  if (formData.address.length > 50){
     errors.address ="Address is too long"
   }
   if (formData.city.length > 15){

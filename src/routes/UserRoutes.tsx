@@ -12,7 +12,7 @@ import { useCallContext } from "../components/context/CallContext";
 
 const UserRoutes = () => {
   const { socket } = useCallContext();
-  console.log('StudentRoutes: Socket from CallContext:', socket?.id); // Debug log
+  console.log('StudentRoutes: Socket from CallContext:', socket?.id); 
   return (
     <Routes>
       <Route element={<UserGuards />}>

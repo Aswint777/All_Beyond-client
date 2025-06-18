@@ -85,11 +85,40 @@ interface CourseResponse {
 
 // Common
 
+// export const fetchCourses = async (
+//   page: number,
+//   limit: number,
+//   search: string = "",
+//   category: string = ""
+// ): Promise<CoursesResponse> => {
+//   try {
+//     const response = await api.get("/auth/courses", {
+//       params: {
+//         page,
+//         limit,
+//         search,
+//         category,
+//       },
+//     });
+//     const { courses, totalPages } = response.data.data;
+//     if (!Array.isArray(courses)) {
+//       throw new Error("Courses data is not an array");
+//     }
+//     return { courses, totalPages };
+//   } catch (error) {
+//     console.error("Error fetching courses:", error);
+//     throw error;
+//   }
+// };
+
+
 export const fetchCourses = async (
   page: number,
   limit: number,
   search: string = "",
-  category: string = ""
+  category: string = "",
+  sortOption: string = "",
+  pricingFilter: string = ""
 ): Promise<CoursesResponse> => {
   try {
     const response = await api.get("/auth/courses", {
@@ -97,7 +126,9 @@ export const fetchCourses = async (
         page,
         limit,
         search,
-        category,
+        category, 
+        sort: sortOption,
+        pricingOption: pricingFilter,
       },
     });
     const { courses, totalPages } = response.data.data;

@@ -10,6 +10,7 @@ import {
 } from "../validation/instructorApplicationErrors";
 import { submitInstructorApplication } from "../../services/userService";
 import dummyImage from "../../assets/images/blank-profile-picture-973460_640.webp"
+import { ROUTES } from "../../utils/paths";
 
 
 const InstructorApplicationForm: React.FC = () => {
@@ -105,7 +106,7 @@ const InstructorApplicationForm: React.FC = () => {
       setShowSuccess(true);
       setTimeout(() => {
         setShowSuccess(false);
-        navigate("/InstructorApplyPage");
+        navigate(`${ROUTES.USER}${ROUTES.INSTRUCTOR_APPLY_PAGE}`); 
       }, 2000);
     } catch (error) {
       setLoading(false);

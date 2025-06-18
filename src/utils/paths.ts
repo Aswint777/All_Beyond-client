@@ -20,6 +20,7 @@ export const ROUTES = {
   INSTRUCTOR_APPLICATION_FORM: "/InstructorApplicationForm",
   CHAT_PAGE:"/chat",
   VIDEO_CHAT_PAGE:"/video-chat",
+  NOTIFICATIONS:'/notifications',
 
 
   // ADMIN

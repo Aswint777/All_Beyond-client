@@ -1,15 +1,28 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import UserNavbar from "../../components/layout/UserNavbar";
 import { useNavigate } from "react-router-dom";
-import { useSelector } from "react-redux";
-import { RootState } from "../../redux/store";
+import { useDispatch, useSelector } from "react-redux";
+import { AppDispatch,RootState } from "../../redux/store";
 import { ROUTES } from "../../utils/paths";
+import { GetUserDetailsAction } from "../../redux/actions/GetUserDetailsAction";
 
 const InstructorApplyPage: React.FC = () => {
   const navigate = useNavigate();
-  const { userDetails } = useSelector((state: RootState) => state.user);
+    const dispatch = useDispatch<AppDispatch>();
 
-  const isAppliedInstructor = userDetails?.isAppliedInstructor;
+  const { userDetails } = useSelector((state: RootState) => state.user);
+    const [isApplied, setIsApplied] = useState<boolean>(false);
+
+
+   useEffect(() => {
+    dispatch(GetUserDetailsAction());
+  }, [dispatch]);
+
+  useEffect(() => {
+    if (userDetails) {
+      setIsApplied(userDetails.isAppliedInstructor);
+    }
+  }, [userDetails]);
 
   return (
     <>
@@ -42,14 +55,14 @@ const InstructorApplyPage: React.FC = () => {
             </ul>
             <button
               className={`mt-4 px-4 py-2 rounded-lg ${
-                isAppliedInstructor
+                isApplied
                   ? "bg-gray-400 cursor-not-allowed"
                   : "bg-purple-500 text-white"
               }`}
-              disabled={isAppliedInstructor}
+              disabled={isApplied}
               onClick={() => navigate(`${ROUTES.USER}${ROUTES.INSTRUCTOR_APPLICATION_FORM}`)}
             >
-              {isAppliedInstructor ? "Already Applied" : "Apply Now"}
+              {isApplied ? "Already Applied" : "Apply Now"}
             </button>
           </div>
         </div>
