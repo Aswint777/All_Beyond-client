@@ -10,9 +10,9 @@ import StudentDashboard from "../pages/Student/StudentDashboard";
 import StudentAssessments from "../pages/Student/StudentAssessments";
 import TakeAssessment from "../pages/Student/TakeAssessment";
 import CertificatePage from "../pages/Student/CertificatePage";
+import StudentTransactionHistory from "../pages/Student/studentTransactionHistory";
 
 const StudentRoutes = () => {
-  
   return (
     <Routes>
       <Route element={<StudentGuards />}>
@@ -34,9 +34,13 @@ const StudentRoutes = () => {
           path={`${ROUTES.TAKE_ASSESSMENT}/:assessmentId`}
           element={<TakeAssessment />}
         />
-                <Route
+        <Route
           path={`${ROUTES.CERTIFICATE}/:assessmentId`}
           element={<CertificatePage />}
+        />
+        <Route
+          path={`${ROUTES.STUDENT_TRANSACTION_HISTORY}`}
+          element={<StudentTransactionHistory />}
         />
       </Route>
       <Route path="*" element={<NotFound />} />

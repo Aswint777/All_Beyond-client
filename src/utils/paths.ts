@@ -46,6 +46,8 @@ export const ROUTES = {
   LIST_ASSESSMENT:"/ListAssessments",
   CREATE_ASSESSMENT:"/CreateAssessment",
   EDIT_ASSESSMENT:"/EditAssessment",
+  INSTRUCTOR_TRANSACTION_HISTORY:"/InstructorTransactionHistory",
+  
   
   
 
@@ -58,4 +60,5 @@ export const ROUTES = {
   STUDENT_ASSESSMENTS:"/StudentAssessments",
   TAKE_ASSESSMENT:"/takeAssessment",
   CERTIFICATE:"/Download_Certificate",
+  STUDENT_TRANSACTION_HISTORY:'/studentTransactionHistory'
 };

@@ -4,7 +4,10 @@ import { useSelector } from "react-redux";
 import { RootState } from "../../redux/store";
 import UserNavbar from "../../components/layout/UserNavbar";
 import BasicNavbar from "../../components/layout/BasicNavbar";
-import { fetchCourseDetails, fetchSimilarCourses } from "../../services/courseService";
+import {
+  fetchCourseDetails,
+  fetchSimilarCourses,
+} from "../../services/courseService";
 import { alreadyEnrolledCourses } from "../../services/userService";
 import CourseActionModal from "../../components/reusableComponents/CourseActionModal";
 import { ROUTES } from "../../utils/paths";
@@ -12,7 +15,8 @@ import axios from "axios";
 import { config } from "../../configaration/Config";
 import { Star, Loader2 } from "lucide-react";
 
-const API_URL = import.meta.env.VITE_REACT_APP_API_URL || "http://localhost:5000";
+const API_URL =
+  import.meta.env.VITE_REACT_APP_API_URL || "http://localhost:5000";
 
 interface ICourse {
   _id: string;
@@ -85,7 +89,9 @@ const CourseDetails: React.FC = () => {
   const [loading, setLoading] = useState<boolean>(true);
   const [reviewLoading, setReviewLoading] = useState<boolean>(true);
   const [reviewError, setReviewError] = useState<string | null>(null);
-  const [averageReview, setAverageReview] = useState<AverageReview | null>(null); // For reviewStatus
+  const [averageReview, setAverageReview] = useState<AverageReview | null>(
+    null
+  ); // For reviewStatus
 
   const navigate = useNavigate();
   const { userDetails } = useSelector((state: RootState) => state.user);
@@ -117,10 +123,12 @@ const CourseDetails: React.FC = () => {
           setReviewLoading(true);
           const response = await fetchWithAuth(`student/reviews/${courseId}`);
           console.log(response, "reviews response");
-          const reviewData: Review[] = response.data.data|| [];
+          const reviewData: Review[] = response.data.data || [];
           setReviews(reviewData);
         } catch (err: any) {
-          setReviewError(err.response?.data?.message || "Failed to load reviews.");
+          setReviewError(
+            err.response?.data?.message || "Failed to load reviews."
+          );
         } finally {
           setReviewLoading(false);
         }
@@ -159,7 +167,10 @@ const CourseDetails: React.FC = () => {
       return;
     }
 
-    if (course?.pricingOption === "Premium" && (!course.price || course.price <= 0)) {
+    if (
+      course?.pricingOption === "Premium" &&
+      (!course.price || course.price <= 0)
+    ) {
       setError("Invalid price for premium course.");
       return;
     }
@@ -176,10 +187,14 @@ const CourseDetails: React.FC = () => {
   const handlePaymentSuccess = async (paymentIntentId: string) => {
     try {
       setIsModalOpen(false);
-      navigate(`${ROUTES.STUDENT}${ROUTES.PAYMENT_SUCCESS}?courseId=${courseId}`);
+      navigate(
+        `${ROUTES.STUDENT}${ROUTES.PAYMENT_SUCCESS}?courseId=${courseId}`
+      );
     } catch (error) {
       console.error("Error enrolling after payment:", error);
-      setError("Payment succeeded, but enrollment failed. Please contact support.");
+      setError(
+        "Payment succeeded, but enrollment failed. Please contact support."
+      );
     }
   };
 
@@ -227,7 +242,11 @@ const CourseDetails: React.FC = () => {
                     onClick={() => setIsVideoPlaying(true)}
                     className="absolute inset-0 flex items-center justify-center bg-black bg-opacity-30 text-white rounded-lg hover:bg-opacity-50 transition"
                   >
-                    <svg className="w-16 h-16" fill="currentColor" viewBox="0 0 24 24">
+                    <svg
+                      className="w-16 h-16"
+                      fill="currentColor"
+                      viewBox="0 0 24 24"
+                    >
                       <path d="M8 5v14l11-7z" />
                     </svg>
                   </button>
@@ -236,15 +255,22 @@ const CourseDetails: React.FC = () => {
             )}
           </div>
           <div className="lg:ml-6 mt-4 lg:mt-0 flex flex-col justify-between">
-            <h1 className="text-3xl font-bold text-gray-900">{course?.courseTitle}</h1>
-            <p className="text-gray-700 mt-2 text-xl">Created By: {course?.instructor || "Unknown"}</p>
+            <h1 className="text-3xl font-bold text-gray-900">
+              {course?.courseTitle}
+            </h1>
+            <p className="text-gray-700 mt-2 text-xl">
+              Created By: {course?.instructor || "Unknown"}
+            </p>
             <p className="text-xl font-bold mt-2">
-              ⭐ {averageReview?.average || "No ratings"} ({averageReview?.count || 0} Reviews)
+              ⭐ {averageReview?.average || "No ratings"} (
+              {averageReview?.count || 0} Reviews)
             </p>
             <p className="mt-4 font-semibold text-3xl">
               Price:{" "}
               {course?.pricingOption === "Premium" ? (
-                <span className="text-green-600 font-semibold">₹{course.price}</span>
+                <span className="text-green-600 font-semibold">
+                  ₹{course.price}
+                </span>
               ) : (
                 "Free"
               )}
@@ -270,12 +296,16 @@ const CourseDetails: React.FC = () => {
 
         <div className="mt-8 bg-white p-6 rounded-lg shadow-md">
           <h2 className="text-2xl font-semibold border-b pb-2">About</h2>
-          <p className="text-lg text-gray-600 mt-4">{course?.courseDescription}</p>
+          <p className="text-lg text-gray-600 mt-4">
+            {course?.courseDescription}
+          </p>
           {course?.content && course.content.length > 0 ? (
             <ul className="mt-3">
               {course.content.map((module, index) => (
                 <li key={index} className="mb-4">
-                  <h3 className="text-lg font-bold text-gray-900">{module.moduleTitle}</h3>
+                  <h3 className="text-lg font-bold text-gray-900">
+                    {module.moduleTitle}
+                  </h3>
                   <ul className="ml-4 list-disc text-gray-700">
                     {module.lessons.map((lesson, lessonIndex) => (
                       <li key={lessonIndex}>{lesson.lessonTitle}</li>
@@ -312,7 +342,10 @@ const CourseDetails: React.FC = () => {
           ) : (
             <div className="space-y-6 max-h-96 overflow-y-auto mt-4">
               {reviews.map((review) => (
-                <div key={review._id} className="border-b border-gray-200 pb-4 last:border-b-0">
+                <div
+                  key={review._id}
+                  className="border-b border-gray-200 pb-4 last:border-b-0"
+                >
                   <div className="flex items-center gap-2 mb-2">
                     <div className="flex">
                       {[1, 2, 3, 4, 5].map((star) => (
@@ -326,8 +359,12 @@ const CourseDetails: React.FC = () => {
                         />
                       ))}
                     </div>
-                    <p className="text-sm font-medium text-gray-800">{review.userName}</p>
-                    <p className="text-sm text-gray-500">· {formatDate(review.createdAt)}</p>
+                    <p className="text-sm font-medium text-gray-800">
+                      {review.userName}
+                    </p>
+                    <p className="text-sm text-gray-500">
+                      · {formatDate(review.createdAt)}
+                    </p>
                   </div>
                   <p className="text-gray-600">{review.comment}</p>
                 </div>
@@ -337,17 +374,33 @@ const CourseDetails: React.FC = () => {
         </div>
 
         <div className="mt-8 bg-white p-6 rounded-lg shadow-md">
-          <h2 className="text-2xl font-semibold border-b pb-2">Similar Courses</h2>
+          <h2 className="text-2xl font-semibold border-b pb-2">
+            {course?.instructor}
+          </h2>
+          <p className="text-lg text-gray-600 mt-4">
+            {course?.aboutInstructor}
+          </p>
+        </div>
+
+        <div className="mt-8 bg-white p-6 rounded-lg shadow-md">
+          <h2 className="text-2xl font-semibold border-b pb-2">
+            Similar Courses
+          </h2>
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 mt-4">
             {similarCourses.map((course) => (
-              <div key={course._id} className="shadow-md rounded-lg overflow-hidden bg-slate-200">
+              <div
+                key={course._id}
+                className="shadow-md rounded-lg overflow-hidden bg-slate-200"
+              >
                 <img
                   src={course.thumbnailUrl || "/default-course.jpg"}
                   alt={course.courseTitle}
                   className="w-full h-40 object-cover"
                 />
                 <div className="p-4">
-                  <h2 className="text-lg font-semibold">{course.courseTitle}</h2>
+                  <h2 className="text-lg font-semibold">
+                    {course.courseTitle}
+                  </h2>
                   <p className="text-sm text-gray-600">
                     Instructor: {course.user?.name || "Unknown"}
                   </p>
@@ -375,6 +428,3 @@ const CourseDetails: React.FC = () => {
 };
 
 export default CourseDetails;
-
-
-

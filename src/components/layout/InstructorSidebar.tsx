@@ -15,10 +15,14 @@ const InstructorSidebar = () => {
     },
     { name: "Chat", path: `${ROUTES.USER}${ROUTES.CHAT_PAGE}` },
     { name: "Video Call", path: `${ROUTES.USER}${ROUTES.VIDEO_CHAT_PAGE}` },
-    
+
     {
       name: "Assessments",
       path: `${ROUTES.INSTRUCTOR}${ROUTES.LIST_ASSESSMENT}`,
+    },
+    {
+      name: "Transactions",
+      path: `${ROUTES.INSTRUCTOR}${ROUTES.INSTRUCTOR_TRANSACTION_HISTORY}`,
     },
     { name: "Settings", path: "/settings" },
   ];

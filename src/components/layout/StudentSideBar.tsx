@@ -14,6 +14,10 @@ const StudentSideBar = () => {
       name: "Assessments",
       path: `${ROUTES.STUDENT}${ROUTES.STUDENT_ASSESSMENTS}`,
     },
+        {
+          name: "Transactions",
+          path: `${ROUTES.STUDENT}${ROUTES.STUDENT_TRANSACTION_HISTORY}`,
+        },
     { name: "Settings", path: "/settings" },
   ];
 
