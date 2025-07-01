@@ -11,6 +11,7 @@ import {
 import { GoogleLogin, CredentialResponse } from "@react-oauth/google";
 import { googleAuthAction } from "../../redux/actions/GoogleAuthAction";
 import { toast } from "react-toastify";
+import { ROUTES } from "../../utils/paths";
 
 const LoginPage: React.FC = () => {
   const navigate = useNavigate();
@@ -20,7 +21,7 @@ const LoginPage: React.FC = () => {
     (state: RootState) => state.user
   );
   const { userDetails } = useSelector((state: RootState) => state.user);
-    console.log(userDetails,'!!!!!!!!!!!!!!!!!!!!!');
+  console.log(userDetails, "!!!!!!!!!!!!!!!!!!!!!");
 
   const [loginValues, setLoginValues] = useState({
     email: "",
@@ -55,11 +56,9 @@ const LoginPage: React.FC = () => {
 
     const response = await dispatch(UserLoginAction(loginValues));
 
-
     if (response.payload?.message) {
-
-      setLocalError(response.payload.message); 
-      toast.error(response.payload.message); 
+      setLocalError(response.payload.message);
+      toast.error(response.payload.message);
 
       setTimeout(() => setLocalError(null), 2000);
       return;
@@ -77,7 +76,7 @@ const LoginPage: React.FC = () => {
   ) => {
     try {
       const response = await dispatch(
-        googleAuthAction({ credentials: credentialResponse, userType: "user" }) 
+        googleAuthAction({ credentials: credentialResponse, userType: "user" })
       );
       if (response.payload.success) {
         console.log(response.payload.user);
@@ -97,8 +96,8 @@ const LoginPage: React.FC = () => {
     console.error("Google login error");
   };
   useEffect(() => {
-    console.log(userDetails,'!!!!!!!!!!!!!!!!!!!!!');
-    
+    console.log(userDetails, "!!!!!!!!!!!!!!!!!!!!!");
+
     if (isAuthenticated) {
       if (userDetails?.role === "admin") {
         navigate("/admin/AdminStudentsListPage");
@@ -161,6 +160,16 @@ const LoginPage: React.FC = () => {
             {errors.password && (
               <p className="text-red-500 text-xs mt-1">{errors.password}</p>
             )}
+          </div>
+
+          <div className="mb-4 text-right">
+            <button
+              type="button"
+              onClick={() => navigate(ROUTES.FORGOT_PASSWORD)}
+              className="text-sm text-indigo-600 hover:text-indigo-800"
+            >
+              Forgot Password?
+            </button>
           </div>
 
           <button

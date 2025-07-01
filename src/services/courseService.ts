@@ -215,12 +215,14 @@ export const toggleCourseStatus = async (courseId: string): Promise<void> => {
 };
 
 // Fetch course data by ID
-export const fetchCourseById = async (
+export const  fetchCourseById = async (
   courseId: string
 ): Promise<CourseFormData> => {
   try {
     const response = await api.get(`/instructor/viewCourses/${courseId}`);
     const course = response.data.data;
+    console.log("response :",response.data);
+    
 
     const categoryResponse = await api.get("/instructor/courseCategories");
     const categoryMap = new Map(
@@ -277,6 +279,8 @@ export const updateCourse = async (
   data: FormData
 ): Promise<void> => {
   try {
+    console.log('data:',data);
+    
     await api.put(`/instructor/editCourse/${courseId}`, data, {
       headers: { "Content-Type": "multipart/form-data" },
     });
@@ -306,3 +310,7 @@ export const fetchStudentCourses = async (
     throw error;
   }
 };
+
+
+
+

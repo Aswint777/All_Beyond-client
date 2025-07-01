@@ -12,6 +12,7 @@ export const ROUTES = {
   SIGNUP: "/SignUP",
   LOGIN: "/login",
   OTP_VERIFY: "/OtpVerify",
+  FORGOT_PASSWORD:"/ForgotPassword",
 
   // USER
   USER:'/user',

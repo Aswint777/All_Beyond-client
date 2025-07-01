@@ -80,6 +80,7 @@ const Profile: React.FC = () => {
         firstName: userDetails.firstName || "",
         lastName: userDetails.lastName || "",
         contactNumber: userDetails.contactNumber || "",
+        email: userDetails.email || "",
         linkedin: userDetails.linkedin || "",
         facebook: userDetails.facebook || "",
         instagram: userDetails.instagram || "",
@@ -99,7 +100,7 @@ const Profile: React.FC = () => {
     const newErrors: FormErrors = {};
 
     if (!formData.firstName.trim()) newErrors.firstName = "First name is required";
-    if (!formData.lastName.trim()) newErrors.lastName = "Last name is required";
+    // if (!formData.lastName.trim()) newErrors.lastName = "Last name is required";
     if (formData.contactNumber && !/^\d{10}$/.test(formData.contactNumber))
       newErrors.contactNumber = "Contact number must be 10 digits";
     if (formData.linkedin && !/^https?:\/\/(www\.)?linkedin\.com\/.*$/.test(formData.linkedin))
