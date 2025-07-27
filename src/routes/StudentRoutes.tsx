@@ -10,7 +10,8 @@ import StudentDashboard from "../pages/Student/StudentDashboard";
 import StudentAssessments from "../pages/Student/StudentAssessments";
 import TakeAssessment from "../pages/Student/TakeAssessment";
 import CertificatePage from "../pages/Student/CertificatePage";
-import StudentTransactionHistory from "../pages/Student/studentTransactionHistory";
+import StudentTransactionHistory from "../pages/Student/StudentTransactionHistory";
+// import StudentTransactionHistory from "../pages/Student/studentTransactionHistory";
 
 const StudentRoutes = () => {
   return (

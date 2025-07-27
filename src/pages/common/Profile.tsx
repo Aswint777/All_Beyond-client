@@ -10,7 +10,7 @@ import { config } from "../../configaration/Config";
 import { updateProfilePhoto } from "../../redux/reducer/UserDetailsSlice";
 
 interface FormData {
-  userId: string;
+  // userId: string;
   firstName: string;
   lastName: string;
   contactNumber: string;
@@ -35,7 +35,7 @@ interface FormErrors {
 }
 
 interface UpdateProfilePayload {
-  userId: string;
+  // userId: string;
   firstName: string;
   lastName: string;
   contactNumber: string;
@@ -60,7 +60,7 @@ const Profile: React.FC = () => {
   const [errors, setErrors] = useState<FormErrors>({});
 
   const [formData, setFormData] = useState<FormData>({
-    userId: userDetails?.userId || "",
+    // userId: userDetails?.userId || "",
     firstName: userDetails?.firstName || "",
     lastName: userDetails?.lastName || "",
     contactNumber: userDetails?.contactNumber || "",
@@ -76,7 +76,7 @@ const Profile: React.FC = () => {
     if (userDetails) {
       setFormData((prev) => ({
         ...prev,
-        userId: userDetails.userId,
+        // userId: userDetails.userId,
         firstName: userDetails.firstName || "",
         lastName: userDetails.lastName || "",
         contactNumber: userDetails.contactNumber || "",
@@ -148,7 +148,7 @@ const Profile: React.FC = () => {
       const API_URL = import.meta.env.VITE_REACT_APP_API_URL;
       const formData = new FormData();
       formData.append("profilePhoto", selectedFile);
-      formData.append("userId", userDetails?.userId || "");
+      // formData.append("userId", userDetails?.userId || "");
 
       const response = await axios.put(`${API_URL}/auth/uploadProfilePhoto`, formData, {
         headers: { "Content-Type": "multipart/form-data" },

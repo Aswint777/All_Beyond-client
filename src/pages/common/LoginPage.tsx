@@ -65,7 +65,7 @@ const LoginPage: React.FC = () => {
     }
 
     if (response.payload.data.role === "admin") {
-      navigate("/admin/AdminStudentsListPage");
+      navigate(`${ROUTES.ADMIN}${ROUTES.ADMIN_DASHBOARD}`);
     } else {
       navigate("/");
     }
@@ -100,7 +100,7 @@ const LoginPage: React.FC = () => {
 
     if (isAuthenticated) {
       if (userDetails?.role === "admin") {
-        navigate("/admin/AdminStudentsListPage");
+      navigate(`${ROUTES.ADMIN}${ROUTES.ADMIN_DASHBOARD}`);
       } else {
         navigate("/");
       }

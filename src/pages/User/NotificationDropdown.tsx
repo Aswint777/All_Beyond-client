@@ -1,4 +1,3 @@
-
 import React, { useState, useEffect } from "react";
 import axios from "axios";
 import { config } from "../../configaration/Config";
@@ -38,7 +37,12 @@ const NotificationDropdown: React.FC<NotificationDropdownProps> = ({
     const fetchNotifications = async () => {
       try {
         const API_URL = import.meta.env.VITE_REACT_APP_API_URL;
-        const response = await axios.get(`${API_URL}${ROUTES.STUDENT}${ROUTES.NOTIFICATIONS}`, config);
+        const response = await axios.get(
+          `${API_URL}${ROUTES.STUDENT}${ROUTES.NOTIFICATIONS}`,
+          config
+        );
+        console.log(response.data.data);
+        
         const fetchedNotifications = response.data.data as Notification[];
         setNotifications(fetchedNotifications);
         const count = fetchedNotifications.filter((n) => !n.read).length;
@@ -79,11 +83,13 @@ const NotificationDropdown: React.FC<NotificationDropdownProps> = ({
   const handleMarkAsRead = async (notificationId: string) => {
     try {
       const API_URL = import.meta.env.VITE_REACT_APP_API_URL;
-      await axios.put(`${API_URL}/auth/notifications/${notificationId}/read`, {}, config);
+      await axios.put(
+        `${API_URL}/auth/notifications/${notificationId}/read`,
+        {},
+        config
+      );
       setNotifications((prev) =>
-        prev.map((n) =>
-          n._id === notificationId ? { ...n, read: true } : n
-        )
+        prev.map((n) => (n._id === notificationId ? { ...n, read: true } : n))
       );
       setUnreadCount((prev) => {
         const newCount = prev - 1;
@@ -98,10 +104,21 @@ const NotificationDropdown: React.FC<NotificationDropdownProps> = ({
   const handleMarkAllAsRead = async () => {
     try {
       const API_URL = import.meta.env.VITE_REACT_APP_API_URL;
-      await axios.put(`${API_URL}/auth/notifications/read-all`, {}, config);
-      setNotifications((prev) => prev.map((n) => ({ ...n, read: true })));
-      setUnreadCount(0);
-      onUnreadCountUpdate?.(0);
+      const response = await axios.put(
+        `${API_URL}${ROUTES.STUDENT}/notifications-read-all`,
+        {},
+        config
+      );
+      console.log(response, "response");
+
+      if (response.data.success) {
+        // Only mark as read if success
+        setNotifications((prev) => prev.map((n) => ({ ...n, read: true })));
+        setUnreadCount(0);
+        onUnreadCountUpdate?.(0);
+      } else {
+        console.warn("Server did not confirm marking notifications as read");
+      }
     } catch (error) {
       console.error("Failed to mark all notifications as read:", error);
     }
@@ -113,21 +130,21 @@ const NotificationDropdown: React.FC<NotificationDropdownProps> = ({
     <div className="absolute top-12 right-0 bg-white shadow-lg rounded-lg w-80 text-sm z-50 max-h-96 overflow-y-auto">
       <div className="flex justify-between items-center px-4 py-3 bg-gray-100 sticky top-0 z-10">
         <h3 className="font-semibold text-gray-800">Messages</h3>
-        {unreadCount > 0 && (
+        {/* {unreadCount > 0 && (
           <button
             onClick={handleMarkAllAsRead}
             className="text-indigo-600 hover:text-indigo-800 text-xs"
           >
             Mark All as Read
           </button>
-        )}
+        )} */}
       </div>
       {notifications.length === 0 ? (
-        <p className="px-4 py-4 text-gray-500 text-center">
-          No messages
-        </p>
+        <p className="px-4 py-4 text-gray-500 text-center">No messages</p>
       ) : (
         <div className="px-4 py-2 space-y-3">
+
+
           {notifications.slice(0, 10).map((notification) => (
             <div
               key={notification._id}
@@ -142,13 +159,21 @@ const NotificationDropdown: React.FC<NotificationDropdownProps> = ({
                 <p className="text-xs text-gray-400">
                   {format(new Date(notification.createdAt), "p, MMM d")}
                 </p>
-                {!notification.read && (
-                  <button
-                    onClick={() => handleMarkAsRead(notification._id)}
-                    className="text-indigo-600 hover:text-indigo-800 text-xs"
+                {/* Double tick icon */}
+                {notification.read && (
+                  <svg
+                    className="w-4 h-4 text-indigo-500"
+                    fill="none"
+                    stroke="currentColor"
+                    viewBox="0 0 24 24"
                   >
-                    Read
-                  </button>
+                    <path
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      strokeWidth="2"
+                      d="M5 13l4 4L19 7"
+                    />
+                  </svg>
                 )}
               </div>
             </div>

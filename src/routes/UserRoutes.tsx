@@ -11,8 +11,8 @@ import VideoPage from "../pages/User/VideoPage";
 import { useCallContext } from "../components/context/CallContext";
 
 const UserRoutes = () => {
-  const { socket } = useCallContext();
-  console.log('StudentRoutes: Socket from CallContext:', socket?.id); 
+  const { socket } = useCallContext();  
+  console.log('StudentRoutes: Socket from CallContext:', socket?.id || "No socket"); 
   return (
     <Routes>
       <Route element={<UserGuards />}>
@@ -21,7 +21,7 @@ const UserRoutes = () => {
           path={ROUTES.INSTRUCTOR_APPLY_PAGE}
           element={<InstructorApplyPage />}
         />
-        <Route
+        <Route  
           path={ROUTES.INSTRUCTOR_APPLICATION_FORM}
           element={<InstructorApplicationForm />}
         />

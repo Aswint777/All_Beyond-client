@@ -2,6 +2,7 @@ import React from 'react'
 import { useSelector } from 'react-redux';
 import { Navigate, Outlet } from 'react-router-dom';
 import { RootState } from '../../redux/store';
+import { ROUTES } from '../../utils/paths';
 
 const InstructorGuards = () => {
 
@@ -14,7 +15,7 @@ const InstructorGuards = () => {
   
     // Redirect non-admin users to the home page
     if (userDetails.role === "admin") {
-      return <Navigate to="/admin/AdminStudentsListPage" replace />;
+      return <Navigate to={`${ROUTES.ADMIN}${ROUTES.ADMIN_DASHBOARD}`} replace />;
     }
     if (userDetails.role === "student") {
       return <Navigate to="/" replace />;

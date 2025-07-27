@@ -143,7 +143,7 @@ const TakeAssessment: React.FC = () => {
         `${API_URL}/student/submit-assessment/${assessmentId}`,
         { answers: submissionAnswers },
         { withCredentials: true }
-      );
+      ); 
 
       if (!response.data.success) {
         throw new Error("Failed to submit assessment");
