@@ -111,8 +111,7 @@ const AddCourse_Content: React.FC = () => {
                 <label className="block text-sm font-medium text-gray-700 mb-1">
                   Module Title
                 </label>
-                <Field
-                  type="text"
+                <Field                  type="text"
                   name="newModuleTitle"
                   placeholder="Module Title"
                   className="w-full p-2 border border-gray-300 rounded-lg mr-2 mb-2"

@@ -74,6 +74,8 @@ const Profile: React.FC = () => {
 
   useEffect(() => {
     if (userDetails) {
+      console.log(userDetails,'ppppppppppppppppppppppppppmmmmmmmmnnnnnnnnnnnnnnnn');
+      
       setFormData((prev) => ({
         ...prev,
         // userId: userDetails.userId,
@@ -119,7 +121,7 @@ const Profile: React.FC = () => {
       if (formData.newPassword !== formData.confirmPassword)
         newErrors.confirmPassword = "Passwords do not match";
     }
-
+    
     return newErrors;
   };
 

@@ -14,7 +14,7 @@ const API_URL = import.meta.env.VITE_REACT_APP_API_URL || "http://localhost:5000
 interface Question {
   question: string;
   options: string[];
-  correctOption: number;
+  // correctOption: number;
 }
 
 interface AssessmentResult {
@@ -72,6 +72,8 @@ const StudentAssessments: React.FC = () => {
             withCredentials: true,
           }
         );
+        console.log(response,'oooooooooooooooooooooooooooooooooooooooooooooooooooooo');
+        
 
         if (!response.data.success) {
           throw new Error("Failed to fetch assessments");

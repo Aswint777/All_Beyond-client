@@ -86,7 +86,7 @@ function App() {
   return (
     <ModalProvider>
       <BrowserRouter>
-        {socket && userDetails?._id ? (
+        {socket && userDetails?._id ? ( 
           <CallProvider socket={socket} userId={userDetails._id}>
             <CallInvitationPopup />
             <Routes>

@@ -35,7 +35,9 @@ const BasicNavbar: React.FC = () => {
           >
             Courses
           </li>
-          <li className="cursor-pointer hover:text-indigo-600 transition-colors duration-200">
+          <li className="cursor-pointer hover:text-indigo-600 transition-colors duration-200"
+                      onClick={() => navigate(`${ROUTES.ABOUT_US}`)}
+>
             About Us
           </li>
         </ul>

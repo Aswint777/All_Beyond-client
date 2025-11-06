@@ -22,7 +22,7 @@ const EditAssessment: React.FC = () => {
 
   useEffect(() => {
     if (loading) return;
-    if (!userDetails?._id || userDetails?.role !== "instructor") {
+    if (!userDetails?._id || userDetails?.role !== "instructor") {      
       navigate("/login");
       return;
     }

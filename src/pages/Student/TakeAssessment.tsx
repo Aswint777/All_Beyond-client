@@ -10,7 +10,7 @@ const API_URL = import.meta.env.VITE_REACT_APP_API_URL || "http://localhost:5000
 interface Question {
   question: string;
   options: string[];
-  correctOption: number; 
+  // correctOption: number; 
 }
 
 interface Assessment {
@@ -69,6 +69,7 @@ const TakeAssessment: React.FC = () => {
           `${API_URL}/student/getQuestions/${assessmentId}`,
           { withCredentials: true }
         );
+console.log(response,'ppppppppppppppppppppppppppppppppppp');
 
         if (!response.data.success || !response.data.data) {
           throw new Error("Assessment not found");
@@ -80,9 +81,9 @@ const TakeAssessment: React.FC = () => {
         const invalidQuestion = fetchedAssessment.questions.find(
           (q, i) =>
             !q.question ||
-            !q.options?.length ||
-            q.correctOption < 1 ||
-            q.correctOption > q.options.length
+            !q.options?.length 
+            // || q.correctOption < 1 ||
+            // q.correctOption > q.options.length
         );
         if (invalidQuestion) {
           throw new Error("Invalid question data in assessment");

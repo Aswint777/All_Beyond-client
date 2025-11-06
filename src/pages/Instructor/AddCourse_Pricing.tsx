@@ -78,9 +78,15 @@ const validationSchema = Yup.object().shape({
 });
 
 const AddCourse_Pricing: React.FC = () => {
-  const [pricingOption, setPricingOption] = useState<"Free" | "Premium" | "">("");
+  const [pricingOption, setPricingOption] = useState<"Free" | "Premium" | "">(
+    ""
+  );
   const [loading, setLoading] = useState(false);
-  const { formData: contextData, updateFormData, resetFormData } = useCourseForm();
+  const {
+    formData: contextData,
+    updateFormData,
+    resetFormData,
+  } = useCourseForm();
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -88,8 +94,8 @@ const AddCourse_Pricing: React.FC = () => {
       setPricingOption(contextData.isPaid);
     }
   }, [contextData.isPaid]);
-  console.log('contextData :',contextData);
-  
+  console.log("contextData :", contextData);
+
   const initialValues: Partial<CourseFormData> = {
     isPaid: contextData.isPaid || "",
     price: contextData.price || "",
@@ -134,7 +140,10 @@ const AddCourse_Pricing: React.FC = () => {
     contextData.modules.forEach((module, moduleIndex) => {
       data.append(`modules[${moduleIndex}][title]`, module.title);
       module.lessons.forEach((lesson, lessonIndex) => {
-        data.append(`modules[${moduleIndex}][lessons][${lessonIndex}][title]`, lesson.title);
+        data.append(
+          `modules[${moduleIndex}][lessons][${lessonIndex}][title]`,
+          lesson.title
+        );
         data.append(
           `modules[${moduleIndex}][lessons][${lessonIndex}][lessonDescription]`,
           lesson.lessonDescription
@@ -148,11 +157,15 @@ const AddCourse_Pricing: React.FC = () => {
     try {
       console.log("Submitting FormData...");
       console.log(data);
-      
-      const response = await axios.post(`${API_URL}/instructor/createCourse`, data, {
-        headers: { "Content-Type": "multipart/form-data" },
-        withCredentials: true,
-      });
+
+      const response = await axios.post(
+        `${API_URL}/instructor/createCourse`,
+        data,
+        {
+          headers: { "Content-Type": "multipart/form-data" },
+          withCredentials: true,
+        }
+      );
 
       console.log("Course added successfully:", response.data);
       resetFormData();
@@ -179,11 +192,15 @@ const AddCourse_Pricing: React.FC = () => {
           {({ values, setFieldValue, errors, touched, isSubmitting }) => (
             <Form className="max-w-xl mx-auto p-6 bg-white rounded-lg shadow-md">
               <div className="mb-6 text-center">
-                <h2 className="text-2xl mb-4 font-semibold">Choose Pricing Plan</h2>
+                <h2 className="text-2xl mb-4 font-semibold">
+                  Choose Pricing Plan
+                </h2>
                 <div className="flex justify-center gap-4">
                   <label
                     className={`flex-1 p-2 border rounded-lg text-center cursor-pointer ${
-                      values.isPaid === "Free" ? "border-violet-500" : "border-gray-300"
+                      values.isPaid === "Free"
+                        ? "border-violet-500"
+                        : "border-gray-300"
                     }`}
                   >
                     <Field
@@ -207,7 +224,9 @@ const AddCourse_Pricing: React.FC = () => {
                   </label>
                   <label
                     className={`flex-1 p-2 border rounded-lg text-center cursor-pointer ${
-                      values.isPaid === "Premium" ? "border-violet-500" : "border-gray-300"
+                      values.isPaid === "Premium"
+                        ? "border-violet-500"
+                        : "border-gray-300"
                     }`}
                   >
                     <Field
@@ -225,13 +244,17 @@ const AddCourse_Pricing: React.FC = () => {
                   </label>
                 </div>
                 {errors.isPaid && touched.isPaid && (
-                  <div className="text-red-500 text-sm mt-2">{errors.isPaid}</div>
+                  <div className="text-red-500 text-sm mt-2">
+                    {errors.isPaid}
+                  </div>
                 )}
               </div>
 
               {values.isPaid === "Premium" && (
                 <div className="mb-6">
-                  <h3 className="text-xl mb-4 font-semibold text-center">Premium Plan Details</h3>
+                  <h3 className="text-xl mb-4 font-semibold text-center">
+                    Premium Plan Details
+                  </h3>
                   <Field
                     type="text"
                     name="price"
@@ -243,7 +266,9 @@ const AddCourse_Pricing: React.FC = () => {
                     }}
                   />
                   {errors.price && touched.price && (
-                    <div className="text-red-500 text-sm mb-2">{errors.price}</div>
+                    <div className="text-red-500 text-sm mb-2">
+                      {errors.price}
+                    </div>
                   )}
 
                   <Field
@@ -257,7 +282,9 @@ const AddCourse_Pricing: React.FC = () => {
                     }}
                   />
                   {errors.accountNumber && touched.accountNumber && (
-                    <div className="text-red-500 text-sm mb-2">{errors.accountNumber}</div>
+                    <div className="text-red-500 text-sm mb-2">
+                      {errors.accountNumber}
+                    </div>
                   )}
 
                   <Field
@@ -271,7 +298,9 @@ const AddCourse_Pricing: React.FC = () => {
                     }}
                   />
                   {errors.email && touched.email && (
-                    <div className="text-red-500 text-sm mb-2">{errors.email}</div>
+                    <div className="text-red-500 text-sm mb-2">
+                      {errors.email}
+                    </div>
                   )}
 
                   <Field
@@ -285,7 +314,9 @@ const AddCourse_Pricing: React.FC = () => {
                     }}
                   />
                   {errors.phone && touched.phone && (
-                    <div className="text-red-500 text-sm mb-2">{errors.phone}</div>
+                    <div className="text-red-500 text-sm mb-2">
+                      {errors.phone}
+                    </div>
                   )}
                 </div>
               )}
@@ -332,7 +363,3 @@ const AddCourse_Pricing: React.FC = () => {
 };
 
 export default AddCourse_Pricing;
-
-
-
-
