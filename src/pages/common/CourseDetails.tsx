@@ -86,7 +86,7 @@ const CourseDetails: React.FC = () => {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [isEnrolled, setIsEnrolled] = useState<boolean>(false);
   const [reviews, setReviews] = useState<Review[]>([]);
-  const [loading, setLoading] = useState<boolean>(true);
+  const [, setLoading] = useState<boolean>(true);
   const [reviewLoading, setReviewLoading] = useState<boolean>(true);
   const [reviewError, setReviewError] = useState<string | null>(null);
   const [averageReview, setAverageReview] = useState<AverageReview | null>(
@@ -184,7 +184,7 @@ const CourseDetails: React.FC = () => {
     navigate(`${ROUTES.STUDENT}${ROUTES.PAYMENT_SUCCESS}?courseId=${courseId}`);
   };
 
-  const handlePaymentSuccess = async (paymentIntentId: string) => {
+  const handlePaymentSuccess = async () => {
     try {
       setIsModalOpen(false);
       navigate(

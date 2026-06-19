@@ -3,7 +3,7 @@ import InstructorSidebar from "../../components/layout/InstructorSidebar";
 import CourseProgress from "../../components/reusableComponents/CourseProgress";
 import { useCourseForm } from "../../components/context/CourseFormContext";
 import axios from "axios";
-import { config, configMultiPart } from "../../configaration/Config";
+
 import { useNavigate } from "react-router-dom";
 import { Formik, Form, Field, FormikHelpers } from "formik";
 import * as Yup from "yup";
@@ -78,7 +78,7 @@ const validationSchema = Yup.object().shape({
 });
 
 const AddCourse_Pricing: React.FC = () => {
-  const [pricingOption, setPricingOption] = useState<"Free" | "Premium" | "">(
+  const [, setPricingOption] = useState<"Free" | "Premium" | "">(
     ""
   );
   const [loading, setLoading] = useState(false);

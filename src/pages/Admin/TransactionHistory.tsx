@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import AdminSideBar from "../../components/layout/AdminSideBar";
 import axios from "axios";
 import TableComponent, {
@@ -59,7 +59,6 @@ const TransactionHistory = () => {
         const {
           transactions,
           totalPages,
-          totalTransactions,
         }: TransactionResponse = response.data.data;
         if (!Array.isArray(transactions)) {
           throw new Error("Invalid transaction data");

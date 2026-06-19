@@ -1,7 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { useCallContext } from '../context/CallContext';
 import { useLocation } from 'react-router-dom';
-import { ROUTES } from '../../utils/paths';
 
 const CallInvitationPopup: React.FC = () => {
   const { incomingCall, acceptCall, rejectCall } = useCallContext();

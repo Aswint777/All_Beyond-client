@@ -1,14 +1,12 @@
 import React from "react";
-import { useNavigate, useSearchParams } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import { CheckCircle, BookOpen } from "lucide-react";
 import UserNavbar from "../../components/layout/UserNavbar";
 import StudentSideBar from "../../components/layout/StudentSideBar";
 import { ROUTES } from "../../utils/paths";
 
 const PaymentSuccess: React.FC = () => {
-  const [searchParams] = useSearchParams();
   const navigate = useNavigate();
-  const courseId = searchParams.get("courseId");
 
   const handleViewCourse = () => {
         navigate(`${ROUTES.STUDENT}${ROUTES.STUDENT_COURSES}`); 

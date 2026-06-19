@@ -46,7 +46,7 @@ export const HlsVideoPlayer: React.FC<{
           setIsLoading(false);
         });
   
-        hls.on(Hls.Events.ERROR, (event, data) => {
+        hls.on(Hls.Events.ERROR, (_, data) => {
           console.error(`HLS error for ${lessonTitle}:`, data);
           setIsLoading(false);
           if (data.fatal) {
@@ -71,7 +71,7 @@ export const HlsVideoPlayer: React.FC<{
           setIsLoading(false);
         });
   
-        video.addEventListener("error", (e) => {
+        video.addEventListener("error", () => {
           setIsLoading(false);
           const errorMessage = `Failed to load video: ${lessonTitle}. Error: ${video.error?.message || "Unknown error"} (Code: ${video.error?.code || "N/A"})`;
           console.error(errorMessage);

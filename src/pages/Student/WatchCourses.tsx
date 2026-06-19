@@ -1,8 +1,8 @@
-import React, { useEffect, useState, useRef } from "react";
+import { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import axios from "axios";
 import { ChevronDown, ChevronUp, PlayCircle, Lock, User, DollarSign, CheckCircle } from "lucide-react";
-import Hls from "hls.js";
+
 import { config } from "../../configaration/Config";
 import StudentSideBar from "../../components/layout/StudentSideBar";
 import UserNavbar from "../../components/layout/UserNavbar";

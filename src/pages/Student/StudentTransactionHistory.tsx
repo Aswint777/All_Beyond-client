@@ -1,5 +1,5 @@
 import axios from 'axios';
-import React, { useEffect, useState } from 'react'
+import { useEffect, useState } from 'react'
 import { ROUTES } from '../../utils/paths';
 import { config } from '../../configaration/Config';
 import TableComponent, { TableColumn } from '../../components/reusableComponents/TableComponent';
@@ -60,7 +60,7 @@ const StudentTransactionHistory = () => {
         const {
           transactions,
           totalPages,
-          totalTransactions,
+
         }: TransactionResponse = response.data.data;
         if (!Array.isArray(transactions)) {
           throw new Error("Invalid transaction data");

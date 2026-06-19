@@ -1,4 +1,4 @@
-import AddCourse_Content from "../pages/Instructor/AddCourse_Content"
+
 
 export const ROUTES = {
 

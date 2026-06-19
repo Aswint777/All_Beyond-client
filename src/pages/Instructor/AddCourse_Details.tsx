@@ -84,7 +84,7 @@ const AddCourse_Details: React.FC = () => {
             navigate("/instructor/AddCourse_Content");
           }}
         >
-          {({ setFieldValue, values }) => (
+          {({ setFieldValue }) => (
             <Form className="max-w-xl mx-auto p-6 bg-white rounded-lg shadow-md">
               <h1 className="text-2xl p-3">Course Details</h1>
 

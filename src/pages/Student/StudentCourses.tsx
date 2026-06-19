@@ -5,7 +5,7 @@ import UserNavbar from "../../components/layout/UserNavbar";
 import StudentSideBar from "../../components/layout/StudentSideBar";
 import Pagination from "../../components/reusableComponents/Pagination";
 import { fetchStudentCourses } from "../../services/courseService";
-import { ROUTES } from "../../utils/paths";
+
 
 interface ICourse {
   _id: string;

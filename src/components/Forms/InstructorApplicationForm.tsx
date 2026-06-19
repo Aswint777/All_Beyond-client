@@ -1,6 +1,5 @@
 import React, { useState } from "react";
 import UserNavbar from "../layout/UserNavbar";
-import axios from "axios";
 import { useSelector } from "react-redux";
 import { RootState } from "../../redux/store";
 import { useNavigate } from "react-router-dom";
@@ -82,7 +81,6 @@ const InstructorApplicationForm: React.FC = () => {
 
     setLoading(true);
 
-    const API_URL = import.meta.env.VITE_REACT_APP_API_URL!;
     const formDataObj = new FormData();
 
     Object.entries(formData).forEach(([key, value]) => {

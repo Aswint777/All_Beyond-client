@@ -73,7 +73,7 @@ const ChatList: React.FC<ChatListProps> = ({ onSelectChat, selectedChatId, userI
     });
 
     console.log("unread message here :",);
-    newSocket.on("unreadCountUpdate", ({ userId, chatGroupId, unreadCount }) => {
+    newSocket.on("unreadCountUpdate", ({ chatGroupId, unreadCount }: any) => {
 
       setLastMessages((prev) => ({
         ...prev,

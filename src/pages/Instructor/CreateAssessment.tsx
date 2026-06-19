@@ -15,7 +15,7 @@ const CreateAssessment: React.FC = () => {
   const location = useLocation();
   const { courseId, courseTitle } = location.state || { courseId: "", courseTitle: "" };
   const [error, setError] = useState<string | null>(null);
-  const [isLoading, setIsLoading] = useState(false); 
+
 
   const handleSubmit = async (data: { questions: Question[] }) => {
     try {
@@ -49,7 +49,7 @@ const CreateAssessment: React.FC = () => {
     }
   };
 
-  if (loading || isLoading) {
+  if (loading) {
     return (
       <div className="min-h-screen bg-gray-50 flex items-center justify-center">
         <div className="flex items-center gap-4">

@@ -18,7 +18,6 @@ interface TableProps<T> {
 const TableComponent = <T,>({
   columns,
   data,
-  itemsPerPage = 5,
   totalPages = 1,
   currentPage = 1,
   onPageChange,

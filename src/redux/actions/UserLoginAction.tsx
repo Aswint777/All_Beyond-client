@@ -1,11 +1,11 @@
 import { createAsyncThunk } from "@reduxjs/toolkit";
 import axios from "axios";
-import { GetUserDetailsAction } from "./GetUserDetailsAction"; // Import it
+
 import { logoutUser } from "../reducer/UserDetailsSlice";
 
 export const UserLoginAction = createAsyncThunk(
   "user/login",
-  async (loginData: { email: string; password: string }, { dispatch, rejectWithValue }) => {
+  async (loginData: { email: string; password: string }, { rejectWithValue }) => {
     try {
       const API_URL = import.meta.env.VITE_REACT_APP_API_URL!;
       const response = await axios.post(`${API_URL}/auth/login`, loginData, {

@@ -51,7 +51,7 @@ const EditCategoryPage = () => {
 
     try {
       const API_URL = import.meta.env.VITE_REACT_APP_API_URL;
-      const response = await axios.put(
+      await axios.put(
         `${API_URL}/admin/editCategory/${id}`,
         formData,
         { withCredentials: true }

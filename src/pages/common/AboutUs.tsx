@@ -1,4 +1,4 @@
-import React from "react";
+
 import UserNavbar from "../../components/layout/UserNavbar";
 import BasicNavbar from "../../components/layout/BasicNavbar";
 import { useSelector } from "react-redux";

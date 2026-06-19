@@ -16,7 +16,6 @@ interface AssessmentFormProps {
 const AssessmentForm: React.FC<AssessmentFormProps> = ({
   initialData,
   courseId,
-  courseTitle,
   onSubmit,
   isEditMode = false,
 }) => {

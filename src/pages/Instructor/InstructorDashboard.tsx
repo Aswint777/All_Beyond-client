@@ -195,7 +195,7 @@ const InstructorDashboard: React.FC = () => {
                           wrapperStyle={{ fontSize: "14px", color: "#4B5563" }}
                         />
                         <Bar dataKey="users" radius={[4, 4, 0, 0]}>
-                          {data.monthlyEnrollments.map((entry, index) => (
+                          {data.monthlyEnrollments.map((_, index) => (
                             <Cell
                               key={`bar-${index}`}
                               fill="#2F80ED"
@@ -230,12 +230,12 @@ const InstructorDashboard: React.FC = () => {
                           cy="50%"
                           outerRadius={130}
                           innerRadius={80}
-                          label={({ name, percent }) => `${(percent * 100).toFixed(0)}%`}
+                          label={({ percent }) => `${(percent * 100).toFixed(0)}%`}
                           labelLine={{ stroke: "#6B7280", strokeWidth: 1 }}
                           animationDuration={1000}
                           animationBegin={0}
                         >
-                          {data.courseEnrollments.map((entry, index) => (
+                          {data.courseEnrollments.map((_, index) => (
                             <Cell
                               key={`cell-${index}`}
                               fill={COLORS[index % COLORS.length]}

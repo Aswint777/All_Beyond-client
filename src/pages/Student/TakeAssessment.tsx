@@ -79,7 +79,7 @@ console.log(response,'ppppppppppppppppppppppppppppppppppp');
 
         // Validate questions
         const invalidQuestion = fetchedAssessment.questions.find(
-          (q, i) =>
+          (q) =>
             !q.question ||
             !q.options?.length 
             // || q.correctOption < 1 ||

@@ -40,7 +40,7 @@ const VideoChat: React.FC<VideoChatProps> = ({ socket, username, userId }) => {
   >("idle");
   const [isMicMuted, setIsMicMuted] = useState(false);
   const [isVideoOff, setIsVideoOff] = useState(false);
-  const [callAccepted, setCallAccepted] = useState(false);
+
 
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
   const [cameraActive, setCameraActive] = useState(false);

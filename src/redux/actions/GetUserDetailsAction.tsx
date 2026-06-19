@@ -1,6 +1,6 @@
 import { createAsyncThunk } from '@reduxjs/toolkit'
 import axios from 'axios';
-import React from 'react'
+
 
 export const GetUserDetailsAction = createAsyncThunk(
     "user/GetUserDetails",

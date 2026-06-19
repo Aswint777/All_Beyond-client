@@ -1,11 +1,10 @@
 import axios from "axios";
-import React, { useState } from "react";
-import { NavLink, useNavigate } from "react-router-dom";
+import  { useState } from "react";
+import { NavLink} from "react-router-dom";
 import { useModal } from "../context/ModalContext";
 import { ROUTES } from "../../utils/paths";
 
 const AdminSideBar = () => {
-  const navigate = useNavigate();
   const { openModal } = useModal();
   const test = `Are you sure you want to log out? Any unsaved changes will be lost. You can log in again anytime.`;
   const [isOpen, setIsOpen] = useState(false);

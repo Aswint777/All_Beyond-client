@@ -1,4 +1,4 @@
-import React from "react";
+
 import { Route, Routes } from "react-router-dom";
 import InstructorGuards from "../components/guards/InstructorGuards";
 import CourseList from "../pages/Instructor/CourseList";
@@ -7,7 +7,7 @@ import AddCourse_Content from "../pages/Instructor/AddCourse_Content";
 import AddCourse_Pricing from "../pages/Instructor/AddCourse_Pricing";
 import EditCourse from "../pages/Instructor/EditCourse";
 import { ROUTES } from "../utils/paths";
-import NotFound from "../pages/common/404";
+
 import InstructorDashboard from "../pages/Instructor/InstructorDashboard";
 import ListAssessments from "../pages/Instructor/ListAssessments";
 import CreateAssessment from "../pages/Instructor/CreateAssessment";

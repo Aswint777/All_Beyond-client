@@ -5,8 +5,7 @@ import { sendSignUpData, updateField } from "../../redux/reducer/UserSlice";
 import { useNavigate } from "react-router-dom";
 import BasicNavbar from "../../components/layout/BasicNavbar";
 import { SignUpErrors, validateSignUp } from "../../components/validation/SignUpErrors";
-import { resetSignUp } from "../../redux/actions/resetSignUpAction";
-import { resetVerifyOtp } from "../../redux/actions/resetVerifyOtp";
+
 
 const SignUpPage: React.FC = () => {
   const navigate = useNavigate();

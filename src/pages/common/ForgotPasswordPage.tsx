@@ -22,7 +22,7 @@ const ForgotPasswordPage: React.FC = () => {
   const [successMessage, setSuccessMessage] = useState<string | null>(null);
   const [otpSent, setOtpSent] = useState(false);
   const [token, setToken] = useState<string | null>(null);
-  const [mainLoading, setMainLoading] = useState(false);
+  
 const [resetLoading, setResetLoading] = useState(false);
 
 

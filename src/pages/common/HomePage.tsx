@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
-import { useDispatch, useSelector } from "react-redux";
-import { RootState, AppDispatch } from "../../redux/store";
+import { useSelector } from "react-redux";
+import { RootState } from "../../redux/store";
 import UserNavbar from "../../components/layout/UserNavbar";
 import BasicNavbar from "../../components/layout/BasicNavbar";
 import axios from "axios";
@@ -21,9 +21,9 @@ interface CourseResponse {
 }
 
 const HomePage: React.FC = () => {
-  const dispatch = useDispatch<AppDispatch>();
+
   const { userDetails } = useSelector((state: RootState) => state.user);
-  const [navbarKey, setNavbarKey] = useState(0);
+  const [, setNavbarKey] = useState(0);
   const [courses, setCourses] = useState<Course[]>([]);
   const [loading, setLoading] = useState<boolean>(true);
   const [error, setError] = useState<string | null>(null);
@@ -38,7 +38,7 @@ const HomePage: React.FC = () => {
 
   const fetchUserDetails = async () => {
     try {
-      const response = await axios.get(`${API_URL}/auth/userDetails`, {
+      await axios.get(`${API_URL}/auth/userDetails`, {
         withCredentials: true, 
       });
 

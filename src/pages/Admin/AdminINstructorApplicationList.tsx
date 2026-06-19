@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import AdminSideBar from "../../components/layout/AdminSideBar";
 import { useNavigate } from "react-router-dom";
 import { ROUTES } from "../../utils/paths";

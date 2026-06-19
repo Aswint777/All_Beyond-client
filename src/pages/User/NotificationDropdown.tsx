@@ -22,13 +22,13 @@ interface NotificationDropdownProps {
 
 const NotificationDropdown: React.FC<NotificationDropdownProps> = ({
   isOpen,
-  onClose,
+
   userId,
   onUnreadCountUpdate,
 }) => {
   const [notifications, setNotifications] = useState<Notification[]>([]);
-  const [unreadCount, setUnreadCount] = useState(0);
-  const [socket, setSocket] = useState<Socket | null>(null);
+  const [, setUnreadCount] = useState(0);
+  const [, setSocket] = useState<Socket | null>(null);
 
   useEffect(() => {
     if (!isOpen || !userId) return;
@@ -80,49 +80,7 @@ const NotificationDropdown: React.FC<NotificationDropdownProps> = ({
     };
   }, [isOpen, userId, onUnreadCountUpdate]);
 
-  const handleMarkAsRead = async (notificationId: string) => {
-    try {
-      const API_URL = import.meta.env.VITE_REACT_APP_API_URL;
-      await axios.put(
-        `${API_URL}/auth/notifications/${notificationId}/read`,
-        {},
-        config
-      );
-      setNotifications((prev) =>
-        prev.map((n) => (n._id === notificationId ? { ...n, read: true } : n))
-      );
-      setUnreadCount((prev) => {
-        const newCount = prev - 1;
-        onUnreadCountUpdate?.(newCount);
-        return newCount;
-      });
-    } catch (error) {
-      console.error("Failed to mark notification as read:", error);
-    }
-  };
 
-  const handleMarkAllAsRead = async () => {
-    try {
-      const API_URL = import.meta.env.VITE_REACT_APP_API_URL;
-      const response = await axios.put(
-        `${API_URL}${ROUTES.STUDENT}/notifications-read-all`,
-        {},
-        config
-      );
-      console.log(response, "response");
-
-      if (response.data.success) {
-        // Only mark as read if success
-        setNotifications((prev) => prev.map((n) => ({ ...n, read: true })));
-        setUnreadCount(0);
-        onUnreadCountUpdate?.(0);
-      } else {
-        console.warn("Server did not confirm marking notifications as read");
-      }
-    } catch (error) {
-      console.error("Failed to mark all notifications as read:", error);
-    }
-  };
 
   if (!isOpen) return null;
 
