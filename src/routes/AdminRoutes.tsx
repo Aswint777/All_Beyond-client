@@ -1,4 +1,3 @@
-import React from 'react'
 import AdminGuards from '../components/guards/AdminGuards';
 import { Route, Routes } from 'react-router-dom';
 import AdminDashboard from '../pages/Admin/AdminDashboard';

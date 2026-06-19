@@ -1,4 +1,3 @@
-import React from "react";
 import { Route, Routes } from "react-router-dom";
 import UserGuards from "../components/guards/UserGuards";
 import Profile from "../pages/common/Profile";

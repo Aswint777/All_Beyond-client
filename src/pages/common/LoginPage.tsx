@@ -17,7 +17,7 @@ const LoginPage: React.FC = () => {
   const navigate = useNavigate();
   const dispatch = useDispatch<AppDispatch>();
 
-  const { error, loading, isAuthenticated } = useSelector(
+  const { loading, isAuthenticated } = useSelector(
     (state: RootState) => state.user
   );
   const { userDetails } = useSelector((state: RootState) => state.user);
