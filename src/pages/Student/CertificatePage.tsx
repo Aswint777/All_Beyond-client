@@ -7,6 +7,8 @@ import { RootState } from "../../redux/store";
 import { Download } from "lucide-react";
 import jsPDF from "jspdf";
 import html2canvas from "html2canvas";
+import logo from "../../assets/images/B (4).png";
+
 
 const API_URL = import.meta.env.VITE_REACT_APP_API_URL || "http://localhost:5000";
 
@@ -131,7 +133,7 @@ const CertificatePage: React.FC = () => {
           {/* Header */}
           <div className="text-center mb-8">
             <img
-              src="/src/assets/images/B (4).png"
+            src={logo}
               alt="EduPlatform Logo"
               className="mx-auto h-16 mb-4"
             />

@@ -5,6 +5,7 @@ import { sendSignUpData, updateField } from "../../redux/reducer/UserSlice";
 import { useNavigate } from "react-router-dom";
 import BasicNavbar from "../../components/layout/BasicNavbar";
 import { SignUpErrors, validateSignUp } from "../../components/validation/SignUpErrors";
+import LogImage from "../../assets/images/Discover-the-Bright-Side-The-Surprising-Benefits-of-Online-Learning.png"
 
 
 const SignUpPage: React.FC = () => {
@@ -69,7 +70,7 @@ const SignUpPage: React.FC = () => {
       <BasicNavbar />
       <div className="flex justify-center items-center min-h-screen bg-slate-50">
         <img
-          src="/src/assets/images/Discover-the-Bright-Side-The-Surprising-Benefits-of-Online-Learning.png"
+            src={LogImage}
           alt="Local Image"
           className="w-1/2 h-full object-cover"
         />

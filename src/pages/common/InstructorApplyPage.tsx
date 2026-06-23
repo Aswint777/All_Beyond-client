@@ -5,6 +5,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { AppDispatch,RootState } from "../../redux/store";
 import { ROUTES } from "../../utils/paths";
 import { GetUserDetailsAction } from "../../redux/actions/GetUserDetailsAction";
+import instructorImage from "../../assets/images/6-ways-to-improve-online-teaching.webp";
 
 const InstructorApplyPage: React.FC = () => {
   const navigate = useNavigate();
@@ -30,7 +31,7 @@ const InstructorApplyPage: React.FC = () => {
       <div className="flex flex-col items-center space-y-10 p-10">
         <div className="flex flex-col md:flex-row items-center bg-white shadow-lg rounded-2xl p-6 max-w-4xl">
           <img
-            src="\src\assets\images\6-ways-to-improve-online-teaching.webp"
+            src={instructorImage}
             alt="Instructor"
             className="w-96 h-96 object-cover rounded-xl shadow-md"
           />

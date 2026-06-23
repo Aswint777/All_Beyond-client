@@ -145,7 +145,6 @@ const InstructorApplicationForm: React.FC = () => {
             <img
               src={
                 formData.profilePhotoPreview ||dummyImage
-                // "src/assets/images/blank-profile-picture-973460_640.webp"
               }
               alt="Profile Preview"
               className="w-32 h-32 rounded-full border-4 border-purple-200 object-cover shadow-md hover:opacity-80 transition-all duration-200"

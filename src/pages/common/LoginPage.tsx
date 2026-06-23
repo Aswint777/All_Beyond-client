@@ -12,6 +12,7 @@ import { GoogleLogin, CredentialResponse } from "@react-oauth/google";
 import { googleAuthAction } from "../../redux/actions/GoogleAuthAction";
 import { toast } from "react-toastify";
 import { ROUTES } from "../../utils/paths";
+import LogImage from "../../assets/images/Discover-the-Bright-Side-The-Surprising-Benefits-of-Online-Learning.png"
 
 const LoginPage: React.FC = () => {
   const navigate = useNavigate();
@@ -112,7 +113,7 @@ const LoginPage: React.FC = () => {
       <BasicNavbar />
       <div className="flex justify-center items-center min-h-screen bg-slate-50">
         <img
-          src="/src/assets/images/Discover-the-Bright-Side-The-Surprising-Benefits-of-Online-Learning.png"
+            src={LogImage}
           alt="Local Image"
           className="w-1/2 h-full object-cover"
         />

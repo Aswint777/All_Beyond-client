@@ -7,6 +7,7 @@ import axios from "axios";
 import { config } from "../../configaration/Config";
 import { resetVerifyOtp } from "../../redux/actions/resetVerifyOtp";
 import { resetSignUp } from "../../redux/actions/resetSignUpAction";
+import LogImage from "../../assets/images/Discover-the-Bright-Side-The-Surprising-Benefits-of-Online-Learning.png";
 
 const OtpVerifyPage: React.FC = () => {
   const OTP_LENGTH = 6;
@@ -26,7 +27,6 @@ const OtpVerifyPage: React.FC = () => {
     loading,
     error: reduxError,
     isOtpVerified,
-    
   } = useSelector((state: RootState) => state.verifyOtp);
 
   const handleChange = (value: string, index: number) => {
@@ -46,7 +46,7 @@ const OtpVerifyPage: React.FC = () => {
     }
   };
 
-  const handleSubmit = async(event: React.FormEvent) => {
+  const handleSubmit = async (event: React.FormEvent) => {
     event.preventDefault();
     setError("");
 
@@ -58,16 +58,15 @@ const OtpVerifyPage: React.FC = () => {
       return;
     }
 
-      const result = await dispatch(
-      VerifyOtpAction({ email: formValues.email, otp: otpString })
-    ).unwrap(); 
+    const result = await dispatch(
+      VerifyOtpAction({ email: formValues.email, otp: otpString }),
+    ).unwrap();
 
     console.log(result, "OTP Verified Result");
 
     dispatch(resetVerifyOtp());
     dispatch(resetSignUp());
     navigate("/login");
-    
   };
 
   useEffect(() => {
@@ -77,7 +76,7 @@ const OtpVerifyPage: React.FC = () => {
         setTimer((prev) => prev - 1);
       }, 1000);
     } else {
-      setResendEnabled(true); 
+      setResendEnabled(true);
     }
     return () => clearInterval(interval);
   }, [timer]);
@@ -94,7 +93,7 @@ const OtpVerifyPage: React.FC = () => {
       const response = await axios.post(
         `${API_URL}/auth/resent`,
         { email: formValues.email },
-        config
+        config,
       );
 
       console.log("Resend OTP response:", response.data);
@@ -106,7 +105,7 @@ const OtpVerifyPage: React.FC = () => {
   return (
     <div className="flex items-center justify-center min-h-screen bg-white">
       <img
-        src="\src\assets\images\Discover-the-Bright-Side-The-Surprising-Benefits-of-Online-Learning.png"
+        src={LogImage}
         alt="Local Image"
         className="w-1/2 h-full object-cover"
       />

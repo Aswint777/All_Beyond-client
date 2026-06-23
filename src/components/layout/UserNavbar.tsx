@@ -10,7 +10,7 @@ import { GetUserDetailsAction } from "../../redux/actions/GetUserDetailsAction";
 import { ROUTES } from "../../utils/paths";
 import dummyImage from "../../assets/images/blank-profile-picture-973460_640.webp";
 import NotificationDropdown from "../../pages/User/NotificationDropdown";
-// import NotificationDropdown from "./NotificationDropdown";
+import logo from "../../assets/images/B (4).png";
 
 const UserNavbar: React.FC = () => {
   const dispatch = useDispatch<AppDispatch>();
@@ -86,7 +86,7 @@ const UserNavbar: React.FC = () => {
       <div className="container mx-auto px-4 py-4 flex justify-between items-center">
         <div className="flex items-center space-x-3">
           <img
-            src="/src/assets/images/B (4).png"
+            src={logo}
             alt="Logo"
             className="h-10 w-auto"
           />

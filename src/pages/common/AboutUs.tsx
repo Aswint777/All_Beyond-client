@@ -1,28 +1,27 @@
-
 import UserNavbar from "../../components/layout/UserNavbar";
 import BasicNavbar from "../../components/layout/BasicNavbar";
 import { useSelector } from "react-redux";
 import { RootState } from "../../redux/store";
+import logo from "../../assets/images/B (4).png";
 
 function AboutUs() {
-      const { userDetails } = useSelector((state: RootState) => state.user);
+  const { userDetails } = useSelector((state: RootState) => state.user);
 
   return (
     <div className="bg-gray-100 font-sans min-h-screen">
       {userDetails ? <UserNavbar /> : <BasicNavbar />}
 
-
       <main className="container mx-auto py-10 px-4">
-                    <img
-              src="/src/assets/images/B (4).png"
-              alt="EduPlatform Logo"
-              className="mx-auto h-28 mb-4 mt-14"
-            />
+        <img
+          src={logo}
+          alt="EduPlatform Logo"
+          className="mx-auto h-28 mb-4 mt-14"
+        />
         <section className="bg-white rounded-lg shadow-lg p-8 mb-8">
           <h2 className="text-3xl font-semibold text-gray-800 mb-4 text-center">
             About All Beyond
           </h2>
-          
+
           <p className="text-gray-600 leading-relaxed mb-6 text-center">
             Welcome to <span className="font-bold">All Beyond</span>, your
             ultimate platform for seamless and secure communication! Founded in
