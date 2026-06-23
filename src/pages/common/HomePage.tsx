@@ -4,12 +4,13 @@ import { RootState } from "../../redux/store";
 import UserNavbar from "../../components/layout/UserNavbar";
 import BasicNavbar from "../../components/layout/BasicNavbar";
 import axios from "axios";
+import heroImage from "../../assets/images/shutterstock_1029674362-860x574.png";
 
 interface Course {
   _id: string;
   courseTitle: string;
   thumbnailUrl?: string;
-  instructor: string 
+  instructor: string;
   rating?: number;
   reviews?: number;
   createdAt: string;
@@ -21,28 +22,26 @@ interface CourseResponse {
 }
 
 const HomePage: React.FC = () => {
-
   const { userDetails } = useSelector((state: RootState) => state.user);
   const [, setNavbarKey] = useState(0);
   const [courses, setCourses] = useState<Course[]>([]);
   const [loading, setLoading] = useState<boolean>(true);
   const [error, setError] = useState<string | null>(null);
 
-  const API_URL = import.meta.env.VITE_REACT_APP_API_URL || "http://localhost:5000";
+  const API_URL =
+    import.meta.env.VITE_REACT_APP_API_URL || "http://localhost:5000";
 
   useEffect(() => {
     if (userDetails) {
-      setNavbarKey(prevKey => prevKey + 1);
+      setNavbarKey((prevKey) => prevKey + 1);
     }
   }, [userDetails]);
 
   const fetchUserDetails = async () => {
     try {
       await axios.get(`${API_URL}/auth/userDetails`, {
-        withCredentials: true, 
+        withCredentials: true,
       });
-
-
     } catch (error) {
       console.error("Error fetching user details:", error);
     }
@@ -51,9 +50,12 @@ const HomePage: React.FC = () => {
   const fetchLatestCourses = async () => {
     setLoading(true);
     try {
-      const response = await axios.get<CourseResponse>(`${API_URL}/auth/latestCourses`, {
-        withCredentials: true,
-      });
+      const response = await axios.get<CourseResponse>(
+        `${API_URL}/auth/latestCourses`,
+        {
+          withCredentials: true,
+        },
+      );
       if (response.data.success) {
         setCourses(response.data.data);
         setError(null);
@@ -80,17 +82,19 @@ const HomePage: React.FC = () => {
 
       <div className="relative w-full h-screen">
         <img
-          src="\src\assets\images\shutterstock_1029674362-860x574.png"
+          src={heroImage}
           alt="Hero"
           className="w-full h-full object-cover"
         />
         <div className="absolute inset-0 flex items-center justify-center lg:justify-start px-4 lg:px-12 bg-black bg-opacity-30">
           <div className="text-center lg:text-left max-w-lg space-y-6 text-white">
             <h1 className="text-4xl font-bold leading-tight">
-              <span className="text-green-500">Knowledge</span> at your fingertips
+              <span className="text-green-500">Knowledge</span> at your
+              fingertips
             </h1>
             <p className="text-gray-200">
-              Unlock your potential with top-notch resources and expert guidance to elevate your learning experience.
+              Unlock your potential with top-notch resources and expert guidance
+              to elevate your learning experience.
             </p>
           </div>
         </div>
@@ -108,7 +112,9 @@ const HomePage: React.FC = () => {
           ) : error ? (
             <p className="text-red-600 text-center text-lg">{error}</p>
           ) : courses.length === 0 ? (
-            <p className="text-gray-600 text-center text-lg">No courses available at the moment.</p>
+            <p className="text-gray-600 text-center text-lg">
+              No courses available at the moment.
+            </p>
           ) : (
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
               {courses.map((course) => (
@@ -128,7 +134,6 @@ const HomePage: React.FC = () => {
                     <p className="text-sm text-gray-600">
                       Instructor: {course.instructor || "Jane Smith"}
                     </p>
-
                   </div>
                 </div>
               ))}
@@ -165,7 +170,8 @@ const HomePage: React.FC = () => {
             Start Your Learning Journey Today!
           </h2>
           <p className="text-gray-600 mb-8">
-            Explore a wide range of courses and take the first step towards achieving your goals.
+            Explore a wide range of courses and take the first step towards
+            achieving your goals.
           </p>
           <button className="bg-green-500 text-white px-6 py-3 rounded-md hover:bg-green-600 transition-colors duration-200 text-lg font-semibold">
             Explore Courses
